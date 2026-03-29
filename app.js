@@ -76,18 +76,18 @@ const availableSources = [
     { id: 'vidpop', name: 'Vidpop', urls: { movie: 'https://www.vidpop.xyz/embed/?id={id}', tv: 'https://www.vidpop.xyz/embed/?id={id}&season={season}&episode={episode}' } },
     { id: 'rive', name: 'RiveStream', urls: { movie: 'https://rivestream.org/embed?type=movie&id={id}', tv: 'https://rivestream.org/embed?type=tv&id=tmdb&id={id}&season={season}&episode={episode}' } },
     { id: 'hexa', name: 'Hexa', urls: { movie: 'https://hexa.watch/watch/movie/{id}', tv: 'https://hexa.watch/watch/tv/{id}/{season}/{episode}' } },
-    { id: 'vidzee', name: 'VidZee', urls: { movie: 'https://player.vidzee.wtf/embed/movie/{id}', tv: 'https://player.vidzee.wtf/embed/tv/{id}/{season}/{episode}' } },
-    { id: 'vidify', name: 'Vidify', urls: { movie: 'https://vidify.top/embed/movie/{id}', tv: 'https://vidify.top/embed/tv/{id}/{season}/{episode}' } },
+    { id: 'vidking', name: 'Vidking', urls: { movie: 'https://www.vidking.net/embed/movie/{id}', tv: 'https://www.vidking.net/embed/tv/{id}/{season}/{episode}' } },
+    { id: 'xprime', name: 'XPrime', urls: { movie: 'https://xprime.su/watch/movie/{id}', tv: 'https://xprime.su/watch/tv/{id}/{season}/{episode}' } },
     { id: 'spenflix', name: 'SpenFlix', urls: { movie: 'https://spencerdevs.xyz/movie/{id}', tv: 'https://spencerdevs.xyz/tv/{id}/{season}/{episode}' } },
     { id: 'vidsrccx', name: 'VidSrcCX', urls: { movie: 'https://vidsrc.cx/embed/movie/{id}', tv: 'https://vidsrc.cx/embed/tv/{id}/{season}/{episode}' } },
     { id: 'vidnest', name: 'VidNest', urls: { movie: 'https://vidnest.fun/movie/{id}', tv: 'https://vidnest.fun/tv/{id}/{season}/{episode}' } },
-    { id: 'bludclart', name: 'Bludclart', urls: { movie: 'https://watch.bludclart.com/movie/{id}', tv: 'https://www.vidking.net/embed/tv/{id}/{season}/{episode}' } },
-    { id: 'videasy', name: 'VidEasy', urls: { movie: 'https://player.videasy.net/movie/{id}?color=8834ec', tv: 'https://player.videasy.net/tv/{id}/{season}/{episode}?nextEpisode=true&color=8834ec' } },
+    { id: 'cinezo', name: 'Cinezo', urls: { movie: 'https://api.cinezo.net/movie/{id}', tv: 'https://api.cinezo.net/tv/{id}/{season}/{episode}' } },
+   { id: 'videasy', name: 'VidEasy', urls: { movie: 'https://player.videasy.net/movie/{id}?color=8834ec', tv: 'https://player.videasy.net/tv/{id}/{season}/{episode}?nextEpisode=true&color=8834ec' } },
     { id: 'vidfast', name: 'VidFast', urls: { movie: 'https://vidfast.pro/movie/{id}', tv: 'https://vidfast.pro/tv/{id}/{season}/{episode}' } },
     { id: 'vidsrcvip', name: 'vidsrc.vip', urls: { movie: 'https://vidsrc.vip/embed/movie/{id}', tv: 'https://vidsrc.vip/embed/tv/{id}/{season}/{episode}' } }
 ];
 
-const sandboxedSources = ['wplayme', 'vidsrcpk', 'primewire', 'vidpop', 'rive', 'hexa', 'spenflix', 'vidzee', 'vidify', 'vidsrccx', 'bludclart', 'vidnest'];
+const sandboxedSources = ['wplayme', 'vidsrcpk', 'primewire', 'vidpop', 'rive', 'hexa', 'spenflix', 'vidking', 'xprime', 'vidsrccx', 'cinezo', 'vidnest'];
 const noSandboxSources = ['videasy', 'vidfast', 'vidsrcvip'];
 
 function getContinueWatchingKey({ sourceId, type, id, season, episode }) {
