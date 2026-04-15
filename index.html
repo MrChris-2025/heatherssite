@@ -988,7 +988,7 @@
         const availableSources = [
     { id: 'wplayme', name: 'Mike Ty-thhon', urls: { movie: 'https://embed.wplay.me/embed/movie/{id}', tv: 'https://embed.wplay.me/embed/tv/{id}/{season}/{episode}' } },
     { id: "vidsrccc", name: "VidSrcCC", urls: { movie: "https://vidsrc.cc/v2/embed/movie/{id}?autoPlay=false", tv: "https://vidsrc.cc/v2/embed/tv/{id}/{season}/{episode}?nextEpisode=true&autoPlay=false", } },
-    { id: 'primewire', name: 'Primewire', urls: { movie: 'Https://vyla.pages.dev/player?type=movie&id={id}', tv: 'Https://vyla.pages.dev/player?type=tv&id={id}&s={season}&e={episode}' } },
+    { id: 'vyla', name: 'Vyla', urls: { movie: 'Https://vyla.pages.dev/player?type=movie&id={id}', tv: 'Https://vyla.pages.dev/player?type=tv&id={id}&s={season}&e={episode}' } },
     { id: 'vidpop', name: 'Vidpop', urls: { movie: 'https://www.vidpop.xyz/embed/?id={id}', tv: 'https://www.vidpop.xyz/embed/?id={id}&season={season}&episode={episode}' } },
     { id: 'rive', name: 'RiveStream', urls: { movie: 'https://rivestream.org/embed?type=movie&id={id}', tv: 'https://rivestream.org/embed?type=tv&id=tmdb&id={id}&season={season}&episode={episode}' } },
     { id: 'vidking', name: 'Vidking', urls: { movie: 'https://www.vidking.net/embed/movie/{id}', tv: 'https://www.vidking.net/embed/tv/{id}/{season}/{episode}' } },
@@ -1005,7 +1005,7 @@
         ];
         // NOTE: The user's original setup defined sandboxedSources as the ones they wanted *with* the sandbox attribute, which typically works *better* for sources with a lot of popups/ads.
         // We will keep the default `isSandboxMode = true` which uses `sandboxedSources` and applies the sandbox attribute, as per the original intent.
-        const sandboxedSources = ['wplayme', 'vidking', 'primewire', 'vidpop', 'rive', 'xprime', 'willow', 'cinezo', 'vidsrccx', ];
+        const sandboxedSources = ['wplayme', 'vidking', 'vyla', 'vidpop', 'rive', 'xprime', 'willow', 'cinezo', 'vidsrccx', ];
         const noSandboxSources = ['videasy', 'vidfast', 'vidsrcvip'];
 
         /* --- FAVORITES LOGIC --- */
