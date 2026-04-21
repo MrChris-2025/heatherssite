@@ -162,13 +162,14 @@
         let currentFilter = 'all';
         let activeUrl = '';
 
+        // Added baseball and mlb to the exclusion list
         const excluded = [
             'sport', 'racing', 'football', 'liga', 'espn', 'nba', 
             'astro', 'nfl', 'nhl', 'tennis', 'sec', 'red bull', 
             'mlb', 'golf', 'goltv', 'soccer', 'deportes', 'cricket', 
             'acc network', 'hubpremier', 'hub premier', 'dazn', 'btn', 
             'cbc news', 'cnbc', 'msg', 'telemundo', 'univision', "unimás", 'wwe',
-            'yes network', 'sky sports', 'bt sport'
+            'yes network', 'sky sports', 'bt sport', 'baseball'
         ];
 
         async function init() {
@@ -180,8 +181,8 @@
                     const code = ch.code.toLowerCase();
                     const name = ch.name.toLowerCase();
                     const isRegion = (code === 'us' || code === 'gb');
-                    const isSports = excluded.some(k => name.includes(k));
-                    return isRegion && !isSports;
+                    const isExcluded = excluded.some(k => name.includes(k));
+                    return isRegion && !isExcluded;
                 });
 
                 render();
@@ -237,20 +238,15 @@
             activeUrl = ch.url;
             placeholder.classList.add('hidden');
             
-            // Autoplay implementation:
-            // Append autoplay parameter if the URL structure allows or simply rely on iframe loading
-            // Most stream players in these APIs respond to &autoplay=1 or ?autoplay=1
+            // Autoplay implementation
             const playUrl = ch.url.includes('?') ? `${ch.url}&autoplay=1` : `${ch.url}?autoplay=1`;
             player.src = playUrl;
 
-            // Update UI
             footerName.innerText = ch.name;
             footerMeta.innerText = `Streaming via ${ch.code === 'gb' ? 'United Kingdom' : 'United States'} Hub`;
             footerImg.innerHTML = `<img src="${ch.image}" class="w-full h-full object-contain">`;
             
-            render(); // Refresh list to show active state
-            
-            // Scroll to top to see player
+            render();
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
@@ -267,8 +263,6 @@
         }
 
         searchInput.addEventListener('input', render);
-
-        // Initial Load
         window.onload = init;
     </script>
 </body>
