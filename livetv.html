@@ -8,278 +8,268 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         :root {
-            --safe-top: env(safe-area-inset-top);
-            --safe-bottom: env(safe-area-inset-bottom);
+            --accent: #a855f7;
+            --bg-deep: #09090b;
+            --card-bg: #18181b;
         }
 
         body {
-            background-color: #09090b;
+            background-color: var(--bg-deep);
             color: #fafafa;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            overscroll-behavior-y: contain;
+            overscroll-behavior: none;
+            -webkit-tap-highlight-color: transparent;
         }
 
-        /* Glassmorphism effects */
-        .glass-nav {
-            background: rgba(18, 18, 24, 0.8);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border-bottom: 1px solid rgba(139, 92, 246, 0.1);
-        }
-
-        /* Smooth channel transitions */
-        .channel-card {
-            transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.2s;
-        }
-        
-        .channel-card:active {
-            transform: scale(0.97);
-        }
-
-        .active-channel {
-            background: linear-gradient(90deg, rgba(139, 92, 246, 0.2) 0%, rgba(139, 92, 246, 0.05) 100%);
-            border-left: 4px solid #8b5cf6;
-        }
-
-        /* Player Styling */
-        .player-container {
+        /* Video Header Fixed */
+        .video-container {
             position: sticky;
             top: 0;
             z-index: 50;
-            width: 100%;
             background: #000;
-            aspect-ratio: 16 / 9;
-            box-shadow: 0 10px 30px -10px rgba(0,0,0,0.5);
+            width: 100%;
+            aspect-ratio: 16/9;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
 
-        iframe {
+        .video-container iframe {
             width: 100%;
             height: 100%;
             border: none;
+        }
+
+        /* Glassmorphic Search Bar */
+        .search-sticky {
+            position: sticky;
+            top: calc(56.25vw); /* Height of 16:9 video */
+            z-index: 40;
+            background: rgba(9, 9, 11, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
         }
 
         /* Custom Scrollbar */
         ::-webkit-scrollbar {
             width: 4px;
         }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
         ::-webkit-scrollbar-thumb {
-            background: #2d2a45;
+            background: #3f3f46;
             border-radius: 10px;
         }
 
-        .no-flicker {
-            -webkit-backface-visibility: hidden;
-            transform: translate3d(0,0,0);
+        /* Active State */
+        .channel-card.active {
+            background: linear-gradient(90deg, rgba(168, 85, 247, 0.15) 0%, rgba(168, 85, 247, 0) 100%);
+            border-left: 3px solid var(--accent);
+        }
+
+        .channel-card:active {
+            transform: scale(0.98);
+        }
+
+        /* Safe area for newer iPhones */
+        .pb-safe {
+            padding-bottom: env(safe-area-inset-bottom, 20px);
+        }
+
+        .loading-shimmer {
+            background: linear-gradient(90deg, #18181b 25%, #27272a 50%, #18181b 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
         }
     </style>
 </head>
-<body class="flex flex-col min-h-screen pb-20">
+<body class="flex flex-col min-h-screen">
 
-    <!-- Header / Branding (Hidden when scrolling) -->
-    <header class="p-4 flex items-center justify-between glass-nav sticky top-0 z-[60] pt-[calc(1rem+var(--safe-top))]">
-        <div class="flex items-center gap-2">
-            <div class="w-8 h-8 bg-violet-600 rounded-lg flex items-center justify-center shadow-lg shadow-violet-500/20">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white" viewBox="0 0 24 24" fill="currentColor"><path d="M21 6H3c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-10 11V9l7 4-7 4zM9 2v2h6V2H9z"/></svg>
+    <!-- 1. Video Player Section -->
+    <section class="video-container">
+        <div id="placeholder" class="absolute inset-0 flex flex-col items-center justify-center bg-zinc-950">
+            <div class="w-16 h-16 rounded-full bg-purple-500/10 flex items-center justify-center mb-4">
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#a855f7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
             </div>
-            <h1 class="font-black text-lg tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-white to-violet-400">STREAMLINE</h1>
+            <p class="text-zinc-500 text-xs font-bold uppercase tracking-widest">Select a channel to begin</p>
         </div>
-        <div id="status-dot" class="flex items-center gap-2 text-[10px] font-bold uppercase text-zinc-500 tracking-widest">
-            <span class="w-2 h-2 rounded-full bg-zinc-700"></span> Offline
-        </div>
-    </header>
+        <iframe id="main-player" 
+                src="" 
+                allow="autoplay; fullscreen" 
+                allowfullscreen>
+        </iframe>
+    </section>
 
-    <!-- Video Area -->
-    <div class="player-container">
-        <div id="player-placeholder" class="absolute inset-0 flex flex-col items-center justify-center bg-zinc-950 z-10">
-            <div class="animate-pulse flex flex-col items-center">
-                <div class="w-16 h-16 rounded-full bg-violet-500/10 flex items-center justify-center mb-4">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-violet-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                </div>
-                <p class="text-zinc-500 text-xs font-bold tracking-widest uppercase">Select a Channel</p>
-            </div>
-        </div>
-        <iframe id="main-player" src="" allow="autoplay; fullscreen" allowfullscreen></iframe>
-    </div>
-
-    <!-- Search and Filters -->
-    <div class="p-4 space-y-3 bg-zinc-900/50 border-b border-white/5">
-        <div class="relative group">
-            <input type="text" id="search-input" placeholder="Search channels..." 
-                class="w-full bg-zinc-800/80 border border-white/5 rounded-2xl py-3.5 pl-11 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500/50 transition-all placeholder:text-zinc-500">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 absolute left-4 top-3.5 text-zinc-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-            </svg>
+    <!-- 2. Controls & Search Section -->
+    <section class="search-sticky p-4 space-y-3">
+        <div class="relative">
+            <input type="text" id="searchInput" 
+                   placeholder="Search 100+ channels..." 
+                   class="w-full bg-zinc-900 border border-zinc-800 rounded-2xl py-3 px-11 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500/50 transition-all">
+            <svg class="absolute left-4 top-3.5 text-zinc-500" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
         </div>
 
         <div class="flex gap-2 overflow-x-auto pb-1 no-scrollbar">
-            <button data-region="gb" class="region-btn flex-shrink-0 px-5 py-2 rounded-xl text-xs font-bold bg-violet-600 text-white shadow-lg shadow-violet-900/20 active:scale-95 transition-all">UK CHANNELS</button>
-            <button data-region="us" class="region-btn flex-shrink-0 px-5 py-2 rounded-xl text-xs font-bold bg-zinc-800 text-zinc-400 active:scale-95 transition-all border border-white/5">US CHANNELS</button>
+            <button onclick="setFilter('all')" data-filter="all" class="filter-btn px-5 py-2 rounded-full text-xs font-bold bg-purple-600 text-white transition-all">ALL</button>
+            <button onclick="setFilter('gb')" data-filter="gb" class="filter-btn px-5 py-2 rounded-full text-xs font-bold bg-zinc-800 text-zinc-400 transition-all">UK</button>
+            <button onclick="setFilter('us')" data-filter="us" class="filter-btn px-5 py-2 rounded-full text-xs font-bold bg-zinc-800 text-zinc-400 transition-all">USA</button>
         </div>
-    </div>
+    </section>
 
-    <!-- Channel List -->
-    <main id="channel-list" class="flex-1 overflow-y-auto px-2">
-        <!-- Skeleton Loader -->
-        <div id="loader" class="p-6 space-y-4">
-            <div class="h-16 bg-zinc-900 rounded-2xl animate-pulse"></div>
-            <div class="h-16 bg-zinc-900 rounded-2xl animate-pulse"></div>
-            <div class="h-16 bg-zinc-900 rounded-2xl animate-pulse"></div>
-            <div class="h-16 bg-zinc-900 rounded-2xl animate-pulse"></div>
+    <!-- 3. Channel List Section -->
+    <main id="channelList" class="flex-1 px-4 py-2 space-y-2">
+        <!-- Skeleton Loading State -->
+        <div class="skeleton space-y-2">
+            <div class="h-20 w-full rounded-2xl loading-shimmer opacity-20"></div>
+            <div class="h-20 w-full rounded-2xl loading-shimmer opacity-20"></div>
+            <div class="h-20 w-full rounded-2xl loading-shimmer opacity-20"></div>
+            <div class="h-20 w-full rounded-2xl loading-shimmer opacity-20"></div>
         </div>
     </main>
 
-    <!-- Bottom Action Bar -->
-    <footer class="fixed bottom-0 left-0 right-0 glass-nav p-3 px-4 flex items-center justify-between pb-[calc(0.75rem+var(--safe-bottom))] z-50">
-        <div class="flex items-center gap-3 overflow-hidden mr-4">
-            <div id="footer-thumb" class="w-10 h-10 rounded-lg bg-zinc-800 flex-shrink-0 flex items-center justify-center border border-white/5 overflow-hidden">
-                <svg class="w-5 h-5 text-zinc-600" fill="currentColor" viewBox="0 0 20 20"><path d="M2 6a2 2 0 012-2h12a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V6zM14.553 7.106A1 1 0 0014 8v4a1 1 0 00.553.894l2 1A1 1 0 0018 13V7a1 1 0 00-1.447-.894l-2 1z"></path></svg>
+    <!-- 4. Mini Controller / Info -->
+    <footer class="fixed bottom-0 left-0 right-0 bg-zinc-900/90 backdrop-blur-xl border-t border-zinc-800 p-4 pb-safe flex items-center justify-between">
+        <div class="flex items-center gap-3 overflow-hidden">
+            <div id="footer-img-container" class="w-10 h-10 rounded-lg bg-zinc-800 flex-shrink-0 flex items-center justify-center p-1 overflow-hidden border border-zinc-700">
+                <div class="w-full h-full bg-zinc-700 animate-pulse rounded"></div>
             </div>
-            <div class="flex flex-col truncate">
-                <span id="playing-title" class="text-xs font-bold text-white truncate">STANDBY</span>
-                <span id="playing-region" class="text-[9px] font-black text-violet-400 uppercase tracking-tighter">Ready to Stream</span>
+            <div class="truncate">
+                <p id="current-name" class="text-sm font-bold truncate">Standby</p>
+                <p id="current-meta" class="text-[10px] text-zinc-500 font-bold uppercase tracking-tighter">Ready to stream</p>
             </div>
         </div>
-        <button id="refresh-btn" class="p-2.5 rounded-full bg-zinc-800 text-zinc-400 border border-white/5 active:rotate-180 transition-all duration-500">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-            </svg>
-        </button>
+        <div class="flex items-center gap-4 text-purple-500">
+             <div class="w-2 h-2 rounded-full bg-green-500 shadow-[0_0_10px_rgba(34,197,94,0.5)]"></div>
+        </div>
     </footer>
 
     <script>
         const API_URL = 'https://api.cdnlivetv.tv/api/v1/channels/?user=cdnlivetv&plan=free';
-        const EXCLUDED = ['sport', 'racing', 'football', 'liga', 'espn', 'nba', 'astro', 'nfl', 'nhl', 'tennis', 'sec', 'mlb', 'golf', 'soccer', 'dazn', 'wwe', 'ufc'];
-        
-        let channels = [];
-        let currentRegion = 'gb';
-        let searchQuery = '';
-        let activeId = null;
+        const player = document.getElementById('main-player');
+        const placeholder = document.getElementById('placeholder');
+        const listContainer = document.getElementById('channelList');
+        const searchInput = document.getElementById('searchInput');
+        const footerName = document.getElementById('current-name');
+        const footerMeta = document.getElementById('current-meta');
+        const footerImg = document.getElementById('footer-img-container');
 
-        const el = {
-            list: document.getElementById('channel-list'),
-            player: document.getElementById('main-player'),
-            placeholder: document.getElementById('player-placeholder'),
-            search: document.getElementById('search-input'),
-            title: document.getElementById('playing-title'),
-            region: document.getElementById('playing-region'),
-            thumb: document.getElementById('footer-thumb'),
-            status: document.getElementById('status-dot'),
-            refresh: document.getElementById('refresh-btn')
-        };
+        let allChannels = [];
+        let currentFilter = 'all';
+        let activeUrl = '';
+
+        const excluded = [
+            'sport', 'racing', 'football', 'liga', 'espn', 'nba', 
+            'astro', 'nfl', 'nhl', 'tennis', 'sec', 'red bull', 
+            'mlb', 'golf', 'goltv', 'soccer', 'deportes', 'cricket', 
+            'acc network', 'hubpremier', 'hub premier', 'dazn', 'btn', 
+            'cbc news', 'cnbc', 'msg', 'telemundo', 'univision', "unimás", 'wwe',
+            'yes network', 'sky sports', 'bt sport'
+        ];
 
         async function init() {
             try {
-                const res = await fetch(API_URL);
-                const data = await res.json();
+                const response = await fetch(API_URL);
+                const data = await response.json();
                 
-                // Clean and Filter
-                channels = data.channels.filter(ch => {
+                allChannels = data.channels.filter(ch => {
+                    const code = ch.code.toLowerCase();
                     const name = ch.name.toLowerCase();
-                    const region = ch.code.toLowerCase();
-                    const isValidRegion = (region === 'gb' || region === 'us');
-                    const isSports = EXCLUDED.some(ex => name.includes(ex));
-                    return isValidRegion && !isSports;
+                    const isRegion = (code === 'us' || code === 'gb');
+                    const isSports = excluded.some(k => name.includes(k));
+                    return isRegion && !isSports;
                 });
 
-                el.status.innerHTML = `<span class="w-2 h-2 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.5)]"></span> Live`;
                 render();
             } catch (err) {
-                el.list.innerHTML = `<div class="p-10 text-center text-zinc-500 text-sm">Failed to connect to satellite.</div>`;
+                listContainer.innerHTML = `<div class="text-center py-20 text-zinc-500 font-bold">FAILED TO SYNC FEED</div>`;
             }
         }
 
         function render() {
-            const filtered = channels.filter(ch => {
-                const matchesRegion = ch.code.toLowerCase() === currentRegion;
-                const matchesSearch = ch.name.toLowerCase().includes(searchQuery.toLowerCase());
-                return matchesRegion && matchesSearch;
+            const query = searchInput.value.toLowerCase();
+            const filtered = allChannels.filter(ch => {
+                const matchesSearch = ch.name.toLowerCase().includes(query);
+                const matchesTab = currentFilter === 'all' || ch.code === currentFilter;
+                return matchesSearch && matchesTab;
             });
 
+            listContainer.innerHTML = '';
+            
             if (filtered.length === 0) {
-                el.list.innerHTML = `<div class="p-20 text-center opacity-30 font-bold text-xs uppercase tracking-[0.2em]">No Signals Found</div>`;
+                listContainer.innerHTML = `<div class="text-center py-20 text-zinc-600 text-sm font-medium">No channels found</div>`;
                 return;
             }
 
-            el.list.innerHTML = filtered.map(ch => {
-                const isActive = activeId === ch.id;
-                return `
-                    <div onclick="playChannel('${ch.id}')" 
-                        class="channel-card flex items-center p-3 my-1 rounded-2xl cursor-pointer no-flicker ${isActive ? 'active-channel' : 'hover:bg-white/5 border-l-4 border-transparent'}">
-                        <div class="w-14 h-10 rounded-lg bg-black/40 border border-white/5 p-1 flex items-center justify-center overflow-hidden shrink-0">
-                            <img src="${ch.image}" class="max-w-full max-h-full object-contain" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22%23333%22><rect width=%2224%22 height=%2224%22/></svg>'">
+            filtered.forEach(ch => {
+                const isActive = ch.url === activeUrl;
+                const card = document.createElement('div');
+                card.className = `channel-card flex items-center p-3 gap-4 rounded-2xl bg-zinc-900/40 border border-zinc-800/50 transition-all ${isActive ? 'active' : ''}`;
+                
+                card.innerHTML = `
+                    <div class="w-16 h-12 bg-black rounded-xl p-1 flex items-center justify-center border border-zinc-800 flex-shrink-0">
+                        <img src="${ch.image}" class="max-w-full max-h-full object-contain" loading="lazy" onerror="this.src='https://via.placeholder.com/64x48?text=TV'">
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <h3 class="font-bold text-sm truncate uppercase tracking-tight">${ch.name}</h3>
+                        <div class="flex items-center gap-2">
+                            <span class="text-[10px] px-1.5 py-0.5 rounded bg-zinc-800 text-zinc-400 font-black">${ch.code.toUpperCase()}</span>
+                            <span class="text-[10px] text-green-500 font-bold uppercase tracking-widest">Live</span>
                         </div>
-                        <div class="ml-4 flex-1 truncate">
-                            <h3 class="text-sm font-bold tracking-tight ${isActive ? 'text-violet-400' : 'text-zinc-200'} truncate uppercase">${ch.name}</h3>
-                            <div class="flex items-center gap-2 mt-0.5">
-                                <span class="text-[9px] font-black tracking-widest text-zinc-600 uppercase">${ch.code === 'gb' ? 'United Kingdom' : 'United States'}</span>
-                                <span class="w-1 h-1 rounded-full bg-zinc-700"></span>
-                                <span class="text-[9px] font-bold text-zinc-500 uppercase">${ch.status}</span>
-                            </div>
-                        </div>
-                        <div class="ml-2">
-                            <div class="w-6 h-6 rounded-full flex items-center justify-center bg-zinc-800/50">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 text-zinc-500" viewBox="0 0 20 20" fill="currentColor">
-                                    <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
-                                </svg>
-                            </div>
+                    </div>
+                    <div class="pr-2">
+                        <div class="w-8 h-8 rounded-full flex items-center justify-center ${isActive ? 'bg-purple-600 text-white' : 'bg-zinc-800 text-zinc-500'}">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
                         </div>
                     </div>
                 `;
-            }).join('');
+
+                card.onclick = () => playChannel(ch);
+                listContainer.appendChild(card);
+            });
         }
 
-        window.playChannel = (id) => {
-            const ch = channels.find(c => c.id == id);
-            if (!ch) return;
+        function playChannel(ch) {
+            activeUrl = ch.url;
+            placeholder.classList.add('hidden');
+            
+            // Autoplay implementation:
+            // Append autoplay parameter if the URL structure allows or simply rely on iframe loading
+            // Most stream players in these APIs respond to &autoplay=1 or ?autoplay=1
+            const playUrl = ch.url.includes('?') ? `${ch.url}&autoplay=1` : `${ch.url}?autoplay=1`;
+            player.src = playUrl;
 
-            activeId = id;
-            el.placeholder.style.display = 'none';
-            
-            // Note: Autoplay requires the iframe source to allow it
-            // Many providers include &autoplay=1 or similar in the URL
-            el.player.src = ch.url;
-            
             // Update UI
-            el.title.innerText = ch.name;
-            el.region.innerText = ch.code === 'gb' ? 'UK Broadcast' : 'US Broadcast';
-            el.thumb.innerHTML = `<img src="${ch.image}" class="w-full h-full object-contain p-1">`;
+            footerName.innerText = ch.name;
+            footerMeta.innerText = `Streaming via ${ch.code === 'gb' ? 'United Kingdom' : 'United States'} Hub`;
+            footerImg.innerHTML = `<img src="${ch.image}" class="w-full h-full object-contain">`;
             
-            render(); // Refresh highlights
-        };
+            render(); // Refresh list to show active state
+            
+            // Scroll to top to see player
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
 
-        // Event Listeners
-        el.search.addEventListener('input', (e) => {
-            searchQuery = e.target.value;
-            render();
-        });
-
-        document.querySelectorAll('.region-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                document.querySelectorAll('.region-btn').forEach(b => {
-                    b.classList.remove('bg-violet-600', 'text-white');
-                    b.classList.add('bg-zinc-800', 'text-zinc-400');
-                });
-                this.classList.remove('bg-zinc-800', 'text-zinc-400');
-                this.classList.add('bg-violet-600', 'text-white');
-                
-                currentRegion = this.dataset.region;
-                render();
+        function setFilter(code) {
+            currentFilter = code;
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                if(btn.dataset.filter === code) {
+                    btn.className = "filter-btn px-5 py-2 rounded-full text-xs font-bold bg-purple-600 text-white transition-all";
+                } else {
+                    btn.className = "filter-btn px-5 py-2 rounded-full text-xs font-bold bg-zinc-800 text-zinc-400 transition-all";
+                }
             });
-        });
+            render();
+        }
 
-        el.refresh.addEventListener('click', () => {
-            el.list.innerHTML = `<div id="loader" class="p-6 space-y-4">
-                <div class="h-16 bg-zinc-900 rounded-2xl animate-pulse"></div>
-                <div class="h-16 bg-zinc-900 rounded-2xl animate-pulse"></div>
-            </div>`;
-            init();
-        });
+        searchInput.addEventListener('input', render);
 
-        // Start
-        init();
+        // Initial Load
+        window.onload = init;
     </script>
 </body>
 </html>
