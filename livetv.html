@@ -139,7 +139,7 @@
 
         async function load() {
             try {
-                const res = await fetch('https://api.cdn-live.tv/api/v1/channels/?user=cdnlivetv&plan=free');
+                const res = await fetch('https://api.cdnlivetv.tv/api/v1/channels/?user=cdnlivetv&plan=free');
                 const data = await res.json();
                 
                 dataStore = data.channels.filter(ch => {
