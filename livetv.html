@@ -1,118 +1,151 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>LiveTV</title>
+    <title>LiveTV Mobile</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* Medium Purple Color Palette */
         :root {
-            --bg-color: #1e1b2e;
-            --card-bg: #2d2a45;
+            --bg-color: #0f0e17;
+            --card-bg: #1e1b2e;
             --accent-purple: #8b5cf6;
-            --border-color: #443d66;
+            --border-color: #2d2a45;
             --text-muted: #a78bfa;
-            --highlight: #5b21b6;
+            --highlight: #443d66;
         }
 
-        body { background: var(--bg-color); color: #fff; font-family: sans-serif; -webkit-user-select: none; }
+        body { 
+            background: var(--bg-color); 
+            color: #fff; 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            overscroll-behavior-y: contain;
+        }
         
-        .player-box { 
+        .player-container { 
             position: sticky; 
             top: 0; 
             z-index: 100; 
             background: #000; 
             width: 100%; 
             aspect-ratio: 16/9; 
-            border-bottom: 2px solid var(--accent-purple); 
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
         }
         
-        iframe { width: 100%; height: 100%; border: none; }
+        iframe { 
+            width: 100%; 
+            height: 100%; 
+            border: none; 
+            background: #000;
+        }
         
+        .channel-list {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+        }
+
         .channel-item { 
             border-bottom: 1px solid var(--border-color); 
-            transition: all 0.2s ease; 
+            transition: background 0.2s ease;
+            -webkit-tap-highlight-color: transparent;
         }
         
-        /* Highlight selected channel */
         .channel-item.active-channel {
             background: var(--highlight);
             border-left: 4px solid var(--accent-purple);
         }
 
-        .channel-item:active:not(.active-channel) { background: #3c375a; }
-        
+        input, select { 
+            background: var(--card-bg) !important;
+            border: 1px solid var(--border-color) !important;
+            color: white !important;
+            font-size: 16px !important; /* Prevents iOS zoom on focus */
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
         footer { 
             position: fixed; 
             bottom: 0; 
             width: 100%; 
-            background: #13111c; 
+            background: rgba(15, 14, 23, 0.95); 
+            backdrop-filter: blur(10px);
             border-top: 1px solid var(--border-color); 
-            height: 65px; 
-            display: flex; 
-            align-items: center; 
-            padding: 0 20px; 
-            z-index: 100; 
+            padding: 12px 20px;
+            z-index: 110; 
+            padding-bottom: env(safe-area-inset-bottom);
         }
 
-        select, input { 
-            -webkit-appearance: none; 
-            background: var(--card-bg) !important;
-            border: 1px solid var(--border-color) !important;
-        }
-        
-        input:focus, select:focus {
-            border-color: var(--accent-purple) !important;
-        }
-
-        .pulse-text { color: var(--text-muted); }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: var(--bg-color); }
+        ::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 10px; }
     </style>
 </head>
-<body class="pb-24">
+<body class="pb-32">
 
-    <!-- 1. Player Box -->
-    <div class="player-box shadow-2xl">
-        <iframe id="vid-player" src="" allowfullscreen ="allow-same-origin allow-scripts"></iframe>
-        <div id="no-signal" class="absolute inset-0 flex flex-col items-center justify-center text-purple-400 bg-[#0f0e17] pointer-events-none">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 mb-2 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+    <!-- Video Player -->
+    <div class="player-container" id="top">
+        <iframe id="vid-player" 
+                src="" 
+                allow="autoplay; fullscreen; encrypted-media" 
+                allowfullscreen></iframe>
+        
+        <div id="no-signal" class="absolute inset-0 flex flex-col items-center justify-center bg-[#000] text-purple-400">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mb-3 animate-pulse opacity-40" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
-            <span class="text-[10px] font-bold uppercase tracking-[0.2em]">Select Feed</span>
+            <span class="text-xs font-bold uppercase tracking-widest opacity-60">Waiting for Stream...</span>
         </div>
     </div>
 
-    <!-- 2. Search -->
-    <div class="p-4">
-        <input type="text" id="search" placeholder="Search UK & US channels..." 
-            class="w-full rounded-xl p-4 text-white outline-none">
-    </div>
-
-    <!-- 3. Country Dropdown (Defaulted to GB) -->
-    <div class="px-4 pb-4">
+    <!-- Controls -->
+    <div class="p-4 space-y-3 sticky top-[56.25vw] z-[90] bg-[#0f0e17]/80 backdrop-blur-md">
+        <input type="text" id="search" placeholder="Search Channels..." 
+            class="w-full rounded-lg p-3 outline-none focus:ring-2 ring-purple-500 transition-all">
+        
         <div class="relative">
-            <select id="country" class="w-full rounded-xl p-4 text-white outline-none appearance-none">
-                <option value="gb" selected>United Kingdom</option>
-                <option value="us">United States</option>
+            <select id="country" class="w-full rounded-lg p-3 outline-none appearance-none">
+                <option value="gb">🇬🇧 United Kingdom</option>
+                <option value="us">🇺🇸 United States</option>
+                <option value="all">🌐 All Regions</option>
             </select>
-            <div class="absolute right-4 top-5 pointer-events-none text-purple-400">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            <div class="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none opacity-50">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
                 </svg>
             </div>
         </div>
     </div>
 
-    <!-- 4. Stacked Channels -->
-    <div id="list" class="flex flex-col">
-        <div class="p-20 text-center pulse-text animate-pulse text-sm font-medium tracking-widest">INITIALIZING SECURE LINK...</div>
+    <!-- List -->
+    <div id="list" class="channel-list">
+        <div class="p-20 text-center text-purple-400 animate-pulse text-sm font-bold tracking-widest uppercase">
+            Syncing Streams...
+        </div>
     </div>
 
-    <!-- 5. Footer -->
+    <!-- Info Footer -->
     <footer>
-        <div class="flex flex-col truncate w-full">
-            <span id="footer-label" class="text-[10px] text-purple-400 font-black uppercase tracking-tighter">System Ready</span>
-            <span id="current-info" class="text-sm font-bold truncate text-zinc-100">Select channel above</span>
+        <div class="flex items-center justify-between">
+            <div class="flex flex-col truncate pr-4">
+                <span id="footer-label" class="text-[10px] text-purple-400 font-bold uppercase tracking-widest">Status</span>
+                <span id="current-info" class="text-[15px] font-bold truncate">Select a channel</span>
+            </div>
+            <div id="live-indicator" class="hidden">
+                <span class="bg-red-600 text-[10px] font-bold px-2 py-0.5 rounded flex items-center gap-1">
+                    <span class="w-1.5 h-1.5 bg-white rounded-full animate-ping"></span> LIVE
+                </span>
+            </div>
         </div>
     </footer>
 
@@ -124,20 +157,13 @@
         const countrySelect = document.getElementById('country');
         const footerInfo = document.getElementById('current-info');
         const footerLabel = document.getElementById('footer-label');
+        const liveIndicator = document.getElementById('live-indicator');
 
-        const excludedKeywords = [
-            'sport', 'racing', 'football', 'liga', 'espn', 'nba', 
-            'astro', 'nfl', 'nhl', 'tennis', 'sec', 'red bull', 
-            'mlb', 'golf', 'goltv', 'soccer', 'deportes', 'cricket', 
-            'acc network', 'hubpremier', 'hub premier', 'dazn', 'btn', 
-            'cbc news', 'cnbc', 'msg', 'telemundo', 'univision', "unimás", 'wwe',
-            'yes network'
-        ];
-
+        const excluded = ['sport', 'racing', 'football', 'liga', 'espn', 'nba', 'nfl', 'nhl', 'tennis', 'soccer', 'cricket', 'dazn', 'golf', 'mlb'];
         let dataStore = [];
         let activeUrl = "";
 
-        async function load() {
+        async function init() {
             try {
                 const res = await fetch('https://api.cdnlivetv.tv/api/v1/channels/?user=cdnlivetv&plan=free');
                 const data = await res.json();
@@ -145,64 +171,72 @@
                 dataStore = data.channels.filter(ch => {
                     const code = ch.code.toLowerCase();
                     const name = ch.name.toLowerCase();
-                    const isCorrectRegion = (code === 'us' || code === 'gb');
-                    const isExcluded = excludedKeywords.some(keyword => name.includes(keyword));
-                    return isCorrectRegion && !isExcluded;
+                    const isCore = (code === 'us' || code === 'gb');
+                    const isSport = excluded.some(k => name.includes(k));
+                    return isCore && !isSport;
                 });
 
-                // Initial render defaults to filter selection (GB)
                 filter();
             } catch (e) {
-                listContainer.innerHTML = '<div class="p-10 text-center text-red-400 font-bold text-xs uppercase">Server Unavailable</div>';
+                listContainer.innerHTML = '<div class="p-10 text-center text-red-500 font-bold">UNABLE TO LOAD CONTENT</div>';
             }
         }
 
         function render(channels) {
             listContainer.innerHTML = '';
             
-            if(channels.length === 0) {
-                listContainer.innerHTML = '<div class="p-20 text-center text-purple-400/50 text-xs font-bold uppercase tracking-widest">No Matches Found</div>';
+            if(!channels.length) {
+                listContainer.innerHTML = '<div class="p-20 text-center opacity-40 font-bold">NO CHANNELS FOUND</div>';
                 return;
             }
 
             channels.forEach(ch => {
-                const isSelected = ch.url === activeUrl;
+                const isActive = ch.url === activeUrl;
                 const div = document.createElement('div');
-                div.className = `channel-item flex items-center p-4 gap-4 cursor-pointer ${isSelected ? 'active-channel' : ''}`;
+                div.className = `channel-item flex items-center p-4 gap-4 ${isActive ? 'active-channel' : ''}`;
+                
                 div.innerHTML = `
-                    <div class="w-14 h-10 flex-shrink-0 bg-[#13111c] rounded-lg flex items-center justify-center overflow-hidden border border-purple-900/30">
-                        <img src="${ch.image}" class="max-w-full max-h-full object-contain" onerror="this.style.display='none'">
+                    <div class="w-12 h-12 bg-white/5 rounded-lg flex items-center justify-center p-1 border border-white/10 overflow-hidden">
+                        <img src="${ch.image}" class="max-w-full max-h-full object-contain" loading="lazy">
                     </div>
-                    <div class="flex-1 overflow-hidden">
-                        <div class="font-bold text-[15px] ${isSelected ? 'text-white' : 'text-purple-50'} truncate uppercase tracking-tight">${ch.name}</div>
-                        <div class="text-[10px] text-purple-400/70 font-bold uppercase">${ch.code === 'us' ? 'United States' : 'United Kingdom'}</div>
+                    <div class="flex-1 min-w-0">
+                        <h3 class="font-bold text-sm truncate uppercase tracking-tight">${ch.name}</h3>
+                        <p class="text-[10px] opacity-50 uppercase font-bold">${ch.code === 'us' ? 'United States' : 'United Kingdom'}</p>
                     </div>
-                    <div class="flex flex-col items-end">
-                        <div class="w-1.5 h-1.5 rounded-full ${ch.status === 'online' ? 'bg-green-400 shadow-[0_0_8px_#4ade80]' : 'bg-zinc-600'}"></div>
-                    </div>
+                    <div class="status-dot ${ch.status === 'online' ? 'bg-green-500' : 'bg-gray-600'} shadow-lg"></div>
                 `;
                 
                 div.onclick = () => {
-                    activeUrl = ch.url;
-                    noSignal.style.display = 'none';
-                    player.src = ch.url;
-                    footerInfo.innerText = ch.name;
-                    footerLabel.innerText = "Now Playing:";
+                    if (activeUrl === ch.url) return;
                     
-                    // Re-render only to update highlights without scrolling page
-                    filter();
+                    activeUrl = ch.url;
+                    noSignal.classList.add('hidden');
+                    liveIndicator.classList.remove('hidden');
+                    
+                    // Add autoplay parameter if not present
+                    const url = new URL(ch.url);
+                    url.searchParams.set('autoplay', '1');
+                    player.src = url.toString();
+                    
+                    footerInfo.innerText = ch.name;
+                    footerLabel.innerText = "Broadcasting Now";
+                    
+                    // Smooth scroll to player on mobile
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                    
+                    filter(); 
                 };
                 listContainer.appendChild(div);
             });
         }
 
         function filter() {
-            const s = searchInput.value.toLowerCase();
-            const c = countrySelect.value;
+            const query = searchInput.value.toLowerCase();
+            const country = countrySelect.value;
             const filtered = dataStore.filter(ch => {
-                const matchesSearch = ch.name.toLowerCase().includes(s);
-                const matchesCountry = c === 'all' || ch.code === c;
-                return matchesSearch && matchesCountry;
+                const matchName = ch.name.toLowerCase().includes(query);
+                const matchRegion = country === 'all' || ch.code === country;
+                return matchName && matchRegion;
             });
             render(filtered);
         }
@@ -210,7 +244,9 @@
         searchInput.addEventListener('input', filter);
         countrySelect.addEventListener('change', filter);
 
-        load();
+        window.onload = init;
     </script>
 </body>
 </html>
+
+```
