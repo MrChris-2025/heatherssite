@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 
@@ -19,7 +20,7 @@
             margin: 0 auto;
         }
 
-        #audio-canvas {
+        #audio-canvas, #radio-canvas {
             display: block;
             /* Removed background-color to make the canvas area transparent. */
             border-radius: 0.5rem;
@@ -597,6 +598,9 @@
         Your browser does not support the audio element.
     </audio>
 
+    <!-- RADIO AUDIO ELEMENT -->
+    <audio id="radioAudio" crossorigin="anonymous" preload="none"></audio>
+
 
     <div class="container py-8">
         <header class="flex flex-col md:flex-row items-center justify-between gap-4 mb-8">
@@ -648,37 +652,63 @@
 
 
 
-        <div
-            class="w-full max-w-48 p-3 bg-transparent dark:bg-transparent rounded-xl shadow-2xl transition-all duration-300 md:ml-4">
-
-            <h1 class="text-base font-bold text-white mb-2 text-center">
-                Can I Get A Holla?!
-            </h1>
-
-
-            <div class="visualizer-container mb-3 h-16 p-0.5 bg-gray-700 rounded-lg shadow-inner">
-                <canvas id="audio-canvas" class="w-full h-full"></canvas>
+        <div class="flex flex-row items-start justify-center md:justify-start gap-4 mb-8">
+            <!-- HOLLA VISUALIZER -->
+            <div class="w-full max-w-48 p-3 bg-transparent dark:bg-transparent rounded-xl shadow-2xl transition-all duration-300">
+                <h1 class="text-base font-bold text-white mb-2 text-center">
+                    Can I Get A Holla?!
+                </h1>
+                <div class="visualizer-container mb-3 h-16 p-0.5 bg-gray-700 rounded-lg shadow-inner">
+                    <canvas id="audio-canvas" class="w-full h-full"></canvas>
+                </div>
+                <div class="flex justify-center space-x-2">
+                    <button id="playButton" onclick="togglePlayback()"
+                        class="flex items-center justify-center w-32 py-2 text-white bg-purple-400 rounded-lg shadow-md hover:bg-purple-700 focus:outline-none focus:ring-4 focus:ring-indigo-500 transition-all duration-200">
+                        <svg id="playIcon" class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd"
+                                d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"
+                                clip-rule="evenodd"></path>
+                        </svg>
+                        <svg id="pauseIcon" class="w-4 h-4 hidden" fill="currentColor" viewBox="0 0 20 20"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd"
+                                d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zM7 9a1 1 0 000 2h6a1 1 0 100-2H7z"
+                                clip-rule="evenodd"></path>
+                        </svg>
+                    </button>
+                </div>
+                <p id="message" class="mt-4 text-sm text-center text-gray-500 dark:text-gray-400 h-5">Click to begin</p>
             </div>
 
-            <div class="flex justify-center space-x-2">
-                <button id="playButton" onclick="togglePlayback()"
-                    class="flex items-center justify-center w-32 py-2 text-white bg-purple-400 rounded-lg shadow-md hover:bg-purple-700 focus:outline-none focus:ring-4 focus:ring-indigo-500 transition-all duration-200">
-                    <svg id="playIcon" class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"
-                        xmlns="http://www.w3.org/2000/svg">
-                        <path fill-rule="evenodd"
-                            d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"
-                            clip-rule="evenodd"></path>
-                    </svg>
-                    <svg id="pauseIcon" class="w-4 h-4 hidden" fill="currentColor" viewBox="0 0 20 20"
-                        xmlns="http://www.w3.org/2000/svg">
-                        <path fill-rule="evenodd"
-                            d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zM7 9a1 1 0 000 2h6a1 1 0 100-2H7z"
-                            clip-rule="evenodd"></path>
-                    </svg>
-                </button>
+            <!-- RADIO VISUALIZER (NEW) -->
+            <div class="w-full max-w-48 p-3 bg-transparent dark:bg-transparent rounded-xl shadow-2xl transition-all duration-300">
+                <select id="radioStationSelect" class="w-full mb-2 bg-gray-800 text-white text-xs p-1 rounded focus:outline-none focus:ring-1 focus:ring-purple-300">
+                    <option value="https://streams.80s80s.de/party/mp3-192/">80s Party</option>
+                    <option value="https://80s-90s.stream.laut.fm/80s-90s">80s-90s Laut.fm</option>
+                </select>
+                <div class="visualizer-container mb-3 h-16 p-0.5 bg-gray-700 rounded-lg shadow-inner">
+                    <canvas id="radio-canvas" class="w-full h-full"></canvas>
+                </div>
+                <div class="flex justify-center space-x-2">
+                    <button id="radioPlayButton" onclick="toggleRadioPlayback()"
+                        class="flex items-center justify-center w-32 py-2 text-white bg-blue-500 rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-400 transition-all duration-200">
+                        <svg id="radioPlayIcon" class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd"
+                                d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"
+                                clip-rule="evenodd"></path>
+                        </svg>
+                        <svg id="radioPauseIcon" class="w-4 h-4 hidden" fill="currentColor" viewBox="0 0 20 20"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd"
+                                d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zM7 9a1 1 0 000 2h6a1 1 0 100-2H7z"
+                                clip-rule="evenodd"></path>
+                        </svg>
+                    </button>
+                </div>
+                <p id="radioMessage" class="mt-4 text-sm text-center text-gray-500 dark:text-gray-400 h-5">Radio</p>
             </div>
-
-            <p id="message" class="mt-4 text-sm text-center text-gray-500 dark:text-gray-400 h-5">Click to begin</p>
         </div>
 
 
@@ -2079,7 +2109,7 @@
         }
 
         // ======================================================
-        // ===== VISUALIZER SCRIPT BLOCK - Integrated Below =====
+        // ===== HOLLA VISUALIZER SCRIPT BLOCK =====
         // ======================================================
 
         const audio = document.getElementById('myAudio');
@@ -2101,6 +2131,10 @@
                 canvas.width = canvas.offsetWidth;
                 canvas.height = canvas.offsetHeight;
             }
+            if (radioCanvas) {
+                radioCanvas.width = radioCanvas.offsetWidth;
+                radioCanvas.height = radioCanvas.offsetHeight;
+            }
         }
 
         function initAudioContext() {
@@ -2120,7 +2154,7 @@
                 resizeCanvas();
                 draw();
             } catch (error) {
-                console.error("Web Audio API not supported or failed to initialize:", error);
+                console.error("Web Audio API failed to initialize:", error);
                 messageBox.textContent = "Error: Audio API failed.";
             }
         }
@@ -2154,11 +2188,14 @@
                 if (audio.ended) {
                     audio.currentTime = 0;
                 }
+                // Pause radio if playing
+                if (radioAudio && !radioAudio.paused) toggleRadioPlayback();
+
                 audio.play().then(() => {
                     updatePlaybackUI(true);
                 }).catch(e => {
                     console.error("Playback failed:", e);
-                    messageBox.textContent = "Playback blocked by browser.";
+                    messageBox.textContent = "Playback blocked.";
                 });
             } else {
                 audio.pause();
@@ -2178,6 +2215,119 @@
                 messageBox.textContent = audio.ended ? "Finished" : "Paused";
             }
         }
+
+        // ======================================================
+        // ===== RADIO VISUALIZER SCRIPT BLOCK (NEW) =====
+        // ======================================================
+
+        const radioAudio = document.getElementById('radioAudio');
+        const radioCanvas = document.getElementById('radio-canvas');
+        const radioPlayIcon = document.getElementById('radioPlayIcon');
+        const radioPauseIcon = document.getElementById('radioPauseIcon');
+        const radioMessage = document.getElementById('radioMessage');
+        const radioStationSelect = document.getElementById('radioStationSelect');
+        const rctx = radioCanvas.getContext('2d');
+
+        let radioAudioContext;
+        let radioAnalyser;
+        let radioDataArray;
+        let radioBufferLength;
+        let isRadioPlaying = false;
+        let radioAnimationFrameId;
+
+        function initRadioAudioContext() {
+            if (radioAudioContext) return;
+
+            try {
+                radioAudioContext = new (window.AudioContext || window.webkitAudioContext)();
+                radioAnalyser = radioAudioContext.createAnalyser();
+                radioAnalyser.fftSize = 128;
+                radioBufferLength = radioAnalyser.frequencyBinCount;
+                radioDataArray = new Uint8Array(radioBufferLength);
+
+                const source = radioAudioContext.createMediaElementSource(radioAudio);
+                source.connect(radioAnalyser);
+                radioAnalyser.connect(radioAudioContext.destination);
+
+                resizeCanvas();
+                drawRadio();
+            } catch (error) {
+                console.error("Radio Audio API failed to initialize:", error);
+                radioMessage.textContent = "Error: API failed.";
+            }
+        }
+
+        function drawRadio() {
+            radioAnimationFrameId = requestAnimationFrame(drawRadio);
+            if (!radioAnalyser) return;
+            radioAnalyser.getByteFrequencyData(radioDataArray);
+            rctx.clearRect(0, 0, radioCanvas.width, radioCanvas.height);
+            const barWidth = (radioCanvas.width / radioBufferLength) * 2.5;
+            let x = 0;
+            const effectiveBars = 32;
+            for (let i = 0; i < effectiveBars; i++) {
+                const barHeight = radioDataArray[i] * (radioCanvas.height / 255.0) * 0.9;
+                const hue = 200; // Blue-ish
+                const saturation = 85;
+                const lightness = 50 + (radioDataArray[i] / 255) * 25;
+                rctx.fillStyle = `hsl(${hue}, ${saturation}%, ${lightness}%)`;
+                const y = radioCanvas.height - barHeight;
+                rctx.fillRect(x, y, barWidth - 2, barHeight);
+                x += barWidth;
+            }
+        }
+
+        window.toggleRadioPlayback = function () {
+            initRadioAudioContext();
+            if (radioAudio.paused) {
+                if (radioAudioContext && radioAudioContext.state === 'suspended') {
+                    radioAudioContext.resume();
+                }
+                
+                // Pause holla if playing
+                if (audio && !audio.paused) togglePlayback();
+
+                // If switching station or starting fresh
+                if (!radioAudio.src || radioAudio.src !== radioStationSelect.value) {
+                    radioAudio.src = radioStationSelect.value;
+                    radioAudio.load();
+                }
+
+                radioAudio.play().then(() => {
+                    updateRadioUI(true);
+                }).catch(e => {
+                    console.error("Radio playback failed:", e);
+                    radioMessage.textContent = "Blocked.";
+                });
+            } else {
+                radioAudio.pause();
+                updateRadioUI(false);
+            }
+        }
+
+        function updateRadioUI(isCurrentlyPlaying) {
+            isRadioPlaying = isCurrentlyPlaying;
+            if (isRadioPlaying) {
+                radioPlayIcon.classList.add('hidden');
+                radioPauseIcon.classList.remove('hidden');
+                radioMessage.textContent = "Live Radio...";
+            } else {
+                radioPlayIcon.classList.remove('hidden');
+                radioPauseIcon.classList.add('hidden');
+                radioMessage.textContent = "Radio Paused";
+            }
+        }
+
+        // Handle station change
+        radioStationSelect.addEventListener('change', () => {
+            if (!radioAudio.paused) {
+                radioAudio.src = radioStationSelect.value;
+                radioAudio.load();
+                radioAudio.play();
+            } else {
+                radioAudio.src = radioStationSelect.value;
+            }
+        });
 
         document.addEventListener('DOMContentLoaded', () => {
             isSandboxMode = false; // "Sources w/o Ads" is default
@@ -2199,14 +2349,21 @@
             window.addEventListener('resize', resizeCanvas);
             resizeCanvas();
             updatePlaybackUI(false);
+            updateRadioUI(false);
+            
             audio.addEventListener('play', () => updatePlaybackUI(true));
             audio.addEventListener('pause', () => updatePlaybackUI(false));
             audio.addEventListener('ended', () => {
                 updatePlaybackUI(false);
                 messageBox.textContent = "Finished";
             });
+
+            radioAudio.addEventListener('play', () => updateRadioUI(true));
+            radioAudio.addEventListener('pause', () => updateRadioUI(false));
         });
     </script>
 </body>
 
 </html>
+
+```
