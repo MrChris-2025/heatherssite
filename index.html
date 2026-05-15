@@ -10,6 +10,7 @@
     <link href="https://fonts.cdnfonts.com/css/pecita" rel="stylesheet" />
     <script src="https://cdn.tailwindcss.com"></script>
 
+
     <style>
         /* Custom CSS for the visualizer canvas */
         .visualizer-container {
@@ -20,9 +21,14 @@
 
         #audio-canvas, #radio-canvas {
             display: block;
+            /* Removed background-color to make the canvas area transparent. */
             border-radius: 0.5rem;
+            /* Rounded corners */
         }
+    </style>
 
+
+    <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
         @import url('https://fonts.googleapis.com/css2?family=Pecita&display=swap');
 
@@ -72,7 +78,9 @@
             transform: scale(0.95);
             transition: transform 0.3s ease;
             max-height: 85vh;
+            /* Set max height for scrolling */
             overflow-y: auto;
+            /* Enable vertical scrolling */
         }
 
         #videoModal.visible .modal-content {
@@ -122,6 +130,7 @@
         .player-sidebar {
             width: 100%;
             max-height: 400px;
+            /* Limit height for smaller screens */
             overflow-y: auto;
             border-radius: 8px;
             background-color: #0d1117;
@@ -132,6 +141,7 @@
             .player-sidebar {
                 width: 300px;
                 max-height: none;
+                /* Remove height limit for larger screens */
             }
         }
 
@@ -149,8 +159,11 @@
             cursor: pointer;
             transition: transform 0.2s, box-shadow 0.2s;
             position: relative;
+            /* ADDED: For banner positioning */
             display: flex;
+            /* ADDED: To ensure content fills height */
             flex-direction: column;
+            /* ADDED: To ensure content fills height */
         }
 
         .gallery-card:hover {
@@ -161,12 +174,14 @@
         .gallery-card img {
             width: 100%;
             height: 225px;
+            /* Aspect ratio for posters (2:3) */
             object-fit: cover;
         }
 
         .card-info {
             padding: 0.75rem;
             flex-grow: 1;
+            /* ADDED: To ensure content fills height */
             display: flex;
             flex-direction: column;
         }
@@ -208,7 +223,6 @@
             position: relative;
             margin-bottom: 0.75rem;
             padding: 0.5rem;
-            width: 250px;
         }
 
         .continue-watching-card:hover {
@@ -253,7 +267,7 @@
             color: #8b949e;
         }
 
-        .continue-watching-card .close-btn-recent {
+        .continue-watching-card .close-btn {
             position: absolute;
             top: 5px;
             right: 5px;
@@ -263,12 +277,12 @@
             border-radius: 50%;
             width: 20px;
             height: 20px;
-            font-size: 0.8rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            font-size: 1rem;
+            line-height: 1;
+            text-align: center;
             cursor: pointer;
-            z-index: 10;
+            opacity: 1;
+            transition: opacity 0.2s;
         }
 
         .nav-button {
@@ -284,6 +298,7 @@
 
         .nav-button.active {
             background-color: #d8b4fe;
+            /* Purple-300 */
             color: #000;
         }
 
@@ -292,12 +307,74 @@
             color: #8b949e;
         }
 
-        @keyframes pulse-banner {
-            0% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.08); opacity: 0.8; }
-            100% { transform: scale(1); opacity: 1; }
+        /* NEW RELEASE CARD STYLES */
+        .new-release-card {
+            display: flex;
+            flex-direction: column;
+            width: 120px;
+            /* Boxy avatar size */
+            height: 160px;
+            /* Boxy avatar size */
+            background: #161b22;
+            border-radius: 8px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            position: relative;
+            flex-shrink: 0;
+            /* Prevent items from shrinking */
         }
 
+        .new-release-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .new-release-card .image-container {
+            width: 100%;
+            height: 70%;
+            overflow: hidden;
+            border-radius: 8px 8px 0 0;
+        }
+
+        .new-release-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .new-release-card .card-info {
+            padding: 0.5rem;
+            text-align: center;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        /* ADDED ANIMATION AND BANNER STYLES */
+        @keyframes pulse-banner {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+
+            50% {
+                transform: scale(1.08);
+                opacity: 0.8;
+            }
+
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .animate-pulse-banner {
+            animation: pulse-banner 2s infinite ease-in-out;
+        }
+
+        /* Floating Heart Styles */
         #floatingHeart {
             position: fixed;
             bottom: 50px;
@@ -316,10 +393,16 @@
         }
 
         @keyframes floatAnimation {
-            0% { left: 5%; }
-            100% { left: 80%; }
+            0% {
+                left: 5%;
+            }
+
+            100% {
+                left: 80%;
+            }
         }
 
+        /* New Heart Video Modal Styles */
         #heartVideoModal {
             position: fixed;
             top: 0;
@@ -328,6 +411,7 @@
             height: 100%;
             background-color: rgba(0, 0, 0, 0.9);
             z-index: 101;
+            /* Higher than main video modal */
             display: none;
             align-items: center;
             justify-content: center;
@@ -361,17 +445,93 @@
             transition: background 0.2s;
         }
 
+        /* Mobile-specific styles for better layout */
         @media (max-width: 767px) {
-            .container { padding: 1rem; }
-            .header { flex-direction: column; align-items: flex-start; gap: 1rem; }
-            #searchInput { width: 100%; }
-            .nav-button { flex: 1; padding: 0.5rem; font-size: 0.9rem; }
-            .gallery-container { grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 1rem; }
-            .gallery-card img { height: 150px; }
+            .container {
+                padding: 1rem;
+            }
+
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+
+            .header .flex-col {
+                width: 100%;
+            }
+
+            .header .flex-row {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 0.5rem;
+            }
+
+            #searchInput {
+                width: 100%;
+            }
+
+            .nav-button {
+                flex: 1;
+                padding: 0.5rem;
+                font-size: 0.9rem;
+            }
+
+            .nav-button svg {
+                display: none;
+            }
+
+            .new-release-card {
+                width: 100px;
+                height: 140px;
+            }
+
+            .new-release-card .card-info h3 {
+                font-size: 0.7rem;
+            }
+
+            .new-release-card .card-info p {
+                font-size: 0.6rem;
+            }
+
+            .gallery-container {
+                grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+                gap: 1rem;
+            }
+
+            .gallery-card img {
+                height: 150px;
+            }
+
+            .gallery-card h3 {
+                font-size: 0.8rem;
+            }
+
+            .gallery-card p {
+                font-size: 0.7rem;
+            }
         }
 
-        #iframeContainer:fullscreen { width: 100% !important; height: 100% !important; }
+        /* Fullscreen specific styles */
+        #iframeContainer:-webkit-full-screen {
+            width: 100% !important;
+            height: 100% !important;
+            padding-bottom: 0 !important;
+        }
 
+        #iframeContainer:-moz-full-screen {
+            width: 100% !important;
+            height: 100% !important;
+            padding-bottom: 0 !important;
+        }
+
+        #iframeContainer:fullscreen {
+            width: 100% !important;
+            height: 100% !important;
+            padding-bottom: 0 !important;
+        }
+
+        /* FAVORITES STYLES */
         .favorite-heart {
             position: absolute;
             top: 5px;
@@ -382,14 +542,23 @@
             text-shadow: 0 0 5px black;
         }
 
-        .favorite-heart.active { color: #ff69b4; }
-        .favorite-heart.inactive { color: #a0a0a0; }
+        .favorite-heart.active {
+            color: #ff69b4;
+            /* Hot Pink */
+        }
 
+        .favorite-heart.inactive {
+            color: #a0a0a0;
+            /* Gray */
+        }
+
+        /* WATCHED BANNER STYLES */
         .watched-banner {
             position: absolute;
             top: 0;
             right: 0;
             background: #2e8b57;
+            /* Sea Green */
             color: white;
             font-size: 0.65rem;
             font-weight: 700;
@@ -399,17 +568,11 @@
             box-shadow: -2px 2px 5px rgba(0,0,0,0.3);
             pointer-events: none;
         }
-
-        /* Live TV Fixes */
-        .channel-card { cursor: pointer; flex-shrink: 0; }
-        .channel-card.active { background-color: #4c1d95; border-color: #a78bfa; }
-        #channelList { overflow-y: scroll !important; -webkit-overflow-scrolling: touch; }
-        #channelList::-webkit-scrollbar { width: 6px; }
-        #channelList::-webkit-scrollbar-thumb { background: #374151; border-radius: 10px; }
     </style>
 </head>
 
 <body class="bg-gradient-to-br from-black via-purple-500 to-purple-200 text-gray-100">
+    <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
             theme: {
@@ -430,48 +593,96 @@
         }
     </script>
 
-    <audio id="myAudio" src="hollaBB.m4a" preload="auto" crossorigin="anonymous"></audio>
+    <audio id="myAudio" src="hollaBB.m4a" preload="auto" crossorigin="anonymous">
+        Your browser does not support the audio element.
+    </audio>
+
+    <!-- RADIO AUDIO ELEMENT -->
     <audio id="radioAudio" crossorigin="anonymous" preload="none"></audio>
+
 
     <div class="container py-8">
         <header class="flex flex-col md:flex-row items-center justify-between gap-4 mb-8">
-            <h1 class="text-4xl font-bold text-purple-300 font-pecita">heathers site</h1>
-            
-            <button id="liveTvTrigger" class="flex items-center gap-2 hover:opacity-80 transition-opacity">
-                <span class="text-2xl" role="img" aria-label="Union Jack Flag">🇬🇧</span>
+            <h1 class="text-4xl font-bold text-purple-300 font-pecita">
+                heathers site
+            </h1>
+
+
+            <a href="livetv.html">
+                <span class="text-2x1" role="img" aria-label="Union Jack Flag">🇬🇧</span>
+
                 <span class="text-white"><b>Live</b></span>
-            </button>
+            </a>
+
 
             <div class="flex flex-col md:flex-row items-center gap-4 w-full md:w-auto">
                 <div class="relative w-full md:w-auto">
                     <input type="text" id="searchInput" placeholder="Search for movies or TV shows..."
                         class="w-full md:w-80 p-3 pl-10 bg-gray-800 rounded-full text-white focus:outline-none focus:ring-2 focus:ring-purple-300 transition-all duration-300" />
-                    <svg class="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>
+                    <svg class="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" fill="currentColor"
+                        viewBox="0 0 20 20">
+                        <path fill-rule="evenodd"
+                            d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
+                            clip-rule="evenodd"></path>
+                    </svg>
                 </div>
                 <div class="flex gap-2 w-full md:w-auto">
-                    <button id="showMoviesBtn" class="nav-button active">Movies</button>
-                    <button id="showTvBtn" class="nav-button inactive">TV Shows</button>
+                    <button id="showMoviesBtn" class="nav-button active">
+                        <svg class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z">
+                            </path>
+                        </svg>
+                        Movies
+                    </button>
+                    <button id="showTvBtn" class="nav-button inactive">
+                        <svg class="h-6 w-6 mr-2" fill="currentColor" viewBox="0 0 24 24"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path
+                                d="M21 3H3a2 2 0 00-2 2v12a2 2 0 002 2h5v1h8v-1h5a2 2 0 002-2V5a2 2 0 00-2-2zm-1 14H4V6h16v11z" />
+                        </svg>
+                        TV Shows
+                    </button>
                 </div>
             </div>
         </header>
 
+
+
+
+
         <div class="flex flex-row items-start justify-center md:justify-start gap-4 mb-8">
-            <div class="w-full max-w-48 p-3 bg-transparent rounded-xl shadow-2xl transition-all duration-300">
-                <h1 class="text-base font-bold text-white mb-2 text-center">Can I Get A Holla?!</h1>
+            <!-- HOLLA VISUALIZER -->
+            <div class="w-full max-w-48 p-3 bg-transparent dark:bg-transparent rounded-xl shadow-2xl transition-all duration-300">
+                <h1 class="text-base font-bold text-white mb-2 text-center">
+                    Can I Get A Holla?!
+                </h1>
                 <div class="visualizer-container mb-3 h-16 p-0.5 bg-gray-700 rounded-lg shadow-inner">
                     <canvas id="audio-canvas" class="w-full h-full"></canvas>
                 </div>
                 <div class="flex justify-center space-x-2">
-                    <button id="playButton" onclick="togglePlayback()" class="flex items-center justify-center w-32 py-2 text-white bg-purple-400 rounded-lg shadow-md hover:bg-purple-700 focus:outline-none transition-all duration-200">
-                        <svg id="playIcon" class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd"></path></svg>
-                        <svg id="pauseIcon" class="w-4 h-4 hidden" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zM7 9a1 1 0 000 2h6a1 1 0 100-2H7z" clip-rule="evenodd"></path></svg>
+                    <button id="playButton" onclick="togglePlayback()"
+                        class="flex items-center justify-center w-32 py-2 text-white bg-purple-400 rounded-lg shadow-md hover:bg-purple-700 focus:outline-none focus:ring-4 focus:ring-indigo-500 transition-all duration-200">
+                        <svg id="playIcon" class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd"
+                                d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"
+                                clip-rule="evenodd"></path>
+                        </svg>
+                        <svg id="pauseIcon" class="w-4 h-4 hidden" fill="currentColor" viewBox="0 0 20 20"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd"
+                                d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zM7 9a1 1 0 000 2h6a1 1 0 100-2H7z"
+                                clip-rule="evenodd"></path>
+                        </svg>
                     </button>
                 </div>
-                <p id="message" class="mt-4 text-sm text-center text-gray-500 h-5">Click to begin</p>
+                <p id="message" class="mt-4 text-sm text-center text-gray-500 dark:text-gray-400 h-5">Click to begin</p>
             </div>
 
-            <div class="w-full max-w-48 p-3 bg-transparent rounded-xl shadow-2xl transition-all duration-300">
-                <select id="radioStationSelect" class="w-full mb-2 bg-gray-800 text-white text-xs p-1 rounded">
+            <!-- RADIO VISUALIZER (NEW) -->
+            <div class="w-full max-w-48 p-3 bg-transparent dark:bg-transparent rounded-xl shadow-2xl transition-all duration-300">
+                <select id="radioStationSelect" class="w-full mb-2 bg-gray-800 text-white text-xs p-1 rounded focus:outline-none focus:ring-1 focus:ring-purple-300">
                     <option value="https://streams.80s80s.de/party/mp3-192/">80s Party</option>
                     <option value="https://80s-90s.stream.laut.fm/80s-90s">80s-90s Laut.fm</option>
                 </select>
@@ -479,35 +690,116 @@
                     <canvas id="radio-canvas" class="w-full h-full"></canvas>
                 </div>
                 <div class="flex justify-center space-x-2">
-                    <button id="radioPlayButton" onclick="toggleRadioPlayback()" class="flex items-center justify-center w-32 py-2 text-white bg-blue-500 rounded-lg shadow-md hover:bg-blue-700 transition-all duration-200">
-                        <svg id="radioPlayIcon" class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd"></path></svg>
-                        <svg id="radioPauseIcon" class="w-4 h-4 hidden" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zM7 9a1 1 0 000 2h6a1 1 0 100-2H7z" clip-rule="evenodd"></path></svg>
+                    <button id="radioPlayButton" onclick="toggleRadioPlayback()"
+                        class="flex items-center justify-center w-32 py-2 text-white bg-blue-500 rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-400 transition-all duration-200">
+                        <svg id="radioPlayIcon" class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd"
+                                d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"
+                                clip-rule="evenodd"></path>
+                        </svg>
+                        <svg id="radioPauseIcon" class="w-4 h-4 hidden" fill="currentColor" viewBox="0 0 20 20"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd"
+                                d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zM7 9a1 1 0 000 2h6a1 1 0 100-2H7z"
+                                clip-rule="evenodd"></path>
+                        </svg>
                     </button>
                 </div>
-                <p id="radioMessage" class="mt-4 text-sm text-center text-gray-500 h-5">Radio</p>
+                <p id="radioMessage" class="mt-4 text-sm text-center text-gray-500 dark:text-gray-400 h-5">Radio</p>
             </div>
         </div>
 
-        <section id="continueWatchingSection" class="mt-8 mb-8 hidden">
-            <h2 class="text-2xl font-semibold mb-4">Continue Watching</h2>
-            <div id="continueWatchingContainer" class="flex overflow-x-auto gap-4 pb-4 no-scrollbar"></div>
+
+
+
+
+        <section id="continueWatchingSection" class="mt-8 mb-8" style="display: none;">
+            <div class="flex items-center justify-between">
+                <h2 class="text-2xl font-semibold">Continue Watching</h2>
+            </div>
+            <div id="continueWatchingContainer" class="flex flex-wrap gap-4 mt-4"></div>
+        </section>
+
+        <section id="newReleasesSection" class="mt-8 mb-8">
+            <div class="flex flex-col md:flex-row items-center justify-between mb-4">
+                <h2 class="text-2xl font-semibold mb-2 md:mb-0">New Releases This Week</h2>
+                <div class="flex items-center gap-2">
+                    <button id="prevReleaseDayBtn"
+                        class="p-2 bg-gray-700 rounded-full text-white hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd"
+                                d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
+                                clip-rule="evenodd" />
+                        </svg>
+                    </button>
+                    <span id="releaseDateInfo" class="text-sm font-semibold text-gray-100"></span>
+                    <button id="nextReleaseDayBtn"
+                        class="p-2 bg-gray-700 rounded-full text-white hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd"
+                                d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                                clip-rule="evenodd" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            <div class="flex gap-2 mb-4">
+                <button id="showNewReleaseMoviesBtn" class="nav-button active">
+                    Movies
+                </button>
+                <button id="showNewReleaseTvBtn" class="nav-button inactive">
+                    TV Shows
+                </button>
+            </div>
+            <div id="newReleasesContainer" class="flex gap-4 overflow-x-auto py-2"></div>
         </section>
 
         <main class="mt-8">
             <div class="flex items-center justify-between mb-6">
-                <h2 id="galleryTitle" class="text-2xl font-semibold">Popular Movies</h2>
+                <h2 id="galleryTitle" class="text-2xl font-semibold">
+                    Popular Movies
+                </h2>
                 <div class="flex items-center gap-2">
-                    <button id="prevPage" class="p-2 bg-gray-700 rounded-full text-white hover:bg-gray-600 disabled:opacity-50"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" /></svg></button>
+                    <button id="prevPage"
+                        class="p-2 bg-gray-700 rounded-full text-white hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd"
+                                d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
+                                clip-rule="evenodd" />
+                        </svg>
+                    </button>
                     <span id="pageInfo" class="text-gray-100 text-sm"></span>
-                    <button id="nextPage" class="p-2 bg-gray-700 rounded-full text-white hover:bg-gray-600 disabled:opacity-50"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" /></svg></button>
+                    <button id="nextPage"
+                        class="p-2 bg-gray-700 rounded-full text-white hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd"
+                                d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                                clip-rule="evenodd" />
+                        </svg>
+                    </button>
                 </div>
             </div>
             <div id="galleryContainer" class="gallery-container"></div>
             <div class="flex items-center justify-end mt-6">
                 <div class="flex items-center gap-2">
-                    <button id="prevPageBottom" class="p-2 bg-gray-700 rounded-full text-white hover:bg-gray-600 disabled:opacity-50"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" /></svg></button>
+                    <button id="prevPageBottom"
+                        class="p-2 bg-gray-700 rounded-full text-white hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd"
+                                d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
+                                clip-rule="evenodd" />
+                        </svg>
+                    </button>
                     <span id="pageInfoBottom" class="text-gray-100 text-sm"></span>
-                    <button id="nextPageBottom" class="p-2 bg-gray-700 rounded-full text-white hover:bg-gray-600 disabled:opacity-50"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" /></svg></button>
+                    <button id="nextPageBottom"
+                        class="p-2 bg-gray-700 rounded-full text-white hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd"
+                                d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                                clip-rule="evenodd" />
+                        </svg>
+                    </button>
                 </div>
             </div>
         </main>
@@ -519,31 +811,71 @@
             <h2 id="modalTitle" class="text-xl md:text-2xl font-bold mb-4"></h2>
             <div class="player-wrapper">
                 <div class="player-main">
-                    <div id="iframeContainer" class="relative w-full h-0 pb-[56.25%] rounded-lg overflow-hidden bg-black"></div>
+                    <div id="iframeContainer" class="relative w-full h-0 pb-[56.25%] rounded-lg overflow-hidden bg-black">
+                    </div>
                     <div class="p-4 bg-gray-800 rounded-lg mt-4">
                         <h3 id="nowPlaying" class="text-lg font-semibold text-white"></h3>
                         <p id="summary" class="text-sm text-gray-400 mt-2"></p>
                     </div>
                 </div>
+
                 <div class="player-sidebar">
                     <div class="flex flex-col gap-4">
-                        <label class="text-sm text-gray-400 mb-1">Select Source</label>
-                        <div class="flex gap-2">
-                            <select id="sourceSelector" class="w-full px-3 py-2 bg-gray-700 rounded-lg text-white"></select>
-                            <button id="trailerBtn" class="py-2 px-4 bg-red-600 rounded-lg text-white">Trailer</button>
+                        <div class="flex flex-col">
+                            <label for="sourceSelector" class="text-sm text-gray-400 mb-1">
+                                Select Source
+                            </label>
+                            <div class="flex gap-2">
+                                <select id="sourceSelector"
+                                    class="w-full px-3 py-2 bg-gray-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-300"></select>
+                                <button id="trailerBtn"
+                                    class="py-2 px-4 bg-red-600 rounded-lg text-white hover:bg-red-700 transition duration-200">
+                                    Trailer
+                                </button>
+                            </div>
+                            <button id="fullscreenBtn"
+                                class="mt-2 py-2 px-4 bg-purple-600 rounded-lg text-white hover:bg-purple-700 transition duration-200 font-bold">
+                                FULLSCREEN
+                            </button>
                         </div>
-                        <button id="fullscreenBtn" class="mt-2 py-2 px-4 bg-purple-600 rounded-lg text-white font-bold">FULLSCREEN</button>
+
                         <div class="flex gap-2">
-                            <button id="showNoSandboxBtn" class="flex-1 py-2 px-4 rounded-lg font-semibold active ring-2 ring-purple-300 text-xs">Ads</button>
-                            <button id="showSandboxBtn" class="flex-1 py-2 px-4 rounded-lg font-semibold inactive text-xs">No Ads</button>
+                            <button id="showNoSandboxBtn"
+                                class="flex-1 py-2 px-4 rounded-lg font-semibold transition-colors duration-200 active ring-2 ring-purple-300">
+                                Sources with Ads
+                            </button>
+                            <button id="showSandboxBtn"
+                                class="flex-1 py-2 px-4 rounded-lg font-semibold transition-colors duration-200 inactive">
+                                Sources w/o Ads
+                            </button>
                         </div>
+
                         <div id="episodeSelector" class="flex flex-col gap-4 hidden">
-                            <select id="seasonSelect" class="w-full px-3 py-2 bg-gray-700 rounded-lg text-white"></select>
-                            <select id="episodeSelect" class="w-full px-3 py-2 bg-gray-700 rounded-lg text-white"></select>
+                            <div class="flex flex-col">
+                                <label for="seasonSelect" class="text-sm text-gray-400 mb-1">
+                                    Season
+                                </label>
+                                <select id="seasonSelect"
+                                    class="w-full px-3 py-2 bg-gray-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-300"></select>
+                            </div>
+                            <div class="flex flex-col">
+                                <label for="episodeSelect" class="text-sm text-gray-400 mb-1">
+                                    Episode
+                                </label>
+                                <select id="episodeSelect"
+                                    class="w-full px-3 py-2 bg-gray-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-300"></select>
+                            </div>
                         </div>
+
                         <div id="episodeNavButtons" class="flex gap-2 hidden">
-                            <button id="prevEpisodeBtn" class="flex-1 py-2 px-4 bg-purple-300 rounded-lg text-black font-bold">PREV</button>
-                            <button id="nextEpisodeBtn" class="flex-1 py-2 px-4 bg-purple-300 rounded-lg text-black font-bold">NEXT</button>
+                            <button id="prevEpisodeBtn"
+                                class="flex-1 py-2 px-4 bg-purple-300 rounded-lg text-black hover:bg-purple-400 transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed">
+                                Previous
+                            </button>
+                            <button id="nextEpisodeBtn"
+                                class="flex-1 py-2 px-4 bg-purple-300 rounded-lg text-black hover:bg-purple-400 transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed">
+                                Next
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -551,46 +883,7 @@
         </div>
     </div>
 
-    <div id="liveTvModal" class="fixed inset-0 z-[110] hidden flex items-center justify-center bg-black/80 backdrop-blur-sm">
-        <div class="relative w-full max-w-6xl mx-4 bg-gray-900 rounded-2xl border border-purple-500/30 overflow-hidden shadow-2xl">
-            <div class="flex items-center justify-between p-4 bg-gray-800/50">
-                <div class="flex items-center gap-4">
-                    <h3 class="text-xl font-bold text-purple-300">Live TV 🇬🇧</h3>
-                    <input type="text" id="liveSearchInput" placeholder="Search channels..." class="bg-gray-700 text-white text-xs px-3 py-1.5 rounded-full outline-none focus:ring-1 focus:ring-purple-400 w-48">
-                </div>
-                <button id="closeLiveTv" class="h-8 w-8 rounded-full bg-red-500/20 text-red-400 hover:bg-red-500 hover:text-white transition-all flex items-center justify-center">✕</button>
-            </div>
-            
-            <div class="flex flex-col md:flex-row h-[70vh]">
-                <div class="flex-1 bg-black relative">
-                    <div id="livePlaceholder" class="absolute inset-0 flex items-center justify-center text-gray-500">
-                        <p>Select a channel to start watching</p>
-                    </div>
-                    <iframe id="main-player" class="w-full h-full" src="" frameborder="0" allowfullscreen></iframe>
-                </div>
-                
-                <div class="w-full md:w-80 bg-gray-900 border-l border-gray-800 flex flex-col overflow-hidden">
-                    <div class="p-2 border-b border-gray-800 flex gap-1 overflow-x-auto no-scrollbar shrink-0">
-                        <button onclick="setFilter('all')" data-filter="all" class="filter-btn shrink-0 px-4 py-1.5 rounded-lg text-[10px] font-black bg-purple-600 text-white">ALL</button>
-                        <button onclick="setFilter('us')" data-filter="us" class="filter-btn shrink-0 px-4 py-1.5 rounded-lg text-[10px] font-black bg-zinc-800 text-zinc-400">USA</button>
-                        <button onclick="setFilter('gb')" data-filter="gb" class="filter-btn shrink-0 px-4 py-1.5 rounded-lg text-[10px] font-black bg-zinc-800 text-zinc-400">UK</button>
-                    </div>
-                    <div id="channelList" class="flex-1 overflow-y-auto p-2 space-y-2">
-                    </div>
-                    <div class="p-3 bg-black/40 border-t border-gray-800 flex items-center gap-3 shrink-0">
-                        <div id="footer-img-container" class="w-8 h-8 rounded bg-zinc-800 flex-shrink-0"></div>
-                        <div class="min-w-0">
-                            <p id="current-name" class="text-[10px] font-bold truncate text-white uppercase">Waiting...</p>
-                            <p id="current-meta" class="text-[8px] text-zinc-500 truncate">Select Feed</p>
-                        </div>
-                        <div id="status-dot" class="ml-auto w-2 h-2 rounded-full bg-zinc-700"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div id="floatingHeart" role="button">
+    <div id="floatingHeart" role="button" aria-label="Open secret video">
         <span style="color: #a78bfa;">💜</span>
     </div>
 
@@ -598,22 +891,34 @@
         <div class="modal-content-heart">
             <button id="heartModalCloseBtn" class="close-btn-heart">&times;</button>
             <div class="relative w-full h-0 pb-[177.77%] rounded-lg overflow-hidden bg-black">
-                <iframe id="heatherSecretYouTube" class="absolute top-0 left-0 w-full h-full" src="https://www.youtube.com/embed/88MgWvnZD5M?enablejsapi=1&rel=0" frameborder="0" allowfullscreen></iframe>
+                <iframe id="heatherSecretYouTube" 
+                    class="absolute top-0 left-0 w-full h-full"
+                    src="https://www.youtube.com/embed/88MgWvnZD5M?enablejsapi=1&rel=0" 
+                    frameborder="0" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                    allowfullscreen>
+                </iframe>
             </div>
         </div>
     </div>
 
-    <button id="openFavoritesBtn" class="fixed bottom-6 right-6 h-12 w-12 rounded-full bg-purple-600 text-white shadow-lg z-50">❤</button>
-    <div id="favoritesModal" class="fixed inset-0 z-50 hidden">
+    <button id="openFavoritesBtn"
+        class="fixed bottom-6 right-6 h-12 w-12 rounded-full bg-purple-600 text-white shadow-lg hover:bg-purple-700 z-50"
+        title="My Favorites">❤</button>
+    <div id="favoritesModal" class="fixed inset-0 z-50 hidden" role="dialog" aria-modal="true"
+        aria-labelledby="favoritesModalTitle">
         <div class="absolute inset-0 bg-black/60" id="favoritesOverlay"></div>
-        <div class="relative mx-auto my-10 w-[92%] max-w-6xl rounded-2xl border border-gray-700 bg-gray-900 overflow-y-auto max-h-[90vh]">
+        <div
+            class="relative mx-auto my-10 w-[92%] max-w-6xl rounded-2xl border border-gray-700 bg-gray-900 overflow-y-auto max-h-[90vh]">
             <div class="flex items-center justify-between px-4 py-3 border-b border-gray-700 sticky top-0 bg-gray-900 z-10">
-                <h3 class="text-xl font-semibold">My Favorites</h3>
-                <button id="closeFavoritesBtn" class="h-9 w-9 grid place-items-center rounded-lg border border-gray-600">✕</button>
+                <h3 id="favoritesModalTitle" class="text-xl font-semibold">My Favorites</h3>
+                <button id="closeFavoritesBtn" aria-label="Close"
+                    class="h-9 w-9 grid place-items-center rounded-lg border border-gray-600 hover:bg-gray-800">✕</button>
             </div>
             <div class="p-4">
                 <div id="favoritesGrid" class="gallery-container">
-                    <p id="noFavoritesMessage" class="text-center text-gray-500 col-span-full hidden">No favorites yet.</p>
+                    <p id="noFavoritesMessage" class="text-center text-gray-500 col-span-full hidden">You haven't added
+                        any favorites yet.</p>
                 </div>
             </div>
         </div>
@@ -621,9 +926,10 @@
 
     <script type="text/javascript" src="https://unpkg.com/parse@4.0.0/dist/parse.min.js"></script>
     <script>
-        // ==== BACK4APP SETUP ====
+        // ==== ENTER YOUR BACK4APP KEYS HERE ====
         Parse.initialize("fAotdEAsCOF8HvJJr2qk81HywvDVV6KvlfWhFmDO", "cvttNgVwE0kOe2orzrRa54RX1NXKH09K24YhkAra");
         Parse.serverURL = "https://parseapi.back4app.com";
+        // ==== END PARSE SETUP ====
 
         const API_KEY = '1070730380f5fee0d87cf0382670b255';
         const BASE_URL = 'https://api.themoviedb.org/3';
@@ -633,7 +939,17 @@
         let currentType = 'movie';
         let currentQuery = '';
         let currentItemData = null;
-        let isSandboxMode = false;
+        let isSandboxMode = false; // Default to "Sources w/o Ads" (No Sandbox)
+
+        let currentReleaseDate = new Date();
+        let newReleaseType = 'movie';
+
+        // ADDED DATE VARIABLES FOR THE 14-DAY LOGIC
+        const today = new Date();
+        const fourteenDaysAgo = new Date();
+        fourteenDaysAgo.setDate(today.getDate() - 14);
+        today.setHours(0, 0, 0, 0);
+        fourteenDaysAgo.setHours(0, 0, 0, 0);
 
         // DOM Elements
         const galleryContainer = document.getElementById('galleryContainer');
@@ -644,9 +960,11 @@
         const prevPageBtn = document.getElementById('prevPage');
         const nextPageBtn = document.getElementById('nextPage');
         const pageInfoSpan = document.getElementById('pageInfo');
+        // MODAL ELEMENTS
         const videoModal = document.getElementById('videoModal');
         const modalCloseBtn = document.getElementById('modalCloseBtn');
         const modalTitle = document.getElementById('modalTitle');
+        let videoPlayer = null; // Will be set dynamically
         const sourceSelector = document.getElementById('sourceSelector');
         const episodeSelector = document.getElementById('episodeSelector');
         const seasonSelect = document.getElementById('seasonSelect');
@@ -657,57 +975,66 @@
         const trailerBtn = document.getElementById('trailerBtn');
         const prevEpisodeBtn = document.getElementById('prevEpisodeBtn');
         const nextEpisodeBtn = document.getElementById('nextEpisodeBtn');
+        const continueWatchingSection = document.getElementById('continueWatchingSection');
+        const continueWatchingContainer = document.getElementById('continueWatchingContainer');
         const showNoSandboxBtn = document.getElementById('showNoSandboxBtn');
         const showSandboxBtn = document.getElementById('showSandboxBtn');
         const episodeNavButtons = document.getElementById('episodeNavButtons');
+        // NEW FULLSCREEN BUTTON
         const fullscreenBtn = document.getElementById('fullscreenBtn');
+
+        // NEW ELEMENTS FOR BOTTOM NAVIGATION
         const prevPageBottomBtn = document.getElementById('prevPageBottom');
         const nextPageBottomBtn = document.getElementById('nextPageBottom');
         const pageInfoBottomSpan = document.getElementById('pageInfoBottom');
+
+
+        // NEW RELEASE ELEMENTS
+        const newReleasesContainer = document.getElementById('newReleasesContainer');
+        const prevReleaseDayBtn = document.getElementById('prevReleaseDayBtn');
+        const nextReleaseDayBtn = document.getElementById('nextReleaseDayBtn');
+        const releaseDateInfo = document.getElementById('releaseDateInfo');
+        const showNewReleaseMoviesBtn = document.getElementById('showNewReleaseMoviesBtn');
+        const showNewReleaseTvBtn = document.getElementById('showNewReleaseTvBtn');
+
+        // HEART VIDEO MODAL ELEMENTS (NEW)
         const floatingHeart = document.getElementById('floatingHeart');
         const heartVideoModal = document.getElementById('heartVideoModal');
         const heartModalCloseBtn = document.getElementById('heartModalCloseBtn');
+        const heatherSecretVideo = document.getElementById('heatherSecretVideo');
+
+        // FAVORITES ELEMENTS (NEWLY INTEGRATED)
         const openFavoritesBtn = document.getElementById('openFavoritesBtn');
         const closeFavoritesBtn = document.getElementById('closeFavoritesBtn');
         const favoritesModal = document.getElementById('favoritesModal');
         const favoritesGrid = document.getElementById('favoritesGrid');
         const noFavoritesMessage = document.getElementById('noFavoritesMessage');
-        const continueWatchingSection = document.getElementById('continueWatchingSection');
-        const continueWatchingContainer = document.getElementById('continueWatchingContainer');
-        
-        // Live TV Elements
-        const liveTvModal = document.getElementById('liveTvModal');
-        const liveTvTrigger = document.getElementById('liveTvTrigger');
-        const closeLiveTv = document.getElementById('closeLiveTv');
-        const livePlayer = document.getElementById('main-player');
-        const livePlaceholder = document.getElementById('livePlaceholder');
-        const channelList = document.getElementById('channelList');
-        const liveSearchInput = document.getElementById('liveSearchInput');
-        const footerName = document.getElementById('current-name');
-        const footerMeta = document.getElementById('current-meta');
-        const footerImg = document.getElementById('footer-img-container');
-        const statusDot = document.getElementById('status-dot');
+        let favoritedItems = {}; // { 'tmdb-id-type': Parse.Object }
 
-        let favoritedItems = {};
-        let recentlyWatchedItems = {};
+        // RECENTLY WATCHED CACHE
+        let recentlyWatchedItems = {}; // { 'tmdbId-type': { season, episode, date } }
 
         const availableSources = [
-            { id: 'wplayme', name: 'Mike Ty-thhon', urls: { movie: 'https://play.xpass.top/e/movie/{id}', tv: 'https://play.xpass.top/e/tv/{id}/{season}/{episode}' } },
-            { id: "vidsrccc", name: "VidSrcCC", urls: { movie: "https://vidsrc.cc/v2/embed/movie/{id}?autoPlay=false", tv: "https://vidsrc.cc/v2/embed/tv/{id}/{season}/{episode}?nextEpisode=true&autoPlay=false", } },
-            { id: 'vyla', name: 'Vyla', urls: { movie: 'Https://vyla-player.pages.dev/?type=movie&id={id}', tv: 'Https://vyla-player.pages.dev/?type=tv&id={id}&season={season}&episode={episode}' } },
-            { id: 'xprime', name: 'XPrime', urls: { movie: 'https://xprime.su/watch/{id}', tv: 'https://xprime.su/watch/{id}/{season}/{episode}' } },
-            { id: 'vidsrccx', name: 'VidSrcCX', urls: { movie: 'https://vidsrc.cx/embed/movie/{id}', tv: 'https://vidsrc.cx/embed/tv/{id}/{season}/{episode}' } },
-            { id: 'willow', name: 'Willow', urls: { movie: 'https://willow.arlen.icu/embed/movies/{id}', tv: 'https://willow.arlen.icu/embed/series/{id}/{season}/{episode}' } },
-            { id: 'cinezo', name: 'Cinezo', urls: { movie: 'https://api.cinezo.net/movie/{id}', tv: 'https://api.cinezo.net/tv/{id}/{season}/{episode}' } },
+    { id: 'wplayme', name: 'Mike Ty-thhon', urls: { movie: 'https://play.xpass.top/e/movie/{id}', tv: 'https://play.xpass.top/e/tv/{id}/{season}/{episode}' } },
+    { id: "vidsrccc", name: "VidSrcCC", urls: { movie: "https://vidsrc.cc/v2/embed/movie/{id}?autoPlay=false", tv: "https://vidsrc.cc/v2/embed/tv/{id}/{season}/{episode}?nextEpisode=true&autoPlay=false", } },
+    { id: 'vyla', name: 'Vyla', urls: { movie: 'Https://vyla-player.pages.dev/?type=movie&id={id}', tv: 'Https://vyla-player.pages.dev/?type=tv&id={id}&season={season}&episode={episode}' } },
+    { id: 'xprime', name: 'XPrime', urls: { movie: 'https://xprime.su/watch/{id}', tv: 'https://xprime.su/watch/{id}/{season}/{episode}' } },
+    { id: 'vidsrccx', name: 'VidSrcCX', urls: { movie: 'https://vidsrc.cx/embed/movie/{id}', tv: 'https://vidsrc.cx/embed/tv/{id}/{season}/{episode}' } },
+    { id: 'willow', name: 'Willow', urls: { movie: 'https://willow.arlen.icu/embed/movies/{id}', tv: 'https://willow.arlen.icu/embed/series/{id}/{season}/{episode}' } },
+    { id: 'cinezo', name: 'Cinezo', urls: { movie: 'https://api.cinezo.net/movie/{id}', tv: 'https://api.cinezo.net/tv/{id}/{season}/{episode}' } },
+
+
             { id: 'videasy', name: 'VidEasy', urls: { movie: 'https://player.videasy.net/movie/{id}?color=8834ec', tv: 'https://player.videasy.net/tv/{id}/{season}/{episode}?nextEpisode=true&color=8834ec' } },
             { id: 'vidfast', name: 'VidFast', urls: { movie: 'https://vidfast.pro/movie/{id}', tv: 'https://vidfast.pro/tv/{id}/{season}/{episode}' } },
             { id: 'vidsrcvip', name: 'vidsrc.vip', urls: { movie: 'https://vidsrc.vip/embed/movie/{id}', tv: 'https://vidsrc.vip/embed/tv/{id}/{season}/{episode}' } }
         ];
 
+        // "Sources w/o Ads" (Default)
         const noSandboxSources = ['videasy', 'vidfast', 'wplayme', 'vidsrcvip'];
+        // "Sources with Ads" (Sandboxed)
         const sandboxedSources = ['vyla', 'xprime', 'willow', 'cinezo', 'vidsrccx', 'vidsrccc'];
 
-        // --- FAVORITES LOGIC ---
+        /* --- FAVORITES LOGIC --- */
         async function loadFavorites() {
             try {
                 const Favorites = Parse.Object.extend('Favorites');
@@ -719,468 +1046,1319 @@
                     map[key] = item;
                     return map;
                 }, {});
-            } catch (err) { console.error("Favorites load fail:", err); }
+            } catch (err) {
+                console.error("Failed to load favorites from Parse:", err);
+                favoritedItems = {};
+            }
         }
 
         async function toggleFavorite(tmdbId, type, posterUrl, title) {
             const key = `${tmdbId}-${type}`;
             const isFavorited = favoritedItems.hasOwnProperty(key);
             const Favorites = Parse.Object.extend('Favorites');
+
             if (isFavorited) {
-                try { await favoritedItems[key].destroy(); delete favoritedItems[key]; } catch (err) { console.error(err); }
+                // Remove from favorites
+                try {
+                    await favoritedItems[key].destroy();
+                    delete favoritedItems[key];
+                } catch (err) {
+                    console.error("Failed to delete favorite:", err);
+                }
             } else {
+                // Add to favorites
                 try {
                     const favorite = new Favorites();
                     favorite.set('tmdbId', tmdbId);
                     favorite.set('type', type);
                     favorite.set('posterUrl', posterUrl);
                     favorite.set('title', title);
-                    favoritedItems[key] = await favorite.save();
-                } catch (err) { console.error(err); }
+                    const savedFavorite = await favorite.save();
+                    favoritedItems[key] = savedFavorite;
+                } catch (err) {
+                    console.error("Failed to save favorite:", err);
+                }
             }
+
+            // Re-render gallery and favorites modal
             updateUI();
-            if (favoritesModal.classList.contains('flex')) renderFavoritesModal();
+            if (favoritesModal.classList.contains('flex')) {
+                renderFavoritesModal();
+            }
         }
 
         async function renderFavoritesModal() {
             favoritesGrid.innerHTML = '';
+
             const favoriteArray = Object.values(favoritedItems);
-            if (favoriteArray.length === 0) { noFavoritesMessage.classList.remove('hidden'); return; }
+
+            if (favoriteArray.length === 0) {
+                noFavoritesMessage.classList.remove('hidden');
+                return;
+            }
             noFavoritesMessage.classList.add('hidden');
-            favoriteArray.forEach(item => {
+
+            for (const item of favoriteArray) {
+                const tmdbId = item.get('tmdbId');
+                const type = item.get('type');
+                const posterUrl = item.get('posterUrl');
+                const title = item.get('title');
+
                 const card = document.createElement('div');
                 card.className = "gallery-card";
+                card.setAttribute('data-id', tmdbId);
+                card.setAttribute('data-type', type);
+
+                const isFavorited = favoritedItems.hasOwnProperty(`${tmdbId}-${type}`);
+                const heartClass = isFavorited ? 'active' : 'inactive';
+                const heartIcon = isFavorited ? '❤' : '♡';
+
                 card.innerHTML = `
-                    <span class="favorite-heart active" data-id="${item.get('tmdbId')}" data-type="${item.get('type')}" data-title="${item.get('title')}" data-poster="${item.get('posterUrl')}">❤</span>
-                    <img src="${item.get('posterUrl')}" alt="${item.get('title')}">
-                    <div class="card-info"><h3>${item.get('title')}</h3><p>${item.get('type')}</p></div>`;
-                card.querySelector('.favorite-heart').addEventListener('click', e => {
+                    <span class="favorite-heart ${heartClass}" data-id="${tmdbId}" data-type="${type}" data-title="${title}" data-poster="${posterUrl}">
+                        ${heartIcon}
+                    </span>
+                    <img src="${posterUrl}" alt="${title}">
+                    <div class="card-info">
+                        <h3>${title}</h3>
+                        <p>${type === 'movie' ? 'Movie' : 'TV Show'}</p>
+                    </div>
+                `;
+
+                // FIX: Added e.stopPropagation() to prevent the card click handler from firing
+                card.querySelector('.favorite-heart').addEventListener('click', async (e) => {
                     e.stopPropagation();
-                    toggleFavorite(parseInt(e.target.dataset.id), e.target.dataset.type, e.target.dataset.poster, e.target.dataset.title);
+                    const id = e.target.getAttribute('data-id');
+                    const type = e.target.getAttribute('data-type');
+                    const poster = e.target.getAttribute('data-poster');
+                    const title = e.target.getAttribute('data-title');
+                    await toggleFavorite(parseInt(id), type, poster, title);
                 });
+
                 card.addEventListener('click', async () => {
-                    const details = await fetchContentDetails(item.get('tmdbId'), item.get('type'));
-                    if (details) { closeFavoritesModal(); openPlayer(details); }
+                    const itemData = await fetchContentDetails(tmdbId, type);
+                    if (itemData) {
+                        closeFavoritesModal();
+                        openPlayer(itemData);
+                    } else {
+                        console.error("Failed to fetch item details.");
+                    }
                 });
+
                 favoritesGrid.appendChild(card);
-            });
+            }
         }
 
-        function openFavoritesModal() { favoritesModal.classList.remove('hidden'); favoritesModal.classList.add('flex'); renderFavoritesModal(); }
-        function closeFavoritesModal() { favoritesModal.classList.add('hidden'); favoritesModal.classList.remove('flex'); }
+        function openFavoritesModal() {
+            favoritesModal.classList.remove('hidden');
+            favoritesModal.classList.add('flex');
+            renderFavoritesModal();
+        }
 
-        // --- RECENTLY WATCHED ---
+        function closeFavoritesModal() {
+            favoritesModal.classList.add('hidden');
+            favoritesModal.classList.remove('flex');
+        }
+
+        /* --- RECENTLY WATCHED LOGIC --- */
         async function loadRecentlyWatched() {
             try {
                 const Recent = Parse.Object.extend('RecentlyWatched');
                 const query = new Parse.Query(Recent);
+                query.limit(1000);
                 query.descending('updatedAt');
                 const results = await query.find();
-                recentlyWatchedItems = {};
-                results.forEach(item => {
-                    recentlyWatchedItems[`${item.get('tmdbId')}-${item.get('type')}`] = { 
-                        tmdbId: item.get('tmdbId'),
-                        type: item.get('type'),
-                        season: item.get('season'), 
-                        episode: item.get('episode'), 
-                        date: item.updatedAt,
-                        parseObj: item
+                recentlyWatchedItems = results.reduce((map, item) => {
+                    const key = `${item.get('tmdbId')}-${item.get('type')}`;
+                    map[key] = {
+                        season: item.get('season'),
+                        episode: item.get('episode'),
+                        date: item.updatedAt
                     };
-                });
-                renderRecentlyWatched();
-            } catch (err) { console.error(err); }
-        }
-
-        async function renderRecentlyWatched() {
-            const recentArray = Object.values(recentlyWatchedItems).sort((a, b) => b.date - a.date);
-            if (recentArray.length === 0) {
-                continueWatchingSection.classList.add('hidden');
-                return;
-            }
-            
-            continueWatchingSection.classList.remove('hidden');
-            continueWatchingContainer.innerHTML = '';
-            
-            for (const item of recentArray) {
-                const details = await fetchContentDetails(item.tmdbId, item.type);
-                if (!details) continue;
-                
-                const card = document.createElement('div');
-                card.className = "continue-watching-card";
-                card.innerHTML = `
-                    <button class="close-btn-recent">&times;</button>
-                    <div class="image-container">
-                        <img src="${IMAGE_BASE_URL}${details.poster_path}" alt="${details.title || details.name}">
-                    </div>
-                    <div class="title-area">
-                        <div class="title">${details.title || details.name}</div>
-                        <div class="progress">${item.type === 'tv' ? `S${item.season} E${item.episode}` : 'Movie'}</div>
-                    </div>
-                `;
-                
-                card.querySelector('.close-btn-recent').onclick = async (e) => {
-                    e.stopPropagation();
-                    await item.parseObj.destroy();
-                    delete recentlyWatchedItems[`${item.tmdbId}-${item.type}`];
-                    renderRecentlyWatched();
-                };
-                
-                card.onclick = () => openPlayer(details, item.season, item.episode);
-                continueWatchingContainer.appendChild(card);
+                    return map;
+                }, {});
+            } catch (err) {
+                console.error("Failed to load Recently Watched from Parse:", err);
+                recentlyWatchedItems = {};
             }
         }
 
         async function saveRecentlyWatched() {
             if (!currentItemData) return;
+            const tmdbId = currentItemData.id;
+            const type = currentType;
+            let season = null;
+            let episode = null;
+
+            if (type === 'tv') {
+                season = parseInt(seasonSelect.value);
+                episode = parseInt(episodeSelect.value);
+            }
+
             try {
                 const Recent = Parse.Object.extend('RecentlyWatched');
                 const query = new Parse.Query(Recent);
-                query.equalTo('tmdbId', currentItemData.id);
-                query.equalTo('type', currentType);
-                let record = await query.first() || new Recent();
-                record.set('tmdbId', currentItemData.id);
-                record.set('type', currentType);
-                if (currentType === 'tv') { 
-                    record.set('season', parseInt(seasonSelect.value)); 
-                    record.set('episode', parseInt(episodeSelect.value)); 
+                query.equalTo('tmdbId', tmdbId);
+                query.equalTo('type', type);
+                let record = await query.first();
+                if (!record) {
+                    record = new Recent();
+                    record.set('tmdbId', tmdbId);
+                    record.set('type', type);
                 }
+                record.set('season', season);
+                record.set('episode', episode);
                 await record.save();
-                loadRecentlyWatched(); // Refresh
-            } catch (err) { console.error(err); }
+                
+                // Update local cache
+                recentlyWatchedItems[`${tmdbId}-${type}`] = {
+                    season,
+                    episode,
+                    date: new Date()
+                };
+                updateUI();
+            } catch (err) {
+                console.error('Parse saveRecentlyWatched failed:', err);
+            }
         }
 
-        // --- TMDB FETCHING ---
+        /* --- CONTINUE WATCHING LOGIC --- */
+
+        function getContinueWatchingKey({ type, id }) {
+            return `${type}:${id}`;
+        }
+
+        async function saveContinueWatching(key, position, sourceId, season = null, episode = null) {
+            try {
+                const CW = Parse.Object.extend('ContinueWatching');
+                const query = new Parse.Query(CW);
+                query.equalTo('key', key); // Use content-based key (e.g., tv:123) for uniqueness per show
+                let record = await query.first();
+                if (!record) {
+                    record = new CW();
+                    record.set('key', key);
+                }
+                record.set('position', position);
+                record.set('sourceId', sourceId);
+                if (season !== null) record.set('season', parseInt(season));
+                if (episode !== null) record.set('episode', parseInt(episode));
+                
+                await record.save();
+            } catch (err) {
+                console.error('Parse saveContinueWatching failed:', err);
+            }
+        }
+
+        async function getContinueWatching(key) {
+            try {
+                const CW = Parse.Object.extend('ContinueWatching');
+                const query = new Parse.Query(CW);
+                query.equalTo('key', key);
+                const obj = await query.first();
+                return obj && typeof obj.get("position") === "number" ? obj.get("position") : 0;
+            } catch (err) {
+                console.error('Parse getContinueWatching failed:', err);
+                return 0;
+            }
+        }
+
+        async function deleteContinueWatching(key) {
+            try {
+                const CW = Parse.Object.extend('ContinueWatching');
+                const query = new Parse.Query(CW);
+                query.equalTo('key', key);
+                const obj = await query.first();
+                if (obj) {
+                    await obj.destroy();
+                }
+            } catch (err) {
+                console.error("Failed to delete from continue watching:", err);
+            }
+        }
+
+        let parseProgressTimer = null;
+        let lastVideoKey = null;
+        let watchSeconds = 0;
+        let lastSaved = 0;
+        let hasSavedRecent = false;
+
+        function startParseProgressTracking() {
+            stopParseProgressTracking();
+            hasSavedRecent = false;
+
+            const sourceId = sourceSelector.value;
+            const type = currentType;
+            const id = currentItemData.id;
+            let season = null,
+                episode = null;
+            if (type === 'tv') {
+                season = parseInt(seasonSelect.value);
+                episode = parseInt(episodeSelect.value);
+            }
+            
+            // Unique key per show (tv:123 or movie:123)
+            lastVideoKey = getContinueWatchingKey({ type, id });
+
+            getContinueWatching(lastVideoKey).then(seconds => {
+                watchSeconds = seconds;
+                lastSaved = seconds;
+            });
+
+            parseProgressTimer = setInterval(() => {
+                watchSeconds += 10; 
+                
+                if (!hasSavedRecent && watchSeconds >= 30) {
+                    saveRecentlyWatched();
+                    hasSavedRecent = true;
+                }
+
+                if (Math.abs(watchSeconds - lastSaved) >= 20) {
+                    saveContinueWatching(lastVideoKey, watchSeconds, sourceId, season, episode);
+                    lastSaved = watchSeconds;
+                    loadContinueWatchingParse();
+                }
+            }, 10000);
+        }
+
+        function stopParseProgressTracking() {
+            if (parseProgressTimer) clearInterval(parseProgressTimer);
+            parseProgressTimer = null;
+        }
+
+        async function loadContinueWatchingParse() {
+            try {
+                const CW = Parse.Object.extend('ContinueWatching');
+                const query = new Parse.Query(CW);
+                query.limit(20);
+                query.descending('updatedAt');
+                const results = await query.find();
+                
+                const continueWatchingData = results.map(row => {
+                    const key = row.get('key');
+                    const [type, id] = key.split(':');
+                    return {
+                        key,
+                        type,
+                        id,
+                        sourceId: row.get('sourceId'),
+                        season: row.get('season'),
+                        episode: row.get('episode'),
+                        position: row.get('position'),
+                        updatedAt: row.updatedAt
+                    };
+                });
+                
+                renderContinueWatchingParse(continueWatchingData);
+            } catch (err) {
+                console.error("Failed to load continue watching from Parse:", err);
+            }
+        }
+
+        async function renderContinueWatchingParse(data) {
+            const container = document.getElementById('continueWatchingContainer');
+            const section = document.getElementById('continueWatchingSection');
+
+            if (!data.length) {
+                section.style.display = 'none';
+                return;
+            }
+            section.style.display = 'block';
+            container.innerHTML = '';
+
+            for (const item of data) {
+                const cardId = `cw-${item.type}-${item.id}`;
+                const card = document.createElement('div');
+                card.className = 'continue-watching-card';
+                card.dataset.cardId = cardId;
+                
+                card.innerHTML = `
+                    <button class="close-btn" title="Remove" type="button">&times;</button>
+                    <div class="image-container">
+                        <img src="https://via.placeholder.com/80x120/1a1a1a/bb86fc?text=..." alt="Loading">
+                    </div>
+                    <div class="title-area">
+                        <div class="title">Loading...</div>
+                        <div class="progress">Last seen at: ${formatTime(item.position)}</div>
+                    </div>
+                `;
+
+                card.querySelector('.close-btn').addEventListener('click', async e => {
+                    e.stopPropagation();
+                    await deleteContinueWatching(item.key);
+                    loadContinueWatchingParse();
+                });
+
+                container.appendChild(card);
+
+                fetchContentDetails(item.id, item.type).then(details => {
+                    if (!details) return;
+                    const title = details.title || details.name || 'Unknown';
+                    const image = details.poster_path ? `${IMAGE_BASE_URL}${details.poster_path}` : '';
+                    let sub = "";
+                    if (item.type === "tv" && item.season && item.episode)
+                        sub = `S${item.season}E${item.episode}`;
+
+                    card.querySelector('.image-container img').src = image;
+                    card.querySelector('.title').innerHTML = title + (sub ? ` <span style="color:#bbb; font-size:.9em;">${sub}</span>` : '');
+                    
+                    card.onclick = (e) => {
+                        if (e.target.closest('.close-btn')) return;
+                        openPlayer(details, item.season, item.episode);
+                    };
+                });
+            }
+        }
+
+        /* --- TMDB FETCHING LOGIC --- */
+
         async function fetchContent(type, page, query = '') {
             try {
-                const url = query ? `${BASE_URL}/search/${type}?api_key=${API_KEY}&query=${encodeURIComponent(query)}&page=${page}` : `${BASE_URL}/${type}/popular?api_key=${API_KEY}&page=${page}`;
-                const res = await fetch(url);
-                return await res.json();
-            } catch (err) { return null; }
+                let url;
+                if (query) {
+                    url = `${BASE_URL}/search/${type}?api_key=${API_KEY}&query=${encodeURIComponent(query)}&page=${page}`;
+                } else {
+                    url = `${BASE_URL}/${type}/popular?api_key=${API_KEY}&page=${page}`;
+                }
+                const response = await fetch(url);
+                const data = await response.json();
+                return data;
+            } catch (error) {
+                console.error("TMDB Fetch Error: " + error.message);
+                return null;
+            }
         }
 
-        async function fetchContentDetails(id, type) {
+        // MODIFIED FUNCTION TO FETCH NEW RELEASES
+        async function fetchNewReleases(date, type) {
             try {
-                const res = await fetch(`${BASE_URL}/${type}/${id}?api_key=${API_KEY}`);
-                const data = await res.json();
-                if (type === 'tv' && data.seasons) {
-                    const seasonPromises = data.seasons.filter(s => s.season_number >= 1).map(async s => {
-                        const sRes = await fetch(`${BASE_URL}/tv/${id}/season/${s.season_number}?api_key=${API_KEY}`);
-                        const sData = await sRes.json();
-                        return { ...s, episodes: sData.episodes || [] };
-                    });
-                    data.seasons = await Promise.all(seasonPromises);
+                const formattedDate = date.toISOString().split('T')[0];
+                let url = '';
+
+                if (type === 'movie') {
+                    url = `${BASE_URL}/discover/movie?api_key=${API_KEY}&primary_release_date.gte=${formattedDate}&primary_release_date.lte=${formattedDate}&sort_by=primary_release_date.desc`;
+                } else if (type === 'tv') {
+                    url = `${BASE_URL}/discover/tv?api_key=${API_KEY}&air_date.gte=${formattedDate}&air_date.lte=${formattedDate}&sort_by=air_date.desc`;
                 }
-                return data;
-            } catch (err) { return null; }
+
+                const response = await fetch(url);
+                const data = await response.json();
+                return data.results;
+            } catch (error) {
+                console.error("TMDB New Releases Fetch Error: " + error.message);
+                return [];
+            }
         }
 
         async function fetchTrailer(id, type) {
             try {
-                const res = await fetch(`${BASE_URL}/${type}/${id}/videos?api_key=${API_KEY}`);
-                const data = await res.json();
-                const trailer = data.results.find(v => v.site === 'YouTube' && (v.type === 'Trailer' || v.type === 'Teaser'));
+                const url = `${BASE_URL}/${type}/${id}/videos?api_key=${API_KEY}`;
+                const response = await fetch(url);
+                const data = await response.json();
+                const trailer = data.results.find(video => video.site === 'YouTube' && (video.type === 'Trailer' || video.type === 'Teaser'));
                 return trailer ? `https://www.youtube.com/embed/${trailer.key}` : null;
-            } catch (err) { return null; }
+            } catch (error) {
+                console.error("TMDB Trailer Fetch Error: " + error.message);
+                return null;
+            }
         }
 
-        // --- RENDERING ---
+        async function fetchContentDetails(id, type) {
+            try {
+                const url = `${BASE_URL}/${type}/${id}?api_key=${API_KEY}`;
+                const response = await fetch(url);
+                const data = await response.json();
+
+                if (type === 'tv' && data.seasons) {
+                    const validSeasons = data.seasons.filter(s => s.season_number >= 1);
+                    const seasonPromises = validSeasons.map(async season => {
+                        const seasonUrl = `${BASE_URL}/tv/${id}/season/${season.season_number}?api_key=${API_KEY}`;
+                        const seasonRes = await fetch(seasonUrl);
+                        const seasonData = await seasonRes.json();
+                        return { ...season, episodes: seasonData.episodes || [] };
+                    });
+                    data.seasons = await Promise.all(seasonPromises);
+                }
+                return data;
+            } catch (error) {
+                console.error("TMDB Details Error: " + error.message);
+                return null;
+            }
+        }
+
+        /* --- RENDERING LOGIC --- */
+
         function renderGallery(items) {
             galleryContainer.innerHTML = '';
-            if (!items?.length) { galleryContainer.innerHTML = '<p class="col-span-full text-center">No results.</p>'; return; }
+            if (!items || items.length === 0) {
+                galleryContainer.innerHTML = '<p class="text-center text-gray-500 col-span-full">No results found.</p>';
+                return;
+            }
             items.forEach(item => {
                 const title = item.title || item.name;
-                const posterUrl = `${IMAGE_BASE_URL}${item.poster_path}`;
-                const isFavorited = favoritedItems.hasOwnProperty(`${item.id}-${currentType}`);
-                const card = document.createElement('div');
-                card.className = "gallery-card";
-                
-                let watchedBanner = '';
-                const recent = recentlyWatchedItems[`${item.id}-${currentType}`];
-                if (recent) watchedBanner = `<div class="watched-banner">Watched ${new Date(recent.date).toLocaleDateString()}</div>`;
+                const releaseDate = item.release_date || item.first_air_date;
+                const posterPath = item.poster_path;
+                const tmdbId = item.id;
+                const type = currentType;
 
-                card.innerHTML = `
-                    ${watchedBanner}
-                    <span class="favorite-heart ${isFavorited ? 'active' : 'inactive'}"> ${isFavorited ? '❤' : '♡'}</span>
-                    <img src="${posterUrl}" alt="${title}">
-                    <div class="card-info"><h3>${title}</h3><p>${(item.release_date || item.first_air_date || '').substring(0, 4)}</p></div>`;
-                
-                card.querySelector('.favorite-heart').onclick = e => { e.stopPropagation(); toggleFavorite(item.id, currentType, posterUrl, title); };
-                card.onclick = async () => { const details = await fetchContentDetails(item.id, currentType); if (details) openPlayer(details); };
-                galleryContainer.appendChild(card);
+                let isNewRelease = false;
+                if (releaseDate) {
+                    const itemReleaseDate = new Date(releaseDate);
+                    itemReleaseDate.setHours(0, 0, 0, 0);
+                    isNewRelease = itemReleaseDate >= fourteenDaysAgo && itemReleaseDate <= today;
+                }
+
+                if (posterPath) {
+                    const posterUrl = `${IMAGE_BASE_URL}${posterPath}`;
+                    const card = document.createElement('div');
+                    card.className = "gallery-card";
+                    card.setAttribute('data-id', tmdbId);
+                    card.setAttribute('data-type', type);
+
+                    const isFavorited = favoritedItems.hasOwnProperty(`${tmdbId}-${type}`);
+                    const heartClass = isFavorited ? 'active' : 'inactive';
+                    const heartIcon = isFavorited ? '❤' : '♡';
+
+                    // WATCHED BANNER LOGIC
+                    let watchedBannerHTML = '';
+                    const recentData = recentlyWatchedItems[`${tmdbId}-${type}`];
+                    if (recentData) {
+                        const dateStr = new Date(recentData.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+                        if (type === 'movie') {
+                            watchedBannerHTML = `<div class="watched-banner">Watched ${dateStr}</div>`;
+                        } else {
+                            watchedBannerHTML = `<div class="watched-banner">S${recentData.season}E${recentData.episode} (${dateStr})</div>`;
+                        }
+                    }
+
+                    let bannerHTML = '';
+                    if (isNewRelease) {
+                        const bannerText = currentType === 'movie' ? 'NEW RELEASE' : 'NEW EPISODE';
+                        bannerHTML = `<div class="absolute top-0 left-0 bg-yellow-500 text-black text-xs font-bold px-3 py-1 rounded-br-lg z-10 animate-pulse-banner">${bannerText}</div>`;
+                    }
+
+                    card.innerHTML = `
+                        ${bannerHTML}
+                        ${watchedBannerHTML}
+                        <span class="favorite-heart ${heartClass}" data-id="${tmdbId}" data-type="${type}" data-title="${title}" data-poster="${posterUrl}">
+                            ${heartIcon}
+                        </span>
+                        <img src="${posterUrl}" alt="${title}">
+                        <div class="card-info">
+                            <h3>${title}</h3>
+                            <p>${releaseDate ? releaseDate.substring(0, 4) : 'N/A'}</p>
+                        </div>
+                    `;
+
+                    // FIX: Added e.stopPropagation() to prevent the card click handler from firing
+                    card.querySelector('.favorite-heart').addEventListener('click', async (e) => {
+                        e.stopPropagation();
+                        await toggleFavorite(tmdbId, type, posterUrl, title);
+                    });
+
+                    card.addEventListener('click', async () => {
+                        const itemData = await fetchContentDetails(tmdbId, type);
+                        if (itemData) {
+                            openPlayer(itemData);
+                        } else {
+                            console.error("Failed to fetch item details.");
+                        }
+                    });
+                    galleryContainer.appendChild(card);
+                }
             });
         }
 
-        function updateUI() {
-            fetchContent(currentType, currentPage, currentQuery).then(data => {
-                if (!data) return;
+        async function renderNewReleases(items) {
+            newReleasesContainer.innerHTML = '';
+            if (!items || items.length === 0) {
+                newReleasesContainer.innerHTML = '<p class="text-center text-gray-500">No new releases on this day.</p>';
+                return;
+            }
+
+            const displayedItems = items.slice(0, 10);
+            for (const item of displayedItems) {
+                const title = item.title || item.name;
+                const posterPath = item.poster_path;
+
+                if (posterPath) {
+                    const posterUrl = `${IMAGE_BASE_URL}${posterPath}`;
+                    const card = document.createElement('div');
+                    card.className = "new-release-card";
+                    card.setAttribute('data-id', item.id);
+                    card.setAttribute('data-type', newReleaseType);
+                    let subtitle = item.release_date ? item.release_date.substring(0, 4) : 'N/A';
+
+                    if (newReleaseType === 'tv') {
+                        const episodeInfo = await fetchTVShowDetailsWithEpisodes(item.id, currentReleaseDate);
+                        if (episodeInfo) {
+                            subtitle = `S${String(episodeInfo.season).padStart(2, '0')}E${String(episodeInfo.episode).padStart(2, '0')}`;
+                        } else {
+                            continue;
+                        }
+                    }
+
+                    card.innerHTML = `
+                        <div class="image-container">
+                            <img src="${posterUrl}" alt="${title}">
+                        </div>
+                        <div class="card-info">
+                            <h3>${title}</h3>
+                            <p>${subtitle}</p>
+                        </div>
+                    `;
+                    card.addEventListener('click', async () => {
+                        const id = card.getAttribute('data-id');
+                        const type = card.getAttribute('data-type');
+                        const itemData = await fetchContentDetails(id, type);
+                        if (itemData) {
+                            const episodeInfo = await fetchTVShowDetailsWithEpisodes(item.id, currentReleaseDate);
+                            if (type === 'tv' && episodeInfo) {
+                                openPlayer(itemData, episodeInfo.season, episodeInfo.episode);
+                            } else {
+                                openPlayer(itemData);
+                            }
+                        } else {
+                            console.error("Failed to fetch item details.");
+                        }
+                    });
+                    newReleasesContainer.appendChild(card);
+                }
+            }
+        }
+
+
+        async function updateUI() {
+            const data = await fetchContent(currentType, currentPage, currentQuery);
+            if (data) {
                 renderGallery(data.results);
-                pageInfoSpan.textContent = pageInfoBottomSpan.textContent = `Page ${data.page} of ${data.total_pages}`;
-                prevPageBtn.disabled = prevPageBottomBtn.disabled = data.page <= 1;
-                nextPageBtn.disabled = nextPageBottomBtn.disabled = data.page >= data.total_pages;
-                galleryTitle.textContent = currentQuery ? `Results for "${currentQuery}"` : `Popular ${currentType === 'movie' ? 'Movies' : 'TV Shows'}`;
+                pageInfoSpan.textContent = `Page ${data.page} of ${data.total_pages}`;
+                pageInfoBottomSpan.textContent = `Page ${data.page} of ${data.total_pages}`;
+
+                prevPageBtn.disabled = data.page <= 1;
+                nextPageBtn.disabled = data.page >= data.total_pages;
+
+                prevPageBottomBtn.disabled = data.page <= 1;
+                nextPageBottomBtn.disabled = data.page >= data.total_pages;
+
+                if (currentQuery) {
+                    galleryTitle.textContent = `Search Results for "${currentQuery}"`;
+                } else {
+                    galleryTitle.textContent = currentType === 'movie' ? 'Popular Movies' : 'Popular TV Shows';
+                }
+            }
+        }
+
+        function updateNewReleasesUI() {
+            releaseDateInfo.textContent = currentReleaseDate.toLocaleDateString('en-US', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+            fetchNewReleases(currentReleaseDate, newReleaseType).then(items => {
+                renderNewReleases(items);
             });
         }
 
-        // --- PLAYER LOGIC ---
-        function openPlayer(itemData, s = null, e = null) {
+        /* --- PLAYER/MODAL LOGIC --- */
+        function closeModal() {
+            videoModal.classList.remove('visible');
+            videoModal.classList.add('hidden');
+            stopParseProgressTracking();
+            if (videoPlayer) videoPlayer.src = '';
+        }
+
+        function openPlayer(itemData, initialSeason = null, initialEpisode = null) {
             currentItemData = itemData;
-            const isMovie = !!itemData.title;
-            const type = isMovie ? 'movie' : 'tv';
-            currentType = type;
-            
-            modalTitle.textContent = itemData.title || itemData.name;
-            
-            const isTV = type === 'tv';
+            modalTitle.textContent = currentItemData.title || currentItemData.name;
+            stopParseProgressTracking();
+
+            const isTV = itemData.media_type === 'tv' || itemData.first_air_date;
             episodeSelector.classList.toggle('hidden', !isTV);
             episodeNavButtons.classList.toggle('hidden', !isTV);
-            
+
+            if (isTV) {
+                currentType = 'tv';
+                populateSeasonSelect(initialSeason, initialEpisode);
+            } else {
+                currentType = 'movie';
+                updatePlayer();
+            }
+
             videoModal.classList.remove('hidden');
             videoModal.classList.add('visible');
             
-            if (isTV) {
-                populateSeasonSelect(s, e);
-            } else {
-                summaryDisplay.textContent = itemData.overview;
-                populateSourceSelector();
+            // Sync UI state with current mode
+            syncModeButtons();
+        }
+
+        function syncModeButtons() {
+            if (!isSandboxMode) { // Sources w/o Ads active
+                showNoSandboxBtn.classList.add('active', 'ring-2', 'ring-purple-300');
+                showNoSandboxBtn.classList.remove('inactive');
+                showSandboxBtn.classList.remove('active', 'ring-2', 'ring-purple-300');
+                showSandboxBtn.classList.add('inactive');
+            } else { // Sources with Ads active
+                showSandboxBtn.classList.add('active', 'ring-2', 'ring-purple-300');
+                showSandboxBtn.classList.remove('inactive');
+                showNoSandboxBtn.classList.remove('active', 'ring-2', 'ring-purple-300');
+                showNoSandboxBtn.classList.add('inactive');
             }
         }
 
         function populateSourceSelector() {
-            const list = isSandboxMode ? sandboxedSources : noSandboxSources;
-            sourceSelector.innerHTML = availableSources.filter(s => list.includes(s.id)).map(s => `<option value="${s.id}">${s.name}</option>`).join('');
-            sourceSelector.onchange = updatePlayer;
+            sourceSelector.innerHTML = '';
+            const sourcesToShow = !isSandboxMode ? noSandboxSources : sandboxedSources;
+            const filteredSources = availableSources.filter(s => sourcesToShow.includes(s.id));
+            sourceSelector.innerHTML = filteredSources.map(s => `<option value="${s.id}">${s.name}</option>`).join('');
             updatePlayer();
         }
 
-        function populateSeasonSelect(s, e) {
-            if (!currentItemData.seasons) return;
-            seasonSelect.innerHTML = currentItemData.seasons.map(s => `<option value="${s.season_number}">Season ${s.season_number}</option>`).join('');
-            if (s) seasonSelect.value = s;
-            seasonSelect.onchange = () => populateEpisodeSelect();
-            populateEpisodeSelect(e);
+        function populateSeasonSelect(initialSeason = null, initialEpisode = null) {
+            seasonSelect.innerHTML = '';
+            if (!currentItemData || !currentItemData.seasons) {
+                return;
+            }
+            const seasons = currentItemData.seasons.filter(s => s.season_number >= 1).sort((a, b) => a.season_number - b.season_number);
+            seasons.forEach(season => {
+                const option = document.createElement('option');
+                option.value = season.season_number;
+                option.textContent = `Season ${season.season_number}`;
+                seasonSelect.appendChild(option);
+            });
+            if (initialSeason) {
+                seasonSelect.value = initialSeason;
+            }
+            if (seasons.length > 0) {
+                populateEpisodeSelect(seasonSelect.value, initialEpisode);
+            } else {
+                episodeSelect.innerHTML = '';
+            }
         }
 
-        function populateEpisodeSelect(e) {
-            const season = currentItemData.seasons.find(s => s.season_number == seasonSelect.value);
-            if (!season || !season.episodes) return;
-            episodeSelect.innerHTML = season.episodes.map(ep => `<option value="${ep.episode_number}">Ep ${ep.episode_number}: ${ep.name}</option>`).join('');
-            if (e) episodeSelect.value = e;
-            episodeSelect.onchange = updatePlayer;
-            populateSourceSelector();
+        function populateEpisodeSelect(seasonNumber, initialEpisode = null) {
+            const season = (currentItemData.seasons || []).find(s => s.season_number == seasonNumber);
+            episodeSelect.innerHTML = '';
+            if (!season || !season.episodes || season.episodes.length === 0) {
+                const option = document.createElement('option');
+                option.value = 0;
+                option.textContent = `No episodes found`;
+                episodeSelect.appendChild(option);
+                episodeSelect.disabled = true;
+                prevEpisodeBtn.disabled = true;
+                nextEpisodeBtn.disabled = true;
+                summaryDisplay.textContent = "";
+                return;
+            }
+            episodeSelect.disabled = false;
+            season.episodes.forEach(episode => {
+                const option = document.createElement('option');
+                option.value = episode.episode_number;
+                option.textContent = `Episode ${episode.episode_number}: ${episode.name || 'Untitled'}`;
+                episodeSelect.appendChild(option);
+            });
+            if (initialEpisode) {
+                episodeSelect.value = initialEpisode;
+            }
+            updatePlayer();
         }
 
         function updatePlayer() {
-            if (!currentItemData) return;
-            const src = availableSources.find(s => s.id === sourceSelector.value);
-            if (!src) return;
-
-            let url = "";
-            if (currentType === 'movie') {
-                url = src.urls.movie.replace('{id}', currentItemData.id);
-            } else {
-                const sNum = seasonSelect.value;
-                const eNum = episodeSelect.value;
-                url = src.urls.tv.replace('{id}', currentItemData.id)
-                              .replace('{season}', sNum)
-                              .replace('{episode}', eNum);
-                
-                // Show Episode Summary
-                const season = currentItemData.seasons.find(s => s.season_number == sNum);
-                const ep = season?.episodes.find(ep => ep.episode_number == eNum);
-                summaryDisplay.textContent = ep?.overview || "No episode summary available.";
-                nowPlayingDisplay.textContent = ep ? `Playing: ${ep.name}` : "";
+            if (!currentItemData) {
+                if (videoPlayer) videoPlayer.src = '';
+                return;
             }
-            
-            iframeContainer.innerHTML = `<iframe id="videoPlayer" class="w-full h-full absolute" src="${url}" allowfullscreen ${isSandboxMode ? 'sandbox="allow-same-origin allow-scripts allow-forms allow-pointer-lock allow-fullscreen"' : ''}></iframe>`;
-            saveRecentlyWatched();
-        }
 
-        // --- NAVIGATION BUTTONS ---
-        prevEpisodeBtn.onclick = () => {
-            if (episodeSelect.selectedIndex > 0) {
-                episodeSelect.selectedIndex--;
-                updatePlayer();
-            } else if (seasonSelect.selectedIndex > 0) {
-                seasonSelect.selectedIndex--;
-                populateEpisodeSelect();
-                episodeSelect.selectedIndex = episodeSelect.options.length - 1;
-                updatePlayer();
-            }
-        };
+            const isTV = currentType === 'tv';
+            episodeSelector.style.display = isTV ? 'block' : 'none';
+            episodeNavButtons.style.display = isTV ? 'flex' : 'none';
 
-        nextEpisodeBtn.onclick = () => {
-            if (episodeSelect.selectedIndex < episodeSelect.options.length - 1) {
-                episodeSelect.selectedIndex++;
-                updatePlayer();
-            } else if (seasonSelect.selectedIndex < seasonSelect.options.length - 1) {
-                seasonSelect.selectedIndex++;
-                populateEpisodeSelect();
-                episodeSelect.selectedIndex = 0;
-                updatePlayer();
-            }
-        };
+            if (isTV) {
+                const currentSeason = parseInt(seasonSelect.value);
+                const currentEpisode = parseInt(episodeSelect.value);
+                const seasonData = currentItemData.seasons.find(s => s.season_number === currentSeason);
 
-        // --- LIVE TV LOGIC ---
-        const LIVE_API_URL = 'https://api.cdnlivetv.tv/api/v1/channels/?user=cdnlivetv&plan=free';
-        let allChannels = [];
-        let currentFilter = 'all';
-        let activeLiveUrl = '';
-
-        const excludedKeywords = [
-            'sport', 'racing', 'football', 'liga', 'espn', 'nba', 'nfl', 'nhl', 'tennis', 
-            'sec', 'red bull', 'golf', 'goltv', 'soccer', 'deportes', 'cricket', 
-            'acc network', 'dazn', 'btn', 'wwe', 'ufc', 'fight',
-            'mlb', 'baseball', 'yankees', 'red sox', 'dodgers', 'cubs', 'mets', 'braves', 
-            'astros', 'phillies', 'blue jays', 'cardinals', 'giants', 'mariners', 
-            'rangers', 'diamondbacks', 'guardians', 'twins', 'brewers', 'marlins', 
-            'tigers', 'padres', 'orioles', 'angels', 'pirates', 'nationals', 'rays', 'reds', 'royals', 'rockies', 'athletics', 'white sox',
-            'altitude', 'nesn', 'tudn', 'universal kids', 'nbc universo', 'universo',
-            'telemundo', 'astro', 'yes', 'hub', 'univision', 'unimás', 'vix'
-        ];
-
-        async function initLiveTv() {
-            try {
-                const response = await fetch(LIVE_API_URL);
-                const data = await response.json();
-                allChannels = data.channels.filter(ch => {
-                    const code = ch.code.toLowerCase();
-                    const name = ch.name.toLowerCase();
-                    const isRegion = (code === 'us' || code === 'gb');
-                    const isExcluded = excludedKeywords.some(k => name.includes(k));
-                    return isRegion && !isExcluded;
-                });
-                renderLiveChannels();
-            } catch (err) {
-                channelList.innerHTML = `<p class="text-xs text-red-500 text-center py-10">Error loading channels</p>`;
-            }
-        }
-
-        function renderLiveChannels() {
-            const query = liveSearchInput.value.toLowerCase();
-            const filtered = allChannels.filter(ch => {
-                const matchesSearch = ch.name.toLowerCase().includes(query);
-                const matchesTab = currentFilter === 'all' || ch.code === currentFilter;
-                return matchesSearch && matchesTab;
-            });
-
-            channelList.innerHTML = '';
-            filtered.forEach(ch => {
-                const isActive = ch.url === activeLiveUrl;
-                const card = document.createElement('div');
-                card.className = `channel-card flex items-center p-3 gap-3 rounded-xl border border-gray-800 transition-all ${isActive ? 'active' : 'bg-gray-800/40 hover:bg-gray-800'}`;
-                card.innerHTML = `
-                    <div class="w-10 h-10 bg-black rounded p-1 flex items-center justify-center shrink-0 border border-gray-700">
-                        <img src="${ch.image}" class="max-w-full max-h-full object-contain" onerror="this.style.display='none'">
-                    </div>
-                    <div class="flex-1 min-w-0">
-                        <h4 class="text-[11px] font-bold truncate text-white uppercase">${ch.name}</h4>
-                        <span class="text-[8px] text-gray-500 font-bold">${ch.code.toUpperCase()}</span>
-                    </div>
-                `;
-                card.onclick = () => playLiveChannel(ch);
-                channelList.appendChild(card);
-            });
-        }
-
-        function playLiveChannel(ch) {
-            activeLiveUrl = ch.url;
-            livePlaceholder.classList.add('hidden');
-            livePlayer.src = ch.url.includes('?') ? `${ch.url}&autoplay=1` : `${ch.url}?autoplay=1`;
-            
-            footerName.innerText = ch.name;
-            footerMeta.innerText = `${ch.code.toUpperCase()} • LIVE STREAM ACTIVE`;
-            footerImg.innerHTML = `<img src="${ch.image}" class="w-full h-full object-contain">`;
-            statusDot.className = "ml-auto w-2 h-2 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.6)]";
-            renderLiveChannels();
-        }
-
-        window.setFilter = (code) => {
-            currentFilter = code;
-            document.querySelectorAll('.filter-btn').forEach(btn => {
-                if(btn.dataset.filter === code) {
-                    btn.classList.replace('bg-zinc-800', 'bg-purple-600');
-                    btn.classList.replace('text-zinc-400', 'text-white');
-                } else {
-                    btn.classList.replace('bg-purple-600', 'bg-zinc-800');
-                    btn.classList.replace('text-white', 'text-zinc-400');
+                let maxEpisode = 0;
+                if (seasonData && seasonData.episodes) {
+                    maxEpisode = seasonData.episodes.length;
                 }
-            });
-            renderLiveChannels();
-        };
+                const maxSeason = currentItemData.seasons.slice(-1)[0]?.season_number || 1;
 
-        liveTvTrigger.addEventListener('click', () => {
-            liveTvModal.classList.remove('hidden');
-            if (allChannels.length === 0) initLiveTv();
-        });
-        closeLiveTv.addEventListener('click', () => {
-            liveTvModal.classList.add('hidden');
-            livePlayer.src = "";
-        });
-        liveSearchInput.addEventListener('input', renderLiveChannels);
+                prevEpisodeBtn.disabled = currentEpisode <= 1 && currentSeason <= 1;
+                nextEpisodeBtn.disabled = currentEpisode >= maxEpisode && currentSeason >= maxSeason;
 
-        // --- AUDIO VISUALIZERS ---
-        const audio = document.getElementById('myAudio');
-        const radioAudio = document.getElementById('radioAudio');
-        let aCtx, rCtx, aAn, rAn;
 
-        function initAudio(type) {
-            if (type === 'holla' && !aCtx) {
-                aCtx = new (window.AudioContext || window.webkitAudioContext)();
-                aAn = aCtx.createAnalyser();
-                aCtx.createMediaElementSource(audio).connect(aAn);
-                aAn.connect(aCtx.destination);
-            } else if (type === 'radio' && !rCtx) {
-                rCtx = new (window.AudioContext || window.webkitAudioContext)();
-                rAn = rCtx.createAnalyser();
-                rCtx.createMediaElementSource(radioAudio).connect(rAn);
-                rAn.connect(rCtx.destination);
+                const currentEpisodeData = seasonData?.episodes.find(e => e.episode_number === currentEpisode);
+                if (currentEpisodeData) {
+                    nowPlayingDisplay.textContent = `Now Playing: ${currentItemData.name} - S${currentSeason} E${currentEpisode} - ${currentEpisodeData.name}`;
+                    summaryDisplay.textContent = currentEpisodeData.overview || "No summary available for this episode.";
+                } else {
+                    nowPlayingDisplay.textContent = `Now Playing: ${currentItemData.name}`;
+                    summaryDisplay.textContent = "No episode details available.";
+                }
+            } else {
+                nowPlayingDisplay.textContent = `Now Playing: ${currentItemData.title}`;
+                summaryDisplay.textContent = currentItemData.overview || "No summary available for this movie.";
+            }
+
+            const activeSource = availableSources.find(s => s.id === sourceSelector.value);
+            if (!activeSource) {
+                if (videoPlayer) videoPlayer.src = '';
+                return;
+            }
+
+            let url;
+            if (currentType === 'movie') {
+                url = activeSource.urls.movie.replace('{id}', currentItemData.id);
+            } else {
+                const season = seasonSelect.value || 1;
+                const episode = episodeSelect.value || 1;
+                if (isNaN(season) || isNaN(episode) || season == 0 || episode == 0) {
+                    if (videoPlayer) videoPlayer.src = '';
+                    return;
+                }
+                url = activeSource.urls.tv.replace('{id}', currentItemData.id).replace('{season}', season).replace('{episode}', episode);
+            }
+
+            const newIframe = document.createElement('iframe');
+            newIframe.id = 'videoPlayer';
+            newIframe.className = 'w-full h-full absolute top-0 left-0';
+            newIframe.src = url;
+            newIframe.frameborder = '0';
+            newIframe.allowfullscreen = true;
+            newIframe.setAttribute('allow', 'fullscreen');
+
+            // Apply sandbox ONLY if isSandboxMode is true (Sources with Ads)
+            if (isSandboxMode) {
+                newIframe.setAttribute('sandbox', 'allow-same-origin allow-scripts allow-forms allow-pointer-lock allow-fullscreen');
+            } else {
+                newIframe.removeAttribute('sandbox');
+            }
+
+            iframeContainer.innerHTML = '';
+            iframeContainer.appendChild(newIframe);
+            videoPlayer = newIframe;
+
+            startParseProgressTracking();
+        }
+
+        async function playTrailer() {
+            if (!currentItemData) return;
+            const url = await fetchTrailer(currentItemData.id, currentType);
+            if (url) {
+                const newIframe = document.createElement('iframe');
+                newIframe.id = 'videoPlayer';
+                newIframe.className = 'w-full h-full absolute top-0 left-0';
+                newIframe.src = url;
+                newIframe.frameborder = '0';
+                newIframe.allowfullscreen = true;
+                newIframe.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen');
+                newIframe.removeAttribute('sandbox');
+
+                iframeContainer.innerHTML = '';
+                iframeContainer.appendChild(newIframe);
+                videoPlayer = newIframe;
+                stopParseProgressTracking();
+            } else {
+                console.log('No trailer found for this title.');
             }
         }
 
-        window.togglePlayback = () => {
-            initAudio('holla');
-            if (audio.paused) { radioAudio.pause(); audio.play(); } else audio.pause();
-        };
+        function toggleFullscreen() {
+            const element = iframeContainer;
+            if (document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement) {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                } else if (document.webkitExitFullscreen) {
+                    document.webkitExitFullscreen();
+                } else if (document.mozCancelFullScreen) {
+                    document.mozCancelFullScreen();
+                } else if (document.msExitFullscreen) {
+                    document.msExitFullscreen();
+                }
+            } else {
+                if (element.requestFullscreen) {
+                    element.requestFullscreen();
+                } else if (element.mozRequestFullScreen) { 
+                    element.mozRequestFullScreen();
+                } else if (element.webkitRequestFullscreen) { 
+                    element.webkitRequestFullscreen();
+                } else if (element.msRequestFullscreen) { 
+                    element.msRequestFullscreen();
+                }
+            }
+        }
 
-        window.toggleRadioPlayback = () => {
-            initAudio('radio');
-            if (radioAudio.paused) {
+
+        function toggleMediaType(type) {
+            currentType = type;
+            currentPage = 1;
+            const movieBtn = document.getElementById('showMoviesBtn');
+            const tvBtn = document.getElementById('showTvBtn');
+            if (type === 'movie') {
+                movieBtn.classList.add('active');
+                movieBtn.classList.remove('inactive');
+                tvBtn.classList.remove('active');
+                tvBtn.classList.add('inactive');
+            } else {
+                tvBtn.classList.add('active');
+                tvBtn.classList.remove('inactive');
+                movieBtn.classList.remove('active');
+                movieBtn.classList.add('inactive');
+            }
+            updateUI();
+        }
+
+        function toggleNewReleaseMediaType(type) {
+            newReleaseType = type;
+            const movieBtn = document.getElementById('showNewReleaseMoviesBtn');
+            const tvBtn = document.getElementById('showNewReleaseTvBtn');
+            if (type === 'movie') {
+                movieBtn.classList.add('active');
+                movieBtn.classList.remove('inactive');
+                tvBtn.classList.remove('active');
+                tvBtn.classList.add('inactive');
+            } else {
+                tvBtn.classList.add('active');
+                tvBtn.classList.remove('inactive');
+                movieBtn.classList.remove('active');
+                movieBtn.classList.add('inactive');
+            }
+            updateNewReleasesUI();
+        }
+
+        function scrollAndLoad(action) {
+            const gallerySection = document.getElementById('galleryContainer');
+            if (gallerySection) {
+                gallerySection.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+            if (action === 'prev') {
+                if (currentPage > 1) {
+                    currentPage--;
+                    updateUI();
+                }
+            } else if (action === 'next') {
+                currentPage++;
+                updateUI();
+            }
+        }
+
+        function showHeartVideoModal() {
+            heartVideoModal.style.display = 'flex';
+            const ytPlayer = document.getElementById('heatherSecretYouTube');
+            ytPlayer.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
+        }
+
+        function hideHeartVideoModal() {
+            const ytPlayer = document.getElementById('heatherSecretYouTube');
+            ytPlayer.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');
+            heartVideoModal.style.display = 'none';
+        }
+
+
+        // Event listeners
+        searchInput.addEventListener('input', () => {
+            currentQuery = searchInput.value.trim();
+            currentPage = 1;
+            updateUI();
+        });
+
+        showMoviesBtn.addEventListener('click', () => toggleMediaType('movie'));
+        showTvBtn.addEventListener('click', () => toggleMediaType('tv'));
+
+        prevPageBtn.addEventListener('click', () => {
+            scrollAndLoad('prev');
+        });
+        prevPageBottomBtn.addEventListener('click', () => {
+            scrollAndLoad('prev');
+        });
+
+        nextPageBtn.addEventListener('click', () => {
+            scrollAndLoad('next');
+        });
+        nextPageBottomBtn.addEventListener('click', () => {
+            scrollAndLoad('next');
+        });
+
+        sourceSelector.addEventListener('change', updatePlayer);
+        trailerBtn.addEventListener('click', playTrailer);
+        fullscreenBtn.addEventListener('click', toggleFullscreen);
+
+        seasonSelect.addEventListener('change', (e) => populateEpisodeSelect(e.target.value));
+        episodeSelect.addEventListener('change', updatePlayer);
+        prevEpisodeBtn.addEventListener('click', () => {
+            let currentSeason = parseInt(seasonSelect.value);
+            let currentEpisode = parseInt(episodeSelect.value);
+            if (currentEpisode > 1) {
+                episodeSelect.value = currentEpisode - 1;
+            } else if (currentSeason > 1) {
+                const prevSeason = currentItemData.seasons.find(s => s.season_number === currentSeason - 1);
+                if (prevSeason) {
+                    seasonSelect.value = prevSeason.season_number;
+                    populateEpisodeSelect(prevSeason.season_number, prevSeason.episodes.length);
+                }
+            }
+            updatePlayer();
+        });
+        nextEpisodeBtn.addEventListener('click', () => {
+            let currentSeason = parseInt(seasonSelect.value);
+            let currentEpisode = parseInt(episodeSelect.value);
+            const seasonData = currentItemData.seasons.find(s => s.season_number === currentSeason);
+            if (seasonData && currentEpisode < seasonData.episodes.length) {
+                episodeSelect.value = currentEpisode + 1;
+            } else {
+                const nextSeason = currentItemData.seasons.find(s => s.season_number === currentSeason + 1);
+                if (nextSeason) {
+                    seasonSelect.value = nextSeason.season_number;
+                    populateEpisodeSelect(nextSeason.season_number, 1);
+                }
+            }
+            updatePlayer();
+        });
+
+        showNoSandboxBtn.addEventListener('click', () => {
+            isSandboxMode = false;
+            syncModeButtons();
+            populateSourceSelector();
+        });
+        showSandboxBtn.addEventListener('click', () => {
+            isSandboxMode = true;
+            syncModeButtons();
+            populateSourceSelector();
+        });
+
+        modalCloseBtn.addEventListener('click', closeModal);
+        videoModal.addEventListener('click', (e) => {
+            if (e.target.id === 'videoModal') closeModal();
+        });
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && videoModal.classList.contains('visible')) closeModal();
+        });
+
+        floatingHeart.addEventListener('click', showHeartVideoModal);
+        heartModalCloseBtn.addEventListener('click', hideHeartVideoModal);
+        heartVideoModal.addEventListener('click', (e) => {
+            if (e.target.id === 'heartVideoModal') hideHeartVideoModal();
+        });
+
+        openFavoritesBtn.addEventListener('click', openFavoritesModal);
+        closeFavoritesBtn.addEventListener('click', closeFavoritesModal);
+        favoritesModal.addEventListener('click', (e) => {
+            if (e.target.id === 'favoritesOverlay') closeFavoritesModal();
+        });
+
+
+        prevReleaseDayBtn.addEventListener('click', () => {
+            currentReleaseDate.setDate(currentReleaseDate.getDate() - 1);
+            updateNewReleasesUI();
+        });
+
+        nextReleaseDayBtn.addEventListener('click', () => {
+            currentReleaseDate.setDate(currentReleaseDate.getDate() + 1);
+            updateNewReleasesUI();
+        });
+
+        showNewReleaseMoviesBtn.addEventListener('click', () => toggleNewReleaseMediaType('movie'));
+        showNewReleaseTvBtn.addEventListener('click', () => toggleNewReleaseMediaType('tv'));
+
+
+        function formatTime(seconds) {
+            if (!seconds) return "0:00";
+            const minutes = Math.floor(seconds / 60);
+            const remainingSeconds = Math.floor(seconds % 60);
+            const hours = Math.floor(minutes / 60);
+            const remainingMinutes = minutes % 60;
+            if (hours > 0) {
+                return `${hours}:${remainingMinutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+            }
+            return `${remainingMinutes}:${remainingSeconds.toString().padStart(2, '0')}`;
+        }
+
+        async function fetchTVShowDetailsWithEpisodes(id, date) {
+            try {
+                const url = `${BASE_URL}/tv/${id}?api_key=${API_KEY}`;
+                const response = await fetch(url);
+                const data = await response.json();
+
+                const formattedDate = date.toISOString().split('T')[0];
+
+                if (data.seasons) {
+                    for (const season of data.seasons) {
+                        const seasonUrl = `${BASE_URL}/tv/${id}/season/${season.season_number}?api_key=${API_KEY}`;
+                        const seasonRes = await fetch(seasonUrl);
+                        const seasonData = await seasonRes.json();
+                        if (seasonData.episodes) {
+                            const matchingEpisode = seasonData.episodes.find(ep => ep.air_date === formattedDate);
+                            if (matchingEpisode) {
+                                return {
+                                    season: season.season_number,
+                                    episode: matchingEpisode.episode_number
+                                };
+                            }
+                        }
+                    }
+                }
+                return null;
+            } catch (error) {
+                console.error("TMDB TV Episode Fetch Error: " + error.message);
+                return null;
+            }
+        }
+
+        // ======================================================
+        // ===== HOLLA VISUALIZER SCRIPT BLOCK =====
+        // ======================================================
+
+        const audio = document.getElementById('myAudio');
+        const canvas = document.getElementById('audio-canvas');
+        const playIcon = document.getElementById('playIcon');
+        const pauseIcon = document.getElementById('pauseIcon');
+        const messageBox = document.getElementById('message');
+        const ctx = canvas.getContext('2d');
+
+        let audioContext;
+        let analyser;
+        let dataArray;
+        let bufferLength;
+        let isPlaying = false;
+        let animationFrameId;
+
+        function resizeCanvas() {
+            if (canvas) {
+                canvas.width = canvas.offsetWidth;
+                canvas.height = canvas.offsetHeight;
+            }
+            if (radioCanvas) {
+                radioCanvas.width = radioCanvas.offsetWidth;
+                radioCanvas.height = radioCanvas.offsetHeight;
+            }
+        }
+
+        function initAudioContext() {
+            if (audioContext) return;
+
+            try {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                analyser = audioContext.createAnalyser();
+                analyser.fftSize = 128;
+                bufferLength = analyser.frequencyBinCount;
+                dataArray = new Uint8Array(bufferLength);
+
+                const source = audioContext.createMediaElementSource(audio);
+                source.connect(analyser);
+                analyser.connect(audioContext.destination);
+
+                resizeCanvas();
+                draw();
+            } catch (error) {
+                console.error("Web Audio API failed to initialize:", error);
+                messageBox.textContent = "Error: Audio API failed.";
+            }
+        }
+
+        function draw() {
+            animationFrameId = requestAnimationFrame(draw);
+            if (!analyser) return;
+            analyser.getByteFrequencyData(dataArray);
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            const barWidth = (canvas.width / bufferLength) * 2.5;
+            let x = 0;
+            const effectiveBars = 32;
+            for (let i = 0; i < effectiveBars; i++) {
+                const barHeight = dataArray[i] * (canvas.height / 255.0) * 0.9;
+                const hue = 270;
+                const saturation = 75;
+                const lightness = 55 + (dataArray[i] / 255) * 20;
+                ctx.fillStyle = `hsl(${hue}, ${saturation}%, ${lightness}%)`;
+                const y = canvas.height - barHeight;
+                ctx.fillRect(x, y, barWidth - 2, barHeight);
+                x += barWidth;
+            }
+        }
+
+        window.togglePlayback = function () {
+            initAudioContext();
+            if (audio.paused || audio.ended) {
+                if (audioContext && audioContext.state === 'suspended') {
+                    audioContext.resume();
+                }
+                if (audio.ended) {
+                    audio.currentTime = 0;
+                }
+                // Pause radio if playing
+                if (radioAudio && !radioAudio.paused) toggleRadioPlayback();
+
+                audio.play().then(() => {
+                    updatePlaybackUI(true);
+                }).catch(e => {
+                    console.error("Playback failed:", e);
+                    messageBox.textContent = "Playback blocked.";
+                });
+            } else {
                 audio.pause();
-                radioAudio.src = document.getElementById('radioStationSelect').value;
+                updatePlaybackUI(false);
+            }
+        }
+
+        function updatePlaybackUI(isCurrentlyPlaying) {
+            isPlaying = isCurrentlyPlaying;
+            if (isPlaying) {
+                playIcon.classList.add('hidden');
+                pauseIcon.classList.remove('hidden');
+                messageBox.textContent = "Playing...";
+            } else {
+                playIcon.classList.remove('hidden');
+                pauseIcon.classList.add('hidden');
+                messageBox.textContent = audio.ended ? "Finished" : "Paused";
+            }
+        }
+
+        // ======================================================
+        // ===== RADIO VISUALIZER SCRIPT BLOCK (NEW) =====
+        // ======================================================
+
+        const radioAudio = document.getElementById('radioAudio');
+        const radioCanvas = document.getElementById('radio-canvas');
+        const radioPlayIcon = document.getElementById('radioPlayIcon');
+        const radioPauseIcon = document.getElementById('radioPauseIcon');
+        const radioMessage = document.getElementById('radioMessage');
+        const radioStationSelect = document.getElementById('radioStationSelect');
+        const rctx = radioCanvas.getContext('2d');
+
+        let radioAudioContext;
+        let radioAnalyser;
+        let radioDataArray;
+        let radioBufferLength;
+        let isRadioPlaying = false;
+        let radioAnimationFrameId;
+
+        function initRadioAudioContext() {
+            if (radioAudioContext) return;
+
+            try {
+                radioAudioContext = new (window.AudioContext || window.webkitAudioContext)();
+                radioAnalyser = radioAudioContext.createAnalyser();
+                radioAnalyser.fftSize = 128;
+                radioBufferLength = radioAnalyser.frequencyBinCount;
+                radioDataArray = new Uint8Array(radioBufferLength);
+
+                const source = radioAudioContext.createMediaElementSource(radioAudio);
+                source.connect(radioAnalyser);
+                radioAnalyser.connect(radioAudioContext.destination);
+
+                resizeCanvas();
+                drawRadio();
+            } catch (error) {
+                console.error("Radio Audio API failed to initialize:", error);
+                radioMessage.textContent = "Error: API failed.";
+            }
+        }
+
+        function drawRadio() {
+            radioAnimationFrameId = requestAnimationFrame(drawRadio);
+            if (!radioAnalyser) return;
+            radioAnalyser.getByteFrequencyData(radioDataArray);
+            rctx.clearRect(0, 0, radioCanvas.width, radioCanvas.height);
+            const barWidth = (radioCanvas.width / radioBufferLength) * 2.5;
+            let x = 0;
+            const effectiveBars = 32;
+            for (let i = 0; i < effectiveBars; i++) {
+                const barHeight = radioDataArray[i] * (radioCanvas.height / 255.0) * 0.9;
+                const hue = 200; // Blue-ish
+                const saturation = 85;
+                const lightness = 50 + (radioDataArray[i] / 255) * 25;
+                rctx.fillStyle = `hsl(${hue}, ${saturation}%, ${lightness}%)`;
+                const y = radioCanvas.height - barHeight;
+                rctx.fillRect(x, y, barWidth - 2, barHeight);
+                x += barWidth;
+            }
+        }
+
+        window.toggleRadioPlayback = function () {
+            initRadioAudioContext();
+            if (radioAudio.paused) {
+                if (radioAudioContext && radioAudioContext.state === 'suspended') {
+                    radioAudioContext.resume();
+                }
+                
+                // Pause holla if playing
+                if (audio && !audio.paused) togglePlayback();
+
+                // If switching station or starting fresh
+                if (!radioAudio.src || radioAudio.src !== radioStationSelect.value) {
+                    radioAudio.src = radioStationSelect.value;
+                    radioAudio.load();
+                }
+
+                radioAudio.play().then(() => {
+                    updateRadioUI(true);
+                }).catch(e => {
+                    console.error("Radio playback failed:", e);
+                    radioMessage.textContent = "Blocked.";
+                });
+            } else {
+                radioAudio.pause();
+                updateRadioUI(false);
+            }
+        }
+
+        function updateRadioUI(isCurrentlyPlaying) {
+            isRadioPlaying = isCurrentlyPlaying;
+            if (isRadioPlaying) {
+                radioPlayIcon.classList.add('hidden');
+                radioPauseIcon.classList.remove('hidden');
+                radioMessage.textContent = "Live Radio...";
+            } else {
+                radioPlayIcon.classList.remove('hidden');
+                radioPauseIcon.classList.add('hidden');
+                radioMessage.textContent = "Radio Paused";
+            }
+        }
+
+        // Handle station change
+        radioStationSelect.addEventListener('change', () => {
+            if (!radioAudio.paused) {
+                radioAudio.src = radioStationSelect.value;
+                radioAudio.load();
                 radioAudio.play();
-            } else radioAudio.pause();
-        };
-
-        // --- FLOATING HEART ---
-        floatingHeart.onclick = () => { heartVideoModal.style.display = 'flex'; };
-        heartModalCloseBtn.onclick = () => { heartVideoModal.style.display = 'none'; document.getElementById('heatherSecretYouTube').src = document.getElementById('heatherSecretYouTube').src; };
-
-        // --- EVENT LISTENERS ---
-        searchInput.oninput = () => { currentQuery = searchInput.value; currentPage = 1; updateUI(); };
-        showMoviesBtn.onclick = () => { currentType = 'movie'; currentPage = 1; showMoviesBtn.classList.replace('inactive', 'active'); showTvBtn.classList.replace('active', 'inactive'); updateUI(); };
-        showTvBtn.onclick = () => { currentType = 'tv'; currentPage = 1; showTvBtn.classList.replace('inactive', 'active'); showMoviesBtn.classList.replace('active', 'inactive'); updateUI(); };
-        
-        const paginate = (dir) => { currentPage += dir; updateUI(); window.scrollTo(0, 0); };
-        prevPageBtn.onclick = prevPageBottomBtn.onclick = () => paginate(-1);
-        nextPageBtn.onclick = nextPageBottomBtn.onclick = () => paginate(1);
-        
-        modalCloseBtn.onclick = () => { videoModal.classList.remove('visible'); setTimeout(() => { videoModal.classList.add('hidden'); iframeContainer.innerHTML = ''; }, 300); };
-        fullscreenBtn.onclick = () => iframeContainer.requestFullscreen();
-        openFavoritesBtn.onclick = openFavoritesModal;
-        closeFavoritesBtn.onclick = closeFavoritesModal;
-
-        showNoSandboxBtn.onclick = () => { isSandboxMode = false; showNoSandboxBtn.classList.add('active', 'ring-2'); showSandboxBtn.classList.remove('active', 'ring-2'); populateSourceSelector(); };
-        showSandboxBtn.onclick = () => { isSandboxMode = true; showSandboxBtn.classList.add('active', 'ring-2'); showNoSandboxBtn.classList.remove('active', 'ring-2'); populateSourceSelector(); };
-
-        trailerBtn.onclick = async () => {
-            const trailerUrl = await fetchTrailer(currentItemData.id, currentType);
-            if (trailerUrl) iframeContainer.innerHTML = `<iframe class="w-full h-full absolute" src="${trailerUrl}" allowfullscreen></iframe>`;
-        };
+            } else {
+                radioAudio.src = radioStationSelect.value;
+            }
+        });
 
         document.addEventListener('DOMContentLoaded', () => {
-            loadFavorites();
-            loadRecentlyWatched();
-            updateUI();
+            isSandboxMode = false; // "Sources w/o Ads" is default
+            populateSourceSelector();
+
+            Promise.all([
+                loadFavorites(),
+                loadRecentlyWatched(),
+                loadContinueWatchingParse()
+            ]).then(() => {
+                updateUI();
+                updateNewReleasesUI();
+            }).catch(error => {
+                console.error("Initial data loading failed:", error);
+                updateUI(); 
+                updateNewReleasesUI();
+            });
+
+            window.addEventListener('resize', resizeCanvas);
+            resizeCanvas();
+            updatePlaybackUI(false);
+            updateRadioUI(false);
+            
+            audio.addEventListener('play', () => updatePlaybackUI(true));
+            audio.addEventListener('pause', () => updatePlaybackUI(false));
+            audio.addEventListener('ended', () => {
+                updatePlaybackUI(false);
+                messageBox.textContent = "Finished";
+            });
+
+            radioAudio.addEventListener('play', () => updateRadioUI(true));
+            radioAudio.addEventListener('pause', () => updateRadioUI(false));
         });
     </script>
 </body>
