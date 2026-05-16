@@ -758,7 +758,7 @@
             { id: "vidsrccc", name: "VidSrcCC", urls: { movie: "https://vidsrc.cc/v2/embed/movie/{id}?autoPlay=false", tv: "https://vidsrc.cc/v2/embed/tv/{id}/{season}/{episode}?nextEpisode=true&autoPlay=false", } },
             { id: 'vyla', name: 'Vyla', urls: { movie: 'Https://vyla-player.pages.dev/?type=movie&id={id}', tv: 'Https://vyla-player.pages.dev/?type=tv&id={id}&season={season}&episode={episode}' } },
             { id: 'xprime', name: 'XPrime', urls: { movie: 'https://xprime.su/watch/{id}', tv: 'https://xprime.su/watch/{id}/{season}/{episode}' } },
-            { id: 'vidsrccx', name: 'VidSrcCX', urls: { movie: 'https://vidsrc.cx/embed/movie/{id}', tv: 'https://vidsrc.cx/embed/tv/{id}/{season}/{episode}' } },
+            { id: 'meow', name: 'Meow', urls: { movie: 'https://meowtv.ru/play/movie/{id}', tv: 'https://meowtv.ru/play/tv/{id}/{season}/{episode}' } },
             { id: 'willow', name: 'Willow', urls: { movie: 'https://willow.arlen.icu/embed/movies/{id}', tv: 'https://willow.arlen.icu/embed/series/{id}/{season}/{episode}' } },
             { id: 'cinezo', name: 'Cinezo', urls: { movie: 'https://api.cinezo.net/movie/{id}', tv: 'https://api.cinezo.net/tv/{id}/{season}/{episode}' } },
             { id: 'videasy', name: 'VidEasy', urls: { movie: 'https://player.videasy.net/movie/{id}?color=8834ec', tv: 'https://player.videasy.net/tv/{id}/{season}/{episode}?nextEpisode=true&color=8834ec' } },
@@ -767,7 +767,7 @@
         ];
 
         const noSandboxSources = ['videasy', 'vidfast', 'wplayme', 'vidsrcvip'];
-        const sandboxedSources = ['vyla', 'xprime', 'willow', 'cinezo', 'vidsrccx', 'vidsrccc'];
+        const sandboxedSources = ['vyla', 'xprime', 'willow', 'cinezo', 'meow', 'vidsrccc'];
 
         // --- FAVORITES LOGIC ---
         async function loadFavorites() {
