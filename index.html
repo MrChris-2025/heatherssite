@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>HEATHERS MOVIE PAGE</title>
+    <title>heathers site</title>
 
     <link rel="icon" type="image/x-icon" href="https://heather2025.nekoweb.org/images/favicon.ico">
     <link href="https://fonts.cdnfonts.com/css/pecita" rel="stylesheet" />
@@ -549,7 +549,7 @@
                         <option value="https://laut-bon-jovi.stream.laut.fm/laut-bon-jovi">80's Rock</option>
                         <option value="https://stream-179.zeno.fm/uhk2e2w8mbruv?zt=eyJhbGciOiJIUzI1NiJ9.eyJzdHJlYW0iOiJ1aGsyZTJ3OG1icnV2IiwiaG9zdCI6InN0cmVhbS0xNzkuemVuby5mbSIsInJ0dGwiOjUsImp0aSI6IkYtY3JRZUlOUXVXY05TS05FcjRtSkEiLCJpYXQiOjE3Nzg5NjIxNTcsImV4cCI6MTc3ODk2MjIxN30.7KP7MTfUDWWKAANMhliTswBtjLn2qdAMwdwTLLrQ-kU">80's Rock</option>
                     </select>
-                    <p id="radioMessage" class="text-[10px] text-blue-300 font-medium truncate pl-1">Radio</p>
+                    <p id="radioMessage" class="text-[10px] text-blue-300 font-medium truncate pl-1">Press Button To Start</p>
                 </div>
             </div>
         </div>
@@ -1305,6 +1305,9 @@
 
         // --- EVENT LISTENERS ---
         searchInput.oninput = () => { currentQuery = searchInput.value; currentPage = 1; updateUI(); };
+
+document.getElementById('radioStationSelect').onchange = () => { if (!radioAudio.paused) toggleRadioPlayback(); toggleRadioPlayback(); };
+
         showMoviesBtn.onclick = () => { currentType = 'movie'; currentPage = 1; showMoviesBtn.classList.replace('inactive', 'active'); showTvBtn.classList.replace('active', 'inactive'); updateUI(); };
         showTvBtn.onclick = () => { currentType = 'tv'; currentPage = 1; showTvBtn.classList.replace('inactive', 'active'); showMoviesBtn.classList.replace('active', 'inactive'); updateUI(); };
         
