@@ -758,8 +758,6 @@
 
         const availableSources = [
             { id: 'cinesrc', name: 'CineSrc', urls: { movie: 'https://cinesrc.st/embed/movie/{id}', tv: 'https://cinesrc.st/embed/tv/{id}/{season}/{episode}' } },
-            { id: 'vixsrc', name: 'vixsrc', urls: { movie: 'https://vixsrc.to/movie/{id}', tv: 'https://vixsrc.to/tv/{id}/{season}/{episode}' } },
-            { id: '1Embed', name: '1Embed', urls: { movie: 'https://1embed.cc/embed/movie/{id}', tv: 'https://1embed.cc/embed/tv/{id}/{season}/{episode}' } },
             { id: 'wplayme', name: 'Wplay.me', urls: { movie: 'https://play.xpass.top/e/movie/{id}', tv: 'https://play.xpass.top/e/tv/{id}/{season}/{episode}' } },
             { id: 'meow', name: 'Meow', urls: { movie: 'https://meowtv.ru/play/movie/{id}', tv: 'https://meowtv.ru/play/tv/{id}/{season}/{episode}' } },
             { id: 'xprime', name: 'XPrime', urls: { movie: 'https://xprime.su/watch/{id}', tv: 'https://xprime.su/watch/{id}/{season}/{episode}' } },
@@ -767,14 +765,13 @@
             { id: 'vyla', name: 'Vyla', urls: { movie: 'https://vyla.pages.dev/movie/{id}', tv: 'https://vyla.pages.dev/tv/{id}/{season}/{episode}' } },
             { id: 'cinemaos', name: 'Cinemaos', urls: { movie: 'https://cinemaos.tech/player/{id}', tv: 'https://cinemaos.live/tv/watch/{id}&{season}&{episode}' } },
             { id: 'vaplayer', name: 'VaPlayer', urls: { movie: 'https://vaplayer.ru/embed/movie/{id}', tv: 'https://vaplayer.ru/embed/tv/{id}/{season}/{episode}' } },
-            { id: 'filmu', name: 'FilmU', urls: { movie: 'https://embed.filmu.in/movie/{tmdb_id}', tv: 'https://embed.filmu.in/tv/{tmdb_id}/{season}/{episode}' } },
             { id: 'videasy', name: 'VidEasy', urls: { movie: 'https://player.videasy.net/movie/{id}?color=8834ec', tv: 'https://player.videasy.net/tv/{id}/{season}/{episode}?nextEpisode=true&color=8834ec' } },
             { id: 'vidfast', name: 'VidFast', urls: { movie: 'https://vidfast.pro/movie/{id}', tv: 'https://vidfast.pro/tv/{id}/{season}/{episode}' } },
             { id: 'vidsrcvip', name: 'vidsrc.vip', urls: { movie: 'https://vidsrc.vip/embed/movie/{id}', tv: 'https://vidsrc.vip/embed/tv/{id}/{season}/{episode}' } }
         ];
 
         const noSandboxSources = ['videasy', 'vidfast', 'wplayme', 'vidsrcvip'];
-        const sandboxedSources = ['vyla', 'xprime', 'willow', 'cinezo', 'meow', 'filmu', 'vaplayer', 'cinemaos', '1Embed', 'vixsrc', 'cinesrc'];
+        const sandboxedSources = ['vyla', 'xprime', 'willow', 'cinezo', 'meow', 'vaplayer', 'cinemaos', 'cinesrc'];
 
         // --- FAVORITES LOGIC ---
         async function loadFavorites() {
