@@ -757,7 +757,7 @@
         let recentlyWatchedItems = {};
 
         const availableSources = [
-            { id: 'streamvault', name: 'StreamVault', urls: { movie: 'https://streamvaultsrc.click/embed/movie/{id}', tv: 'https://streamvaultsrc.click/embed/tv/{id}/{season}/{episode}' } },
+            { id: 'cinesrc', name: 'CineSrc', urls: { movie: 'https://cinesrc.st/embed/movie/{id}', tv: 'https://cinesrc.st/embed/tv/{id}/{season}/{episode}' } },
             { id: 'vixsrc', name: 'vixsrc', urls: { movie: 'https://vixsrc.to/movie/{id}', tv: 'https://vixsrc.to/tv/{id}/{season}/{episode}' } },
             { id: '1Embed', name: '1Embed', urls: { movie: 'https://1embed.cc/embed/movie/{id}', tv: 'https://1embed.cc/embed/tv/{id}/{season}/{episode}' } },
             { id: 'wplayme', name: 'Wplay.me', urls: { movie: 'https://play.xpass.top/e/movie/{id}', tv: 'https://play.xpass.top/e/tv/{id}/{season}/{episode}' } },
@@ -766,7 +766,6 @@
             { id: 'cinezo', name: 'Cinezo', urls: { movie: 'https://api.cinezo.net/movie/{id}', tv: 'https://api.cinezo.net/tv/{id}/{season}/{episode}?autoplayNext=true?startAt=630' } },     
             { id: 'vyla', name: 'Vyla', urls: { movie: 'https://vyla.pages.dev/movie/{id}', tv: 'https://vyla.pages.dev/tv/{id}/{season}/{episode}' } },
             { id: 'cinemaos', name: 'Cinemaos', urls: { movie: 'https://cinemaos.tech/player/{id}', tv: 'https://cinemaos.live/tv/watch/{id}&{season}&{episode}' } },
-            { id: 'spencer', name: 'Spencer', urls: { movie: 'https://spencerdevs.xyz/movie/{id}', tv: 'https://spencerdevs.xyz/tv/{id}/{season}/{episode}' } },
             { id: 'vaplayer', name: 'VaPlayer', urls: { movie: 'https://vaplayer.ru/embed/movie/{id}', tv: 'https://vaplayer.ru/embed/tv/{id}/{season}/{episode}' } },
             { id: 'filmu', name: 'FilmU', urls: { movie: 'https://embed.filmu.in/movie/{tmdb_id}', tv: 'https://embed.filmu.in/tv/{tmdb_id}/{season}/{episode}' } },
             { id: 'videasy', name: 'VidEasy', urls: { movie: 'https://player.videasy.net/movie/{id}?color=8834ec', tv: 'https://player.videasy.net/tv/{id}/{season}/{episode}?nextEpisode=true&color=8834ec' } },
@@ -775,7 +774,7 @@
         ];
 
         const noSandboxSources = ['videasy', 'vidfast', 'wplayme', 'vidsrcvip'];
-        const sandboxedSources = ['vyla', 'xprime', 'willow', 'cinezo', 'meow', 'filmu', 'vaplayer', 'spencer', 'cinemaos', '1Embed', 'vixsrc', 'streamvault'];
+        const sandboxedSources = ['vyla', 'xprime', 'willow', 'cinezo', 'meow', 'filmu', 'vaplayer', 'cinemaos', '1Embed', 'vixsrc', 'cinesrc'];
 
         // --- FAVORITES LOGIC ---
         async function loadFavorites() {
