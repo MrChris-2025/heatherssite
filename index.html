@@ -198,16 +198,18 @@
             transition: background-color 0.2s, color 0.2s;
         }
 
+        /* COMPACTED & SMALLER CONTINUE WATCHING CARDS */
         .continue-watching-card {
             display: flex;
+            align-items: center;
             background: #1f242c;
             border-radius: 8px;
             overflow: hidden;
             cursor: pointer;
             transition: transform 0.2s;
             position: relative;
-            margin-bottom: 0.75rem;
-            padding: 0.5rem;
+            margin-bottom: 0.5rem;
+            padding: 0.35rem;
         }
 
         .continue-watching-card:hover {
@@ -216,8 +218,8 @@
 
         .continue-watching-card .image-container {
             position: relative;
-            width: 80px;
-            height: 120px;
+            width: 45px;
+            height: 65px;
             flex-shrink: 0;
             border-radius: 4px;
             overflow: hidden;
@@ -231,16 +233,17 @@
 
         .continue-watching-card .title-area {
             flex-grow: 1;
-            padding-left: 1rem;
+            padding-left: 0.75rem;
             display: flex;
             flex-direction: column;
             justify-content: center;
+            min-width: 0; /* important for text truncate */
         }
 
         .continue-watching-card .title {
             font-weight: 600;
-            font-size: 0.9rem;
-            margin-bottom: 0.25rem;
+            font-size: 0.8rem;
+            margin-bottom: 0.1rem;
             color: #c9d1d9;
             white-space: nowrap;
             overflow: hidden;
@@ -248,26 +251,39 @@
         }
 
         .continue-watching-card .progress {
-            font-size: 0.8rem;
+            font-size: 0.7rem;
             color: #8b949e;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .continue-watching-card .watched-date {
+            font-size: 0.65rem;
+            color: #a78bfa;
+            font-weight: 500;
+            margin-top: 0.1rem;
         }
 
         .continue-watching-card .close-btn {
             position: absolute;
-            top: 5px;
-            right: 5px;
+            top: 4px;
+            right: 4px;
             background: rgba(0, 0, 0, 0.4);
             color: white;
             border: none;
             border-radius: 50%;
-            width: 20px;
-            height: 20px;
-            font-size: 1rem;
+            width: 18px;
+            height: 18px;
+            font-size: 0.8rem;
             line-height: 1;
             text-align: center;
             cursor: pointer;
             opacity: 1;
             transition: opacity 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .nav-button {
@@ -884,6 +900,11 @@
             section.style.display = 'block';
             itemsArray.forEach(([key, item]) => {
                 const [tmdbId, type] = key.split('-');
+                
+                // Format Date nicely: e.g. Watched 6/21/26
+                const lastWatchedDate = item.date ? new Date(item.date) : new Date();
+                const formattedDate = `Watched ${lastWatchedDate.getMonth() + 1}/${lastWatchedDate.getDate()}/${String(lastWatchedDate.getFullYear()).slice(-2)}`;
+
                 const card = document.createElement('div');
                 card.className = "continue-watching-card w-full sm:w-[calc(50%-0.5rem)] md:w-[calc(33.33%-0.67rem)] lg:w-[calc(25%-0.75rem)]";
                 card.innerHTML = `
@@ -891,8 +912,9 @@
                         <img src="${item.posterUrl || ''}" alt="${item.title || ''}">
                     </div>
                     <div class="title-area">
-                        <div class="title">${item.title || 'Unknown Title'}</div>
+                        <div class="title" title="${item.title || 'Unknown Title'}">${item.title || 'Unknown Title'}</div>
                         <div class="progress">${type === 'tv' ? `S${item.season} E${item.episode}` : 'Movie'}</div>
+                        <div class="watched-date">${formattedDate}</div>
                     </div>
                     <button class="close-btn">&times;</button>
                 `;
@@ -978,6 +1000,7 @@
             });
         }
 
+        // --- UPDATE UI ---
         function updateUI() {
             fetchContent(currentType, currentPage, currentQuery).then(data => {
                 if (!data) return;
@@ -1308,7 +1331,7 @@
         // --- EVENT LISTENERS ---
         searchInput.oninput = () => { currentQuery = searchInput.value; currentPage = 1; updateUI(); };
 
-document.getElementById('radioStationSelect').onchange = () => { if (!radioAudio.paused) toggleRadioPlayback(); toggleRadioPlayback(); };
+        document.getElementById('radioStationSelect').onchange = () => { if (!radioAudio.paused) toggleRadioPlayback(); toggleRadioPlayback(); };
 
         showMoviesBtn.onclick = () => { currentType = 'movie'; currentPage = 1; showMoviesBtn.classList.replace('inactive', 'active'); showTvBtn.classList.replace('active', 'inactive'); updateUI(); };
         showTvBtn.onclick = () => { currentType = 'tv'; currentPage = 1; showTvBtn.classList.replace('inactive', 'active'); showMoviesBtn.classList.replace('active', 'inactive'); updateUI(); };
