@@ -8,9 +8,18 @@
 
     <link rel="icon" type="image/x-icon" href="https://heather2025.nekoweb.org/images/favicon.ico">
     <link href="https://fonts.cdnfonts.com/css/pecita" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
 
     <style>
+        :root {
+            --p900: #4c1d95;
+            --p600: #9333ea;
+            --glass-bg: rgba(15, 10, 30, 0.4);
+            --glass-border: rgba(147, 51, 234, 0.25);
+            --accent-glow: rgba(147, 51, 234, 0.5);
+        }
+
         /* Custom CSS for the visualizer canvas */
         .visualizer-container {
             width: 100%;
@@ -39,7 +48,7 @@
             padding: 2rem;
         }
 
-        /* Video Modal */
+        /* Video Modal Styles - Restored and Stabilized */
         #videoModal {
             position: fixed;
             top: 0;
@@ -55,6 +64,7 @@
             opacity: 0;
             visibility: hidden;
             transition: opacity 0.3s ease, visibility 0.3s ease;
+            overflow: hidden;
         }
 
         #videoModal.visible {
@@ -380,6 +390,7 @@
             100% { left: 80%; }
         }
 
+        /* Restored Secret Heart Video Modal styling */
         #heartVideoModal {
             position: fixed;
             top: 0;
@@ -462,12 +473,6 @@
             pointer-events: none;
         }
 
-        /* Live TV Specific Styles */
-        .channel-card { cursor: pointer; }
-        .channel-card.active { background-color: #4c1d95; border-color: #a78bfa; }
-        #channelList::-webkit-scrollbar { width: 6px; }
-        #channelList::-webkit-scrollbar-thumb { background: #374151; border-radius: 10px; }
-
         /* Modernized Equalizer Slide Out Styles */
         .eq-container {
             max-width: 0px;
@@ -479,6 +484,72 @@
         .eq-container.open {
             max-width: 200px;
             padding-left: 0.75rem;
+        }
+
+        /* ================= LIQUID GLASS MODAL STYLES ================= */
+        .orb {
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            border-radius: 50%;
+            filter: blur(120px);
+            z-index: -1;
+            opacity: 0.5;
+            animation: float 25s infinite alternate;
+            pointer-events: none; /* Prevent mouse actions from creating wiggles */
+        }
+        .orb-1 { background: var(--p900); top: -200px; left: -100px; }
+        .orb-2 { background: var(--p600); bottom: -200px; right: -100px; animation-delay: -7s; }
+
+        @keyframes float {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(100px, 50px) scale(1.3); }
+        }
+
+        .scrollbar-custom::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        .scrollbar-custom::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 10px;
+        }
+        .scrollbar-custom::-webkit-scrollbar-thumb {
+            background: rgba(147, 51, 234, 0.3);
+            border-radius: 10px;
+        }
+        .scrollbar-custom::-webkit-scrollbar-thumb:hover {
+            background: rgba(147, 51, 234, 0.6);
+        }
+
+        .channel-tile {
+            background: rgba(15, 10, 30, 0.55);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(147, 51, 234, 0.15);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .channel-tile:hover {
+            border-color: rgba(147, 51, 234, 0.45);
+            background: rgba(25, 15, 50, 0.65);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px -5px rgba(147, 51, 234, 0.15);
+        }
+
+        .channel-tile.selected {
+            border-color: rgba(168, 85, 247, 0.8);
+            background: rgba(45, 15, 80, 0.5);
+            box-shadow: 0 0 25px rgba(168, 85, 247, 0.3);
+        }
+
+        .player-container {
+            box-shadow: 0 0 50px rgba(0,0,0,0.8), 0 0 20px rgba(147, 51, 234, 0.25);
+        }
+
+        #p-title {
+            background: linear-gradient(to right, #ffffff, #e9d5ff);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
         }
     </style>
 </head>
@@ -513,7 +584,7 @@
             
             <button id="liveTvTrigger" class="flex items-center gap-2 hover:opacity-80 transition-opacity">
                 <span class="text-2xl" role="img" aria-label="Union Jack Flag">🇬🇧</span>
-                <span class="text-white"><b>Live</b></span>
+                <span class="text-white"><b>Live TV</b></span>
             </button>
 
             <div class="flex flex-col md:flex-row items-center gap-4 w-full md:w-auto">
@@ -596,6 +667,7 @@
         </main>
     </div>
 
+    <!-- ================= RESTORED & STABILIZED MOVIE/TV MODAL ================= -->
     <div id="videoModal" class="hidden">
         <div class="modal-content">
             <button id="modalCloseBtn" class="close-btn">&times;</button>
@@ -634,45 +706,90 @@
         </div>
     </div>
 
-    <div id="liveTvModal" class="fixed inset-0 z-[110] hidden flex items-center justify-center bg-black/80 backdrop-blur-sm">
-        <div class="relative w-full max-w-6xl mx-4 bg-gray-900 rounded-2xl border border-purple-500/30 overflow-hidden shadow-2xl">
-            <div class="flex items-center justify-between p-4 bg-gray-800/50">
-                <div class="flex items-center gap-4">
-                    <h3 class="text-xl font-bold text-purple-300">Live TV 🇬🇧</h3>
-                    <input type="text" id="liveSearchInput" placeholder="Search channels..." class="bg-gray-700 text-white text-xs px-3 py-1.5 rounded-full outline-none focus:ring-1 focus:ring-purple-400 w-48">
+    <!-- ================= LIVE TV MODAL ================= -->
+    <div id="liveTvModal" class="fixed inset-0 z-[110] hidden flex items-center justify-center bg-black/95 backdrop-blur-md overflow-hidden p-3 md:p-6">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        
+        <div class="relative w-full max-w-7xl h-full max-h-[92vh] bg-slate-950/80 border border-purple-500/20 rounded-3xl flex flex-col p-4 md:p-6 overflow-hidden shadow-2xl">
+            <!-- Header bar with title and close button -->
+            <div class="flex items-center justify-between mb-4 flex-shrink-0">
+                <div class="flex items-center gap-3">
+
+                    <div>
+                    </div>
                 </div>
-                <button id="closeLiveTv" class="h-8 w-8 rounded-full bg-red-500/20 text-red-400 hover:bg-red-500 hover:text-white transition-all flex items-center justify-center">✕</button>
+                <button id="closeLiveTv" class="h-5 w-5 rounded-full bg-purple-900/20 text-purple-200 border border-purple-500/30 hover:bg-red-500 hover:text-white hover:border-red-400 transition-all flex items-center justify-center font-bold text-lg">✕</button>
             </div>
-            
-            <div class="flex flex-col md:flex-row h-[70vh]">
-                <div class="flex-1 bg-black relative">
-                    <div id="livePlaceholder" class="absolute inset-0 flex items-center justify-center text-gray-500">
-                        <p>Select a channel to start watching</p>
+
+            <!-- Unified Inside Content Split Panels -->
+            <div class="w-full flex-1 flex flex-col lg:flex-row gap-5 overflow-hidden z-10 min-h-0">
+                <!-- LEFT PANEL: Mobile is compact / Desktop is flexible and full height -->
+                <div class="flex-shrink-0 lg:flex-1 h-auto lg:h-full flex flex-col gap-3 overflow-hidden min-h-0">
+                    
+                    <!-- Video Iframe Wrapper -->
+                    <div class="player-container w-full aspect-video bg-black rounded-2xl border border-purple-500/25 overflow-hidden relative flex-shrink-0">
+                        <iframe id="main-player" sandbox="allow-same-origin allow-scripts" allowfullscreen referrerpolicy="no-referrer" allow="autoplay; encrypted-media" class="w-full h-full border-none"></iframe>
+                        <div id="player-placeholder" class="absolute inset-0 flex flex-col items-center justify-center bg-purple-950/90 backdrop-blur-xl text-purple-200 font-bold text-xs uppercase tracking-widest gap-2">
+
+                            Select a Channel
+                        </div>
                     </div>
-                    <iframe id="main-player" class="w-full h-full" src="" frameborder="0" allowfullscreen></iframe>
+
+                    <!-- Standalone Controller Menu -->
+                    <div class="bg-slate-950/80 border border-purple-500/20 rounded-xl px-4 py-3 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 flex-shrink-0 text-xs">
+                        <div class="flex flex-col">
+
+                            <span id="current-source-label" class="text-[9px] text-purple-400/70 font-semibold mt-0.5">Primary stream active</span>
+                        </div>
+                        <div class="flex items-center gap-2 flex-wrap w-full sm:w-auto">
+                            <button id="btn-primary" onclick="setStreamSource('primary')" class="flex-1 sm:flex-initial px-3.5 py-2 rounded-lg font-bold uppercase text-[10px] tracking-wider transition-all duration-200 bg-purple-600/80 text-white border border-purple-400/40 shadow-lg shadow-purple-500/20">
+                                Primary
+                            </button>
+                            <button id="btn-backup" onclick="setStreamSource('backup')" class="flex-1 sm:flex-initial px-3.5 py-2 rounded-lg font-bold uppercase text-[10px] tracking-wider transition-all duration-200 bg-purple-950/40 text-purple-300 border border-purple-500/20 hover:border-purple-400/40 hover:bg-purple-900/25">
+                                Backup 1
+                            </button>
+                            <button id="btn-backup2" onclick="setStreamSource('backup2')" class="flex-1 sm:flex-initial px-3.5 py-2 rounded-lg font-bold uppercase text-[10px] tracking-wider transition-all duration-200 bg-purple-950/40 text-purple-300 border border-purple-500/20 hover:border-purple-400/40 hover:bg-purple-900/25">
+                                Backup 2
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Meta Information Box -->
+                    <div class="hidden lg:flex flex-1 bg-slate-950/40 backdrop-blur-xl border border-purple-500/25 rounded-2xl p-5 overflow-y-auto scrollbar-custom flex-col justify-start">
+                        <h1 id="p-title" class="text-xl md:text-3xl font-extrabold tracking-tight truncate font-sans">Select a Channel</h1>
+                        
+                        <div id="p-meta" class="flex items-center gap-4 text-purple-200 font-semibold text-xs md:text-sm mt-2 opacity-0 transition-opacity duration-300">
+                            <span id="p-time-range" class="bg-purple-900/40 px-2.5 py-0.5 rounded border border-purple-500/30"></span>
+                            <span class="w-1.5 h-1.5 rounded-full bg-purple-400"></span>
+                            <span id="p-channel-name" class="font-bold"></span>
+                        </div>
+                        
+                        <p id="p-desc" class="text-purple-100/60 text-xs md:text-sm mt-3.5 leading-relaxed">
+                            Click any channel
+                        </p>
+                    </div>
                 </div>
-                
-                <div class="w-full md:w-80 bg-gray-900 border-l border-gray-800 flex flex-col min-h-0">
-                    <div class="p-2 border-b border-gray-800 flex gap-1 overflow-x-auto no-scrollbar">
-                        <button onclick="setFilter('all')" data-filter="all" class="filter-btn shrink-0 px-4 py-1.5 rounded-lg text-[10px] font-black bg-purple-600 text-white">ALL</button>
-                        <button onclick="setFilter('us')" data-filter="us" class="filter-btn shrink-0 px-4 py-1.5 rounded-lg text-[10px] font-black bg-zinc-800 text-zinc-400">USA</button>
-                        <button onclick="setFilter('gb')" data-filter="gb" class="filter-btn shrink-0 px-4 py-1.5 rounded-lg text-[10px] font-black bg-zinc-800 text-zinc-400">UK</button>
+
+                <!-- RIGHT PANEL: Channels List Sidebar -->
+                <div class="w-full lg:w-[400px] flex-1 lg:flex-none min-h-0 lg:h-full flex flex-col bg-slate-950/40 backdrop-blur-xl border border-purple-500/25 rounded-2xl p-4 overflow-hidden shadow-2xl">
+                    <div class="flex items-center justify-between mb-4 flex-shrink-0">
+                        <div class="flex items-center gap-2">
+                            <span class="w-3 h-3 rounded-full bg-purple-500 animate-pulse"></span>
+                            <h2 class="text-lg font-extrabold tracking-tight text-white uppercase">Live Channels</h2>
+                        </div>
+                        <span id="sync-status" class="text-[10px] text-purple-300 font-bold bg-purple-950/50 px-2 py-0.5 rounded border border-purple-500/20">Syncing EPG...</span>
                     </div>
-                    <div id="channelList" class="flex-1 overflow-y-auto p-2 space-y-2 h-full">
-                        </div>
-                    <div class="p-3 bg-black/40 border-t border-gray-800 flex items-center gap-3">
-                        <div id="footer-img-container" class="w-8 h-8 rounded bg-zinc-800 flex-shrink-0"></div>
-                        <div class="min-w-0">
-                            <p id="current-name" class="text-[10px] font-bold truncate text-white uppercase">Waiting...</p>
-                            <p id="current-meta" class="text-[8px] text-zinc-500 truncate">Select Feed</p>
-                        </div>
-                        <div id="status-dot" class="ml-auto w-2 h-2 rounded-full bg-zinc-700"></div>
+
+                    <!-- Scrollable Channels Container -->
+                    <div id="channels-list" class="flex-1 overflow-y-auto pr-1 flex flex-col gap-3 scrollbar-custom font-sans">
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- ================= SECRET HEART VIDEO MODAL ================= -->
     <div id="floatingHeart" role="button">
         <span style="color: #a78bfa;">💜</span>
     </div>
@@ -686,15 +803,16 @@
         </div>
     </div>
 
-    <button id="openFavoritesBtn" class="fixed bottom-6 right-6 h-12 w-12 rounded-full bg-purple-600 text-white shadow-lg z-50">❤</button>
-    <div id="favoritesModal" class="fixed inset-0 z-50 hidden">
-        <div class="absolute inset-0 bg-black/60" id="favoritesOverlay"></div>
-        <div class="relative mx-auto my-10 w-[92%] max-w-6xl rounded-2xl border border-gray-700 bg-gray-900 overflow-y-auto max-h-[90vh]">
-            <div class="flex items-center justify-between px-4 py-3 border-b border-gray-700 sticky top-0 bg-gray-900 z-10">
+    <!-- ================= FAVORITES MODAL ================= -->
+    <button id="openFavoritesBtn" class="fixed bottom-6 right-6 h-12 w-12 rounded-full bg-purple-600 text-white shadow-lg z-50 flex items-center justify-center font-bold">❤</button>
+    
+    <div id="favoritesModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+        <div class="relative w-full max-w-6xl rounded-2xl border border-gray-700 bg-gray-900 flex flex-col max-h-[90vh]">
+            <div class="flex items-center justify-between px-4 py-3 border-b border-gray-700 bg-gray-900 sticky top-0 rounded-t-2xl z-10">
                 <h3 class="text-xl font-semibold">My Favorites</h3>
-                <button id="closeFavoritesBtn" class="h-9 w-9 grid place-items-center rounded-lg border border-gray-600">✕</button>
+                <button id="closeFavoritesBtn" class="h-9 w-9 flex items-center justify-center rounded-lg border border-gray-600 text-gray-300 hover:text-white">&times;</button>
             </div>
-            <div class="p-4">
+            <div class="p-4 overflow-y-auto">
                 <div id="favoritesGrid" class="gallery-container">
                     <p id="noFavoritesMessage" class="text-center text-gray-500 col-span-full hidden">No favorites yet.</p>
                 </div>
@@ -727,6 +845,16 @@
         const prevPageBtn = document.getElementById('prevPage');
         const nextPageBtn = document.getElementById('nextPage');
         const pageInfoSpan = document.getElementById('pageInfo');
+        const prevPageBottomBtn = document.getElementById('prevPageBottom');
+        const nextPageBottomBtn = document.getElementById('nextPageBottom');
+        const pageInfoBottomSpan = document.getElementById('pageInfoBottom');
+        const floatingHeart = document.getElementById('floatingHeart');
+        const openFavoritesBtn = document.getElementById('openFavoritesBtn');
+        const liveTvTrigger = document.getElementById('liveTvTrigger');
+        const liveTvModal = document.getElementById('liveTvModal');
+        const closeLiveTv = document.getElementById('closeLiveTv');
+
+        // Restored Movie/TV Player DOM Elements
         const videoModal = document.getElementById('videoModal');
         const modalCloseBtn = document.getElementById('modalCloseBtn');
         const modalTitle = document.getElementById('modalTitle');
@@ -744,34 +872,21 @@
         const showSandboxBtn = document.getElementById('showSandboxBtn');
         const episodeNavButtons = document.getElementById('episodeNavButtons');
         const fullscreenBtn = document.getElementById('fullscreenBtn');
-        const prevPageBottomBtn = document.getElementById('prevPageBottom');
-        const nextPageBottomBtn = document.getElementById('nextPageBottom');
-        const pageInfoBottomSpan = document.getElementById('pageInfoBottom');
-        const floatingHeart = document.getElementById('floatingHeart');
-        const heartVideoModal = document.getElementById('heartVideoModal');
-        const heartModalCloseBtn = document.getElementById('heartModalCloseBtn');
-        const openFavoritesBtn = document.getElementById('openFavoritesBtn');
+
+        // Restored Favorites Modal DOM Elements
         const closeFavoritesBtn = document.getElementById('closeFavoritesBtn');
         const favoritesModal = document.getElementById('favoritesModal');
         const favoritesGrid = document.getElementById('favoritesGrid');
         const noFavoritesMessage = document.getElementById('noFavoritesMessage');
-        
-        // Live TV Elements
-        const liveTvModal = document.getElementById('liveTvModal');
-        const liveTvTrigger = document.getElementById('liveTvTrigger');
-        const closeLiveTv = document.getElementById('closeLiveTv');
-        const livePlayer = document.getElementById('main-player');
-        const livePlaceholder = document.getElementById('livePlaceholder');
-        const channelList = document.getElementById('channelList');
-        const liveSearchInput = document.getElementById('liveSearchInput');
-        const footerName = document.getElementById('current-name');
-        const footerMeta = document.getElementById('current-meta');
-        const footerImg = document.getElementById('footer-img-container');
-        const statusDot = document.getElementById('status-dot');
+
+        // Restored Secret Heart DOM Elements
+        const heartVideoModal = document.getElementById('heartVideoModal');
+        const heartModalCloseBtn = document.getElementById('heartModalCloseBtn');
 
         let favoritedItems = {};
         let recentlyWatchedItems = {};
 
+        // Restored Streaming Sources configuration
         const availableSources = [
             { id: 'cinesrc', name: 'CineSrc', urls: { movie: 'https://cinesrc.st/embed/movie/{id}', tv: 'https://cinesrc.st/embed/tv/{id}/{season}/{episode}' } },
             { id: 'wplayme', name: 'Wplay.me', urls: { movie: 'https://play.xpass.top/e/movie/{id}', tv: 'https://play.xpass.top/e/tv/{id}/{season}/{episode}' } },
@@ -821,13 +936,17 @@
                 } catch (err) { console.error(err); }
             }
             updateUI();
-            if (favoritesModal.classList.contains('flex')) renderFavoritesModal();
+            if (!favoritesModal.classList.contains('hidden')) renderFavoritesModal();
         }
 
+        // Restored Favorites Modal Rendering
         async function renderFavoritesModal() {
             favoritesGrid.innerHTML = '';
             const favoriteArray = Object.values(favoritedItems);
-            if (favoriteArray.length === 0) { noFavoritesMessage.classList.remove('hidden'); return; }
+            if (favoriteArray.length === 0) {
+                noFavoritesMessage.classList.remove('hidden');
+                return;
+            }
             noFavoritesMessage.classList.add('hidden');
             favoriteArray.forEach(item => {
                 const card = document.createElement('div');
@@ -836,20 +955,34 @@
                     <span class="favorite-heart active" data-id="${item.get('tmdbId')}" data-type="${item.get('type')}" data-title="${item.get('title')}" data-poster="${item.get('posterUrl')}">❤</span>
                     <img src="${item.get('posterUrl')}" alt="${item.get('title')}">
                     <div class="card-info"><h3>${item.get('title')}</h3><p>${item.get('type')}</p></div>`;
+                
                 card.querySelector('.favorite-heart').addEventListener('click', e => {
                     e.stopPropagation();
                     toggleFavorite(parseInt(e.target.dataset.id), e.target.dataset.type, e.target.dataset.poster, e.target.dataset.title);
                 });
                 card.addEventListener('click', async () => {
                     const details = await fetchContentDetails(item.get('tmdbId'), item.get('type'));
-                    if (details) { closeFavoritesModal(); openPlayer(details); }
+                    if (details) {
+                        closeFavoritesModal();
+                        openPlayer(details);
+                    }
                 });
                 favoritesGrid.appendChild(card);
             });
         }
 
-        function openFavoritesModal() { favoritesModal.classList.remove('hidden'); favoritesModal.classList.add('flex'); renderFavoritesModal(); }
-        function closeFavoritesModal() { favoritesModal.classList.add('hidden'); favoritesModal.classList.remove('flex'); }
+        function openFavoritesModal() {
+            document.body.style.overflow = "hidden";
+            favoritesModal.classList.remove('hidden');
+            favoritesModal.classList.add('flex');
+            renderFavoritesModal();
+        }
+
+        function closeFavoritesModal() {
+            document.body.style.overflow = "";
+            favoritesModal.classList.remove('flex');
+            favoritesModal.classList.add('hidden');
+        }
 
         // --- RECENTLY WATCHED ---
         async function loadRecentlyWatched() {
@@ -880,7 +1013,10 @@
                 const posterUrl = `${IMAGE_BASE_URL}${currentItemData.poster_path}`;
                 record.set('title', title);
                 record.set('posterUrl', posterUrl);
-                if (currentType === 'tv') { record.set('season', parseInt(seasonSelect.value)); record.set('episode', parseInt(episodeSelect.value)); }
+                if (currentType === 'tv') { 
+                    record.set('season', parseInt(seasonSelect.value)); 
+                    record.set('episode', parseInt(episodeSelect.value)); 
+                }
                 await record.save();
                 recentlyWatchedItems[`${currentItemData.id}-${currentType}`] = { season: record.get('season'), episode: record.get('episode'), date: new Date(), title: title, posterUrl: posterUrl };
                 updateUI();
@@ -900,8 +1036,6 @@
             section.style.display = 'block';
             itemsArray.forEach(([key, item]) => {
                 const [tmdbId, type] = key.split('-');
-                
-                // Format Date nicely: e.g. Watched 6/21/26
                 const lastWatchedDate = item.date ? new Date(item.date) : new Date();
                 const formattedDate = `Watched ${lastWatchedDate.getMonth() + 1}/${lastWatchedDate.getDate()}/${String(lastWatchedDate.getFullYear()).slice(-2)}`;
 
@@ -948,6 +1082,7 @@
             } catch (err) { return null; }
         }
 
+        // Restored TMDB Content Details fetching for player metadata
         async function fetchContentDetails(id, type) {
             try {
                 const res = await fetch(`${BASE_URL}/${type}/${id}?api_key=${API_KEY}`);
@@ -964,6 +1099,7 @@
             } catch (err) { return null; }
         }
 
+        // Restored TMDB Trailer fetching
         async function fetchTrailer(id, type) {
             try {
                 const res = await fetch(`${BASE_URL}/${type}/${id}/videos?api_key=${API_KEY}`);
@@ -995,7 +1131,10 @@
                     <div class="card-info"><h3>${title}</h3><p>${(item.release_date || item.first_air_date || '').substring(0, 4)}</p></div>`;
                 
                 card.querySelector('.favorite-heart').onclick = e => { e.stopPropagation(); toggleFavorite(item.id, currentType, posterUrl, title); };
-                card.onclick = async () => { const details = await fetchContentDetails(item.id, currentType); if (details) openPlayer(details); };
+                card.onclick = async () => {
+                    const details = await fetchContentDetails(item.id, currentType);
+                    if (details) openPlayer(details);
+                };
                 galleryContainer.appendChild(card);
             });
         }
@@ -1012,8 +1151,9 @@
             });
         }
 
-        // --- PLAYER LOGIC ---
+        // ================= RESTORED MOVIE/TV PLAYER LOGIC =================
         function openPlayer(itemData, s = null, e = null) {
+            document.body.style.overflow = "hidden"; // Scroll-locking layout stabilization
             currentItemData = itemData;
             const isMovie = !!itemData.title;
             const type = isMovie ? 'movie' : 'tv';
@@ -1085,7 +1225,6 @@
             saveRecentlyWatched();
         }
 
-        // --- EPISODE NAVIGATION ---
         function navigateEpisode(direction) {
             if (currentType !== 'tv' || !currentItemData?.seasons) return;
             let currentSeasonNum = parseInt(seasonSelect.value);
@@ -1121,107 +1260,6 @@
             }
             updatePlayer();
         }
-
-        prevEpisodeBtn.onclick = () => navigateEpisode(-1);
-        nextEpisodeBtn.onclick = () => navigateEpisode(1);
-
-        // --- LIVE TV LOGIC ---
-        const LIVE_API_URL = 'https://api.cdnlivetv.tv/api/v1/channels/?user=cdnlivetv&plan=free';
-        let allChannels = [];
-        let currentFilter = 'all';
-        let activeLiveUrl = '';
-
-        const excludedKeywords = [
-            'sport', 'racing', 'football', 'liga', 'espn', 'nba', 'nfl', 'nhl', 'tennis', 
-            'sec', 'red bull', 'golf', 'goltv', 'soccer', 'deportes', 'cricket', 
-            'acc network', 'dazn', 'btn', 'wwe', 'ufc', 'fight',
-            'mlb', 'baseball', 'yankees', 'red sox', 'dodgers', 'cubs', 'mets', 'braves', 
-            'astros', 'phillies', 'blue jays', 'cardinals', 'giants', 'mariners', 
-            'rangers', 'diamondbacks', 'guardians', 'twins', 'brewers', 'marlins', 
-            'tigers', 'padres', 'orioles', 'angels', 'pirates', 'nationals', 'rays', 'reds', 'royals', 'rockies', 'athletics', 'white sox',
-            'altitude', 'nesn', 'tudn', 'universal kids', 'nbc universo', 'universo',
-            'telemundo', 'astro', 'yes', 'hub', 'univision', 'unimás', 'vix'
-        ];
-
-        async function initLiveTv() {
-            try {
-                const response = await fetch(LIVE_API_URL);
-                const data = await response.json();
-                allChannels = data.channels.filter(ch => {
-                    const code = ch.code.toLowerCase();
-                    const name = ch.name.toLowerCase();
-                    const isRegion = (code === 'us' || code === 'gb');
-                    const isExcluded = excludedKeywords.some(k => name.includes(k));
-                    return isRegion && !isExcluded;
-                });
-                renderLiveChannels();
-            } catch (err) {
-                channelList.innerHTML = `<p class="text-xs text-red-500 text-center py-10">Error loading channels</p>`;
-            }
-        }
-
-        function renderLiveChannels() {
-            const query = liveSearchInput.value.toLowerCase();
-            const filtered = allChannels.filter(ch => {
-                const matchesSearch = ch.name.toLowerCase().includes(query);
-                const matchesTab = currentFilter === 'all' || ch.code === currentFilter;
-                return matchesSearch && matchesTab;
-            });
-
-            channelList.innerHTML = '';
-            filtered.forEach(ch => {
-                const isActive = ch.url === activeLiveUrl;
-                const card = document.createElement('div');
-                card.className = `channel-card flex items-center p-3 gap-3 rounded-xl border border-gray-800 transition-all ${isActive ? 'active' : 'bg-gray-800/40 hover:bg-gray-800'}`;
-                card.innerHTML = `
-                    <div class="w-10 h-10 bg-black rounded p-1 flex items-center justify-center shrink-0 border border-gray-700">
-                        <img src="${ch.image}" class="max-w-full max-h-full object-contain" onerror="this.style.display='none'">
-                    </div>
-                    <div class="flex-1 min-w-0">
-                        <h4 class="text-[11px] font-bold truncate text-white uppercase">${ch.name}</h4>
-                        <span class="text-[8px] text-gray-500 font-bold">${ch.code.toUpperCase()}</span>
-                    </div>
-                `;
-                card.onclick = () => playLiveChannel(ch);
-                channelList.appendChild(card);
-            });
-        }
-
-        function playLiveChannel(ch) {
-            activeLiveUrl = ch.url;
-            livePlaceholder.classList.add('hidden');
-            livePlayer.src = ch.url.includes('?') ? `${ch.url}&autoplay=1` : `${ch.url}?autoplay=1`;
-            
-            footerName.innerText = ch.name;
-            footerMeta.innerText = `${ch.code.toUpperCase()} • LIVE STREAM ACTIVE`;
-            footerImg.innerHTML = `<img src="${ch.image}" class="w-full h-full object-contain">`;
-            statusDot.className = "ml-auto w-2 h-2 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.6)]";
-            renderLiveChannels();
-        }
-
-        window.setFilter = (code) => {
-            currentFilter = code;
-            document.querySelectorAll('.filter-btn').forEach(btn => {
-                if(btn.dataset.filter === code) {
-                    btn.classList.replace('bg-zinc-800', 'bg-purple-600');
-                    btn.classList.replace('text-zinc-400', 'text-white');
-                } else {
-                    btn.classList.replace('bg-purple-600', 'bg-zinc-800');
-                    btn.classList.replace('text-white', 'text-zinc-400');
-                }
-            });
-            renderLiveChannels();
-        };
-
-        liveTvTrigger.addEventListener('click', () => {
-            liveTvModal.classList.remove('hidden');
-            if (allChannels.length === 0) initLiveTv();
-        });
-        closeLiveTv.addEventListener('click', () => {
-            liveTvModal.classList.add('hidden');
-            livePlayer.src = "";
-        });
-        liveSearchInput.addEventListener('input', renderLiveChannels);
 
         // --- AUDIO VISUALIZERS ---
         const audio = document.getElementById('myAudio');
@@ -1324,11 +1362,369 @@
             }
         };
 
-        // --- FLOATING HEART ---
-        floatingHeart.onclick = () => { heartVideoModal.style.display = 'flex'; };
-        heartModalCloseBtn.onclick = () => { heartVideoModal.style.display = 'none'; document.getElementById('heatherSecretYouTube').src = document.getElementById('heatherSecretYouTube').src; };
+        // ================= LIQUID GLASS LIVE TV PLAYER JAVASCRIPT =================
+        const XML_URL = 'https://raw.githubusercontent.com/dp247/Freeview-EPG/master/epg.xml';
+        
+        // Dynamic formulation of NYC Date
+        const nyDate = new Date(new Date().toLocaleString("en-US", { timeZone: "America/New_York" }));
+        const yyyy = nyDate.getFullYear();
+        const mm = String(nyDate.getMonth() + 1).padStart(2, '0');
+        const dd = String(nyDate.getDate()).padStart(2, '0');
+        const formattedNYDate = `${yyyy}${mm}${dd}`;
+        
+        const CH4_XML_URL = `https://epg.pw/api/epg.xml?lang=en&date=${formattedNYDate}&channel_id=486699`;
+        
+        const CHANNELS = [
+            {
+                "name":"BBC One",
+                "code":"gb",
+                "url":"https://dami-tv.pro/embed/channel/?id=bbc-one-uk",
+                "backupUrl":"https://dlhd.pk/player/stream-356.php",
+                "backupUrl2": null,
+                "image":"https://api.cdnlivetv.tv/api/v1/channels/images6318/united-kingdom/bbc-one.svg"
+            },
+            {
+                "name":"BBC Two",
+                "code":"gb",
+                "url":"https://dami-tv.pro/embed/channel/?id=bbc-two-uk",
+                "backupUrl":"https://dlhd.pk/player/stream-357.php",
+                "backupUrl2": null,
+                "image":"https://api.cdnlivetv.tv/api/v1/channels/images6318/united-kingdom/bbc-two.svg"
+            },
+            {
+                "name":"BBC Three",
+                "code":"gb",
+                "url":"https://dami-tv.pro/embed/channel/?id=bbc-three-uk",
+                "backupUrl":"https://dlhd.pk/player/stream-358.php",
+                "backupUrl2": null,
+                "image":"https://api.cdnlivetv.tv/api/v1/channels/images6318/united-kingdom/bbc-three.webp"
+            },
+            {
+                "name":"BBC Four",
+                "code":"gb",
+                "url":"https://dami-tv.pro/embed/channel/?id=bbc-four-uk",
+                "backupUrl":"https://dlhd.pk/player/stream-359.php",
+                "backupUrl2": null,
+                "image":"https://api.cdnlivetv.tv/api/v1/channels/images6318/united-kingdom/bbc-four.svg"
+            },
+            {
+                "name":"ITV 1",
+                "code":"gb",
+                "url":"https://dami-tv.pro/embed/channel/?id=itv-1-uk",
+                "backupUrl":"https://dlhd.pk/player/stream-350.php",
+                "backupUrl2":"https://sportsbite.online/channels/itv-1-uk",
+                "image":"https://api.cdnlivetv.tv/api/v1/channels/images6318/united-kingdom/itv-1.svg"
+            },
+            {
+                "name":"ITV 2",
+                "code":"gb",
+                "url":"https://dami-tv.pro/embed/channel/?id=itv-2-uk",
+                "backupUrl":"https://dlhd.pk/player/stream-351.php",
+                "backupUrl2":"https://sportsbite.online/channels/itv-2-uk",
+                "image":"https://api.cdnlivetv.tv/api/v1/channels/images6318/united-kingdom/itv-2.svg"
+            },
+            {
+                "name":"ITV 3",
+                "code":"gb",
+                "url":"https://dami-tv.pro/embed/channel/?id=itv-3-uk",
+                "backupUrl":"https://dlhd.pk/player/stream-352.php",
+                "backupUrl2":"https://sportsbite.online/channels/itv-3-uk",
+                "image":"https://api.cdnlivetv.tv/api/v1/channels/images6318/united-kingdom/itv-3.svg"
+            },
+            {
+                "name":"ITV 4",
+                "code":"gb",
+                "url":"https://dami-tv.pro/embed/channel/?id=itv-4-uk",
+                "backupUrl":"https://dlhd.pk/player/stream-353.php",
+                "backupUrl2":"https://sportsbite.online/channels/itv-4-uk",
+                "image":"https://api.cdnlivetv.tv/api/v1/channels/images6318/united-kingdom/itv-4.svg"
+            },
+            {
+                "name":"Channel 4",
+                "code":"gb",
+                "url":"https://dami-tv.pro/embed/channel/?id=channel-4-uk",
+                "backupUrl":"https://dlhd.pk/player/stream-354.php",
+                "backupUrl2":"https://sportsbite.online/channels/channel-4-uk",
+                "image":"https://api.cdnlivetv.tv/api/v1/channels/images6318/united-kingdom/channel-4.svg",
+                "isCustomEPG": true
+            },
+            {
+                "name":"Channel 5",
+                "code":"gb",
+                "url":"https://dami-tv.pro/embed/channel/?id=channel-5-uk",
+                "backupUrl":"https://dlhd.pk/player/stream-355.php",
+                "backupUrl2":"https://sportsbite.online/channels/channel-5-uk",
+                "image":"https://api.cdnlivetv.tv/api/v1/channels/images6318/united-kingdom/channel-5.svg"
+            }
+        ];
 
-        // --- EVENT LISTENERS ---
+        let loadedChannels = [];
+        let loadedPrograms = [];
+        let liveCurrentUrl = "";
+        let selectedChannelIdx = null;
+        let streamSource = "primary"; // "primary", "backup", or "backup2"
+        let epgUpdateInterval = null;
+
+        async function initLiquidGlassLivePlayer() {
+            try {
+                const [resMain, resCh4] = await Promise.allSettled([
+                    fetch(XML_URL).then(r => r.text()),
+                    fetch(CH4_XML_URL).then(r => r.text())
+                ]);
+
+                let xmlMain = null;
+                let xmlCh4 = null;
+
+                if (resMain.status === "fulfilled") {
+                    xmlMain = new DOMParser().parseFromString(resMain.value, "text/xml");
+                }
+                if (resCh4.status === "fulfilled") {
+                    xmlCh4 = new DOMParser().parseFromString(resCh4.value, "text/xml");
+                }
+
+                if (xmlMain) {
+                    const allChannelNodes = Array.from(xmlMain.getElementsByTagName('channel'));
+                    loadedChannels = CHANNELS.map(local => {
+                        if (local.isCustomEPG) {
+                            return { ...local, xmlId: "channel-4-custom" };
+                        }
+                        const match = allChannelNodes.find(node => {
+                            const xmlName = node.getElementsByTagName('display-name')[0]?.textContent?.toUpperCase() || "";
+                            const localName = local.name.toUpperCase().replace(/\s/g, '');
+                            const cleanXmlName = xmlName.replace(/\s/g, '');
+                            return cleanXmlName === localName || 
+                                   cleanXmlName.startsWith(localName) || 
+                                   (local.name === "Channel 5" && cleanXmlName === "FIVE");
+                        });
+                        return { ...local, xmlId: match ? match.getAttribute('id') : null };
+                    });
+
+                    loadedPrograms = Array.from(xmlMain.getElementsByTagName('programme'))
+                        .map(p => ({
+                            chId: p.getAttribute('channel'),
+                            start: parseDate(p.getAttribute('start')),
+                            stop: parseDate(p.getAttribute('stop')),
+                            title: p.getElementsByTagName('title')[0]?.textContent || "Untitled Program",
+                            desc: p.getElementsByTagName('desc')[0]?.textContent || "No description provided."
+                        }));
+                } else {
+                    loadedChannels = CHANNELS;
+                }
+
+                if (xmlCh4) {
+                    const ch4Programmes = Array.from(xmlCh4.getElementsByTagName('programme'))
+                        .map(p => ({
+                            chId: "channel-4-custom",
+                            start: parseDate(p.getAttribute('start')),
+                            stop: parseDate(p.getAttribute('stop')),
+                            title: p.getElementsByTagName('title')[0]?.textContent || "Untitled Program",
+                            desc: p.getElementsByTagName('desc')[0]?.textContent || "No description provided."
+                        }));
+                    
+                    loadedPrograms = loadedPrograms.filter(p => p.chId !== "channel-4-custom").concat(ch4Programmes);
+                }
+
+                document.getElementById('sync-status').innerText = "10 Channels";
+                document.getElementById('sync-status').className = "text-[10px] text-green-300 font-bold bg-green-950/50 px-2 py-0.5 rounded border border-green-500/20";
+                
+                renderSidebarChannels();
+                if (epgUpdateInterval) clearInterval(epgUpdateInterval);
+                epgUpdateInterval = setInterval(renderSidebarChannels, 60000);
+
+            } catch (e) {
+                console.error(e);
+                document.getElementById('sync-status').innerText = "EPG ERROR";
+                document.getElementById('sync-status').className = "text-[10px] text-red-300 font-bold bg-red-950/50 px-2 py-0.5 rounded border border-red-500/20";
+                loadedChannels = CHANNELS;
+                renderSidebarChannels();
+            }
+        }
+
+        function parseDate(s) {
+            if (!s) return new Date();
+            const y = s.slice(0,4), m = s.slice(4,6)-1, d = s.slice(6,8), h = s.slice(8,10), min = s.slice(10,12);
+            let offset = 0;
+            if (s.includes(' ')) {
+                const parts = s.split(' ');
+                const offsetStr = parts[1];
+                const sign = offsetStr[0] === '+' ? 1 : -1;
+                const offH = parseInt(offsetStr.slice(1,3), 10);
+                const offM = parseInt(offsetStr.slice(3,5), 10);
+                offset = sign * (offH * 60 + offM) * 60 * 1000;
+            }
+            const utcTime = Date.UTC(y, m, d, h, min);
+            return new Date(utcTime - offset);
+        }
+
+        function formatTimeNY(date) {
+            return date.toLocaleTimeString('en-US', {
+                timeZone: 'America/New_York',
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: true
+            }).toLowerCase();
+        }
+
+        function getProgressPercent(start, stop) {
+            const now = new Date();
+            const total = stop.getTime() - start.getTime();
+            const elapsed = now.getTime() - start.getTime();
+            return Math.min(100, Math.max(0, Math.round((elapsed / total) * 100)));
+        }
+
+        window.setStreamSource = (source) => {
+            streamSource = source;
+            
+            const btnPrimary = document.getElementById('btn-primary');
+            const btnBackup = document.getElementById('btn-backup');
+            const btnBackup2 = document.getElementById('btn-backup2');
+            const sourceLabel = document.getElementById('current-source-label');
+            
+            const activeStyle = "flex-1 sm:flex-initial px-3.5 py-2 rounded-lg font-bold uppercase text-[10px] tracking-wider transition-all duration-200 bg-purple-600/80 text-white border border-purple-400/40 shadow-lg shadow-purple-500/20";
+            const inactiveStyle = "flex-1 sm:flex-initial px-3.5 py-2 rounded-lg font-bold uppercase text-[10px] tracking-wider transition-all duration-200 bg-purple-950/40 text-purple-300 border border-purple-500/20 hover:border-purple-400/40 hover:bg-purple-900/25";
+            const disabledStyle = "flex-1 sm:flex-initial px-3.5 py-2 rounded-lg font-bold uppercase text-[10px] tracking-wider transition-all duration-200 bg-slate-950/40 text-slate-600 border border-slate-900 cursor-not-allowed opacity-55";
+
+            let currentCh = selectedChannelIdx !== null ? loadedChannels[selectedChannelIdx] : null;
+
+            btnPrimary.className = inactiveStyle;
+            btnBackup.className = inactiveStyle;
+            
+            if (currentCh && !currentCh.backupUrl2) {
+                btnBackup2.className = disabledStyle;
+                if (streamSource === 'backup2') {
+                    streamSource = 'primary';
+                }
+            } else {
+                btnBackup2.className = inactiveStyle;
+            }
+
+            if (streamSource === 'primary') {
+                btnPrimary.className = activeStyle;
+                sourceLabel.innerText = "Primary stream active";
+            } else if (streamSource === 'backup') {
+                btnBackup.className = activeStyle;
+                sourceLabel.innerText = "Backup 1 stream active";
+            } else if (streamSource === 'backup2') {
+                btnBackup2.className = activeStyle;
+                sourceLabel.innerText = "Backup 2 stream active";
+            }
+
+            if (currentCh) {
+                let activeUrl = currentCh.url;
+                if (streamSource === 'backup') activeUrl = currentCh.backupUrl;
+                if (streamSource === 'backup2' && currentCh.backupUrl2) activeUrl = currentCh.backupUrl2;
+                
+                if (liveCurrentUrl !== activeUrl) {
+                    liveCurrentUrl = activeUrl;
+                    document.getElementById('player-placeholder').style.display = 'none';
+                    document.getElementById('main-player').src = activeUrl;
+                }
+            }
+        };
+
+        function renderSidebarChannels() {
+            const listContainer = document.getElementById('channels-list');
+            listContainer.innerHTML = "";
+            const now = new Date();
+
+            loadedChannels.forEach((ch, idx) => {
+                const channelProgs = loadedPrograms.filter(p => p.chId === ch.xmlId).sort((a, b) => a.start - b.start);
+                const nowPlaying = channelProgs.find(p => now >= p.start && now < p.stop);
+                const upNext = channelProgs.find(p => p.start >= now);
+
+                const tile = document.createElement('div');
+                tile.className = `channel-tile rounded-xl p-3.5 cursor-pointer flex flex-col gap-3 relative ${selectedChannelIdx === idx ? 'selected' : ''}`;
+                
+                const progress = nowPlaying ? getProgressPercent(nowPlaying.start, nowPlaying.stop) : 0;
+                const episodeDesc = nowPlaying ? nowPlaying.desc : 'No description available.';
+
+                tile.innerHTML = `
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <div class="w-12 h-6 bg-white/5 rounded px-1.5 py-0.5 flex items-center justify-center border border-white/10">
+                                <img src="${ch.image}" class="max-w-full max-h-full object-contain filter drop-shadow" onerror="this.style.opacity=0.3">
+                            </div>
+                            <span class="font-bold text-xs md:text-sm text-purple-200 tracking-tight">${ch.name}</span>
+                        </div>
+                        ${nowPlaying ? `<span class="text-[9px] font-extrabold uppercase bg-purple-600/70 px-1.5 py-0.5 rounded-full text-white tracking-widest animate-pulse border border-purple-400/40">LIVE</span>` : ''}
+                    </div>
+
+                    <div class="bg-black/40 rounded-lg p-2.5 border border-purple-500/10">
+                        <div class="text-[9px] text-purple-400 font-extrabold uppercase tracking-widest">NOW PLAYING</div>
+                        <div class="text-xs font-bold text-white truncate mt-0.5">${nowPlaying ? nowPlaying.title : 'No Schedule Data available'}</div>
+                        
+                        ${nowPlaying ? `
+                        <div class="text-[10px] text-purple-300/65 mt-1.5 flex justify-between items-center font-medium">
+                            <span>${formatTimeNY(nowPlaying.start)} - ${formatTimeNY(nowPlaying.stop)}</span>
+                            <span>${progress}%</span>
+                        </div>
+                        <div class="w-full bg-purple-950/60 h-1 rounded-full overflow-hidden mt-1.5 border border-purple-500/10">
+                            <div class="bg-gradient-to-r from-purple-500 to-indigo-500 h-full rounded-full transition-all duration-1000" style="width: ${progress}%"></div>
+                        </div>
+                        ` : ''}
+                    </div>
+
+                    <!-- MOBILE ONLY: Current Live Episode Summary -->
+                    ${nowPlaying ? `
+                    <div class="block lg:hidden text-[11px] text-purple-300/80 leading-relaxed bg-black/20 p-2.5 rounded-lg border border-purple-500/5">
+                        ${episodeDesc}
+                    </div>
+                    ` : ''}
+
+                    ${upNext ? `
+                    <div class="flex items-center justify-between gap-2 text-[11px] px-1 text-purple-300/60">
+                        <span class="truncate font-medium">
+                            <strong class="text-purple-400 font-bold mr-1">UP NEXT:</strong> ${upNext.title}
+                        </span>
+                        <span class="flex-shrink-0 text-[10px] bg-purple-950/40 px-1.5 py-0.5 rounded border border-purple-500/10 font-bold text-purple-300">
+                            ${formatTimeNY(upNext.start)}
+                        </span>
+                    </div>
+                    ` : `
+                    <div class="text-[10px] px-1 text-purple-300/30 italic">No upcoming schedule</div>
+                    `}
+                `;
+
+                tile.onclick = () => {
+                    selectedChannelIdx = idx;
+                    document.querySelectorAll('.channel-tile').forEach(b => b.classList.remove('selected'));
+                    tile.classList.add('selected');
+
+                    if (nowPlaying) {
+                        document.getElementById('p-title').innerText = nowPlaying.title;
+                        document.getElementById('p-time-range').innerText = `${formatTimeNY(nowPlaying.start)} - ${formatTimeNY(nowPlaying.stop)}`;
+                        document.getElementById('p-desc').innerText = nowPlaying.desc;
+                    } else {
+                        document.getElementById('p-title').innerText = ch.name;
+                        document.getElementById('p-time-range').innerText = "Live Stream";
+                        document.getElementById('p-desc').innerText = "Enjoy high-definition streams on the Liquid Glass player interface.";
+                    }
+
+                    document.getElementById('p-channel-name').innerText = ch.name;
+                    document.getElementById('p-meta').style.opacity = "1";
+
+                    if (streamSource === 'backup2' && !ch.backupUrl2) {
+                        streamSource = 'primary';
+                    }
+
+                    let activeUrl = ch.url;
+                    if (streamSource === 'backup') activeUrl = ch.backupUrl;
+                    if (streamSource === 'backup2' && ch.backupUrl2) activeUrl = ch.backupUrl2;
+
+                    setStreamSource(streamSource);
+
+                    if (liveCurrentUrl !== activeUrl) {
+                        liveCurrentUrl = activeUrl;
+                        document.getElementById('player-placeholder').style.display = 'none';
+                        document.getElementById('main-player').src = activeUrl;
+                    }
+                };
+
+                listContainer.appendChild(tile);
+            });
+        }
+
+        // --- EVENT LISTENERS & TRIGGERS ---
         searchInput.oninput = () => { currentQuery = searchInput.value; currentPage = 1; updateUI(); };
 
         document.getElementById('radioStationSelect').onchange = () => { if (!radioAudio.paused) toggleRadioPlayback(); toggleRadioPlayback(); };
@@ -1339,19 +1735,86 @@
         const paginate = (dir) => { currentPage += dir; updateUI(); window.scrollTo(0, 0); };
         prevPageBtn.onclick = prevPageBottomBtn.onclick = () => paginate(-1);
         nextPageBtn.onclick = nextPageBottomBtn.onclick = () => paginate(1);
-        
-        modalCloseBtn.onclick = () => { videoModal.classList.remove('visible'); setTimeout(() => { videoModal.classList.add('hidden'); iframeContainer.innerHTML = ''; }, 300); };
-        fullscreenBtn.onclick = () => iframeContainer.requestFullscreen();
-        openFavoritesBtn.onclick = openFavoritesModal;
-        closeFavoritesBtn.onclick = closeFavoritesModal;
 
-        showNoSandboxBtn.onclick = () => { isSandboxMode = false; showNoSandboxBtn.classList.add('active', 'ring-2'); showSandboxBtn.classList.remove('active', 'ring-2'); populateSourceSelector(); };
-        showSandboxBtn.onclick = () => { isSandboxMode = true; showSandboxBtn.classList.add('active', 'ring-2'); showNoSandboxBtn.classList.remove('active', 'ring-2'); populateSourceSelector(); };
+        // --- LIVE TV MODAL ACTION COUPLERS ---
+        liveTvTrigger.addEventListener('click', () => {
+            // Lock background body scrolling completely to stabilize viewports
+            document.body.style.overflow = "hidden";
+            liveTvModal.classList.remove('hidden');
+            liveTvModal.classList.add('flex');
+            initLiquidGlassLivePlayer();
+        });
+
+        closeLiveTv.addEventListener('click', () => {
+            document.body.style.overflow = "";
+            liveTvModal.classList.remove('flex');
+            liveTvModal.classList.add('hidden');
+            document.getElementById('main-player').src = "";
+            liveCurrentUrl = "";
+            if (epgUpdateInterval) {
+                clearInterval(epgUpdateInterval);
+                epgUpdateInterval = null;
+            }
+        });
+
+        // --- RESTORED MOVIE/TV PLAYER CLOSE EVENT HANDLERS ---
+        modalCloseBtn.onclick = () => {
+            document.body.style.overflow = "";
+            videoModal.classList.remove('visible');
+            setTimeout(() => {
+                videoModal.classList.add('hidden');
+                iframeContainer.innerHTML = '';
+            }, 300);
+        };
+
+        fullscreenBtn.onclick = () => {
+            if (iframeContainer.requestFullscreen) {
+                iframeContainer.requestFullscreen();
+            }
+        };
+
+        showNoSandboxBtn.onclick = () => {
+            isSandboxMode = false;
+            showNoSandboxBtn.classList.add('active', 'ring-2', 'ring-purple-300');
+            showSandboxBtn.classList.remove('active', 'ring-2', 'ring-purple-300');
+            populateSourceSelector();
+        };
+
+        showSandboxBtn.onclick = () => {
+            isSandboxMode = true;
+            showSandboxBtn.classList.add('active', 'ring-2', 'ring-purple-300');
+            showNoSandboxBtn.classList.remove('active', 'ring-2', 'ring-purple-300');
+            populateSourceSelector();
+        };
 
         trailerBtn.onclick = async () => {
+            if (!currentItemData) return;
             const trailerUrl = await fetchTrailer(currentItemData.id, currentType);
-            if (trailerUrl) iframeContainer.innerHTML = `<iframe class="w-full h-full absolute" src="${trailerUrl}" allowfullscreen></iframe>`;
+            if (trailerUrl) {
+                iframeContainer.innerHTML = `<iframe class="w-full h-full absolute" src="${trailerUrl}" allowfullscreen></iframe>`;
+            }
         };
+
+        prevEpisodeBtn.onclick = () => navigateEpisode(-1);
+        nextEpisodeBtn.onclick = () => navigateEpisode(1);
+
+        // --- RESTORED SECRET HEART EVENT HANDLERS ---
+        floatingHeart.onclick = () => {
+            document.body.style.overflow = "hidden";
+            heartVideoModal.style.display = 'flex';
+        };
+
+        heartModalCloseBtn.onclick = () => {
+            document.body.style.overflow = "";
+            heartVideoModal.style.display = 'none';
+            // Stop YouTube iframe from playing behind the scenes when closing
+            const ytFrame = document.getElementById('heatherSecretYouTube');
+            ytFrame.src = ytFrame.src;
+        };
+
+        // --- RESTORED FAVORITES CLICK TRIGGERS ---
+        openFavoritesBtn.onclick = openFavoritesModal;
+        closeFavoritesBtn.onclick = closeFavoritesModal;
 
         document.addEventListener('DOMContentLoaded', () => {
             loadFavorites();
