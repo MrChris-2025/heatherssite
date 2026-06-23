@@ -729,7 +729,7 @@
                     
                     <!-- Video Iframe Wrapper -->
                     <div class="player-container w-full aspect-video bg-black rounded-2xl border border-purple-500/25 overflow-hidden relative flex-shrink-0">
-                        <iframe id="main-player" sandbox="allow-same-origin allow-scripts" allowfullscreen referrerpolicy="no-referrer" allow="autoplay; encrypted-media" class="w-full h-full border-none"></iframe>
+                        <iframe id="main-player" allowfullscreen referrerpolicy="no-referrer" allow="autoplay; encrypted-media" class="w-full h-full border-none"></iframe>
                         <div id="player-placeholder" class="absolute inset-0 flex flex-col items-center justify-center bg-purple-950/90 backdrop-blur-xl text-purple-200 font-bold text-xs uppercase tracking-widest gap-2">
 
                             Select a Channel
@@ -891,18 +891,18 @@
             { id: 'cinesrc', name: 'CineSrc', urls: { movie: 'https://cinesrc.st/embed/movie/{id}', tv: 'https://cinesrc.st/embed/tv/{id}/{season}/{episode}' } },
             { id: 'wplayme', name: 'Wplay.me', urls: { movie: 'https://play.xpass.top/e/movie/{id}', tv: 'https://play.xpass.top/e/tv/{id}/{season}/{episode}' } },
             { id: 'meow', name: 'Meow', urls: { movie: 'https://meowtv.ru/play/movie/{id}', tv: 'https://meowtv.ru/play/tv/{id}/{season}/{episode}' } },
-            { id: 'xprime', name: 'XPrime', urls: { movie: 'https://xprime.su/watch/{id}', tv: 'https://xprime.su/watch/{id}/{season}/{episode}' } },
+            { id: 'nextbox', name: 'NextBox', urls: { movie: 'https://nextbox.uno/player/movie/{id}', tv: 'https://nextbox.uno/player/tv/{id}/{season}/{episode}' } },
             { id: 'cinezo', name: 'Cinezo', urls: { movie: 'https://api.cinezo.net/movie/{id}', tv: 'https://api.cinezo.net/tv/{id}/{season}/{episode}?autoplayNext=true?startAt=630' } },     
-            { id: 'vyla', name: 'Vyla', urls: { movie: 'https://vyla.pages.dev/movie/{id}', tv: 'https://vyla.pages.dev/tv/{id}/{season}/{episode}' } },
+            { id: 'bingr', name: 'Bingr', urls: { movie: 'https://bingr.live/watch/movie/{id}', tv: 'https://bingr.live/watch/tv/{id}/{season}/{episode}' } },
             { id: 'cinemaos', name: 'Cinemaos', urls: { movie: 'https://cinemaos.tech/player/{id}', tv: 'https://cinemaos.live/tv/watch/{id}&{season}&{episode}' } },
             { id: 'vaplayer', name: 'VaPlayer', urls: { movie: 'https://vaplayer.ru/embed/movie/{id}', tv: 'https://vaplayer.ru/embed/tv/{id}/{season}/{episode}' } },
             { id: 'videasy', name: 'VidEasy', urls: { movie: 'https://player.videasy.net/movie/{id}?color=8834ec', tv: 'https://player.videasy.net/tv/{id}/{season}/{episode}?nextEpisode=true&color=8834ec' } },
             { id: 'vidfast', name: 'VidFast', urls: { movie: 'https://vidfast.pro/movie/{id}', tv: 'https://vidfast.pro/tv/{id}/{season}/{episode}' } },
-            { id: 'vidsrcvip', name: 'vidsrc.vip', urls: { movie: 'https://vidsrc.vip/embed/movie/{id}', tv: 'https://vidsrc.vip/embed/tv/{id}/{season}/{episode}' } }
+            { id: 'vidsync', name: 'Vidsync', urls: { movie: 'https://vidsync.live/embed/movie/{id}?autoPlay=true', tv: 'https://vidsync.live/embed/tv/{id}/{season}/{episode}?autoPlay=true' } }
         ];
 
-        const noSandboxSources = ['videasy', 'vidfast', 'wplayme', 'vidsrcvip'];
-        const sandboxedSources = ['vyla', 'xprime', 'willow', 'cinezo', 'meow', 'vaplayer', 'cinemaos', 'cinesrc'];
+        const noSandboxSources = ['videasy', 'vidfast', 'wplayme', 'vidsync'];
+        const sandboxedSources = ['bingr', 'nextbox', 'cinezo', 'meow', 'vaplayer', 'cinemaos', 'cinesrc'];
 
         // --- FAVORITES LOGIC ---
         async function loadFavorites() {
@@ -1378,82 +1378,82 @@
             {
                 "name":"BBC One",
                 "code":"gb",
-                "url":"https://dami-tv.pro/embed/channel/?id=bbc-one-uk",
+                "url":"https://cdnlivetv.tv/api/v1/channels/player/?name=BBC%20One&code=gb&user=cdnlivetv&plan=free",
                 "backupUrl":"https://dlhd.pk/player/stream-356.php",
-                "backupUrl2": "https://sportsbite.lol/channels/bbc-one-uk",
+                "backupUrl2": "https://daddylive.li/embed/embed.php?id=356&player=1&source=tv.json",
                 "image":"https://api.cdnlivetv.tv/api/v1/channels/images6318/united-kingdom/bbc-one.svg"
             },
             {
                 "name":"BBC Two",
                 "code":"gb",
-                "url":"https://dami-tv.pro/embed/channel/?id=bbc-two-uk",
+                "url":"https://cdnlivetv.tv/api/v1/channels/player/?name=BBC%20Two&code=gb&user=cdnlivetv&plan=free",
                 "backupUrl":"https://dlhd.pk/player/stream-357.php",
-                "backupUrl2": "https://sportsbite.lol/channels/bbc-two-uk",
+                "backupUrl2": "https://daddylive.li/embed/embed.php?id=357&player=1&source=tv.json",
                 "image":"https://api.cdnlivetv.tv/api/v1/channels/images6318/united-kingdom/bbc-two.svg"
             },
             {
                 "name":"BBC Three",
                 "code":"gb",
-                "url":"https://dami-tv.pro/embed/channel/?id=bbc-three-uk",
+                "url":"https://cdnlivetv.tv/api/v1/channels/player/?name=BBC%20Three&code=gb&user=cdnlivetv&plan=free",
                 "backupUrl":"https://dlhd.pk/player/stream-358.php",
-                "backupUrl2": "https://sportsbite.lol/channels/bbc-three-uk",
+                "backupUrl2": "https://daddylive.li/embed/embed.php?id=358&player=1&source=tv.json",
                 "image":"https://api.cdnlivetv.tv/api/v1/channels/images6318/united-kingdom/bbc-three.webp"
             },
             {
                 "name":"BBC Four",
                 "code":"gb",
-                "url":"https://dami-tv.pro/embed/channel/?id=bbc-four-uk",
+                "url":"https://cdnlivetv.tv/api/v1/channels/player/?name=BBC%20Four&code=gb&user=cdnlivetv&plan=free",
                 "backupUrl":"https://dlhd.pk/player/stream-359.php",
-                "backupUrl2": "https://sportsbite.lol/channels/bbc-four-uk",
+                "backupUrl2": "https://daddylive.li/embed/embed.php?id=359&player=1&source=tv.json",
                 "image":"https://api.cdnlivetv.tv/api/v1/channels/images6318/united-kingdom/bbc-four.svg"
             },
             {
                 "name":"ITV 1",
                 "code":"gb",
-                "url":"https://dami-tv.pro/embed/channel/?id=itv-1-uk",
+                "url":"https://cdnlivetv.tv/api/v1/channels/player/?name=ITV%201&code=gb&user=cdnlivetv&plan=free",
                 "backupUrl":"https://dlhd.pk/player/stream-350.php",
-                "backupUrl2":"https://sportsbite.lol/channels/itv-1-uk",
+                "backupUrl2":"https://daddylive.li/embed/embed.php?id=350&player=1&source=tv.json",
                 "image":"https://api.cdnlivetv.tv/api/v1/channels/images6318/united-kingdom/itv-1.svg"
             },
             {
                 "name":"ITV 2",
                 "code":"gb",
-                "url":"https://dami-tv.pro/embed/channel/?id=itv-2-uk",
+                "url":"https://cdnlivetv.tv/api/v1/channels/player/?name=ITV%202&code=gb&user=cdnlivetv&plan=free",
                 "backupUrl":"https://dlhd.pk/player/stream-351.php",
-                "backupUrl2":"https://sportsbite.lol/channels/itv-2-uk",
+                "backupUrl2":"https://daddylive.li/embed/embed.php?id=351&player=1&source=tv.json",
                 "image":"https://api.cdnlivetv.tv/api/v1/channels/images6318/united-kingdom/itv-2.svg"
             },
             {
                 "name":"ITV 3",
                 "code":"gb",
-                "url":"https://dami-tv.pro/embed/channel/?id=itv-3-uk",
+                "url":"https://cdnlivetv.tv/api/v1/channels/player/?name=ITV%203&code=gb&user=cdnlivetv&plan=free",
                 "backupUrl":"https://dlhd.pk/player/stream-352.php",
-                "backupUrl2":"https://sportsbite.lol/channels/itv-3-uk",
+                "backupUrl2":"https://daddylive.li/embed/embed.php?id=352&player=1&source=tv.json",
                 "image":"https://api.cdnlivetv.tv/api/v1/channels/images6318/united-kingdom/itv-3.svg"
             },
             {
                 "name":"ITV 4",
                 "code":"gb",
-                "url":"https://dami-tv.pro/embed/channel/?id=itv-4-uk",
+                "url":"https://cdnlivetv.tv/api/v1/channels/player/?name=ITV%204&code=gb&user=cdnlivetv&plan=free",
                 "backupUrl":"https://dlhd.pk/player/stream-353.php",
-                "backupUrl2":"https://sportsbite.lol/channels/itv-4-uk",
+                "backupUrl2":"https://daddylive.li/embed/embed.php?id=353&player=1&source=tv.json",
                 "image":"https://api.cdnlivetv.tv/api/v1/channels/images6318/united-kingdom/itv-4.svg"
             },
             {
                 "name":"Channel 4",
                 "code":"gb",
-                "url":"https://dami-tv.pro/embed/channel/?id=channel-4-uk",
+                "url":"https://cdnlivetv.tv/api/v1/channels/player/?name=Channel%204&code=gb&user=cdnlivetv&plan=free",
                 "backupUrl":"https://dlhd.pk/player/stream-354.php",
-                "backupUrl2":"https://sportsbite.lol/channels/channel-4-uk",
+                "backupUrl2":"https://daddylive.li/embed/embed.php?id=354&player=1&source=tv.json",
                 "image":"https://api.cdnlivetv.tv/api/v1/channels/images6318/united-kingdom/channel-4.svg",
                 "isCustomEPG": true
             },
             {
                 "name":"Channel 5",
                 "code":"gb",
-                "url":"https://dami-tv.pro/embed/channel/?id=channel-5-uk",
+                "url":"https://cdnlivetv.tv/api/v1/channels/player/?name=Channel%204&code=gb&user=cdnlivetv&plan=free",
                 "backupUrl":"https://dlhd.pk/player/stream-355.php",
-                "backupUrl2":"https://sportsbite.lol/channels/channel-5-uk",
+                "backupUrl2":"https://daddylive.li/embed/embed.php?id=355&player=1&source=tv.json",
                 "image":"https://api.cdnlivetv.tv/api/v1/channels/images6318/united-kingdom/channel-5.svg"
             }
         ];
@@ -1565,6 +1565,7 @@
             }).toLowerCase();
         }
 
+        // --- DYNAMIC PROGRESS BAR CALC ---
         function getProgressPercent(start, stop) {
             const now = new Date();
             const total = stop.getTime() - start.getTime();
@@ -1617,7 +1618,16 @@
                 if (liveCurrentUrl !== activeUrl) {
                     liveCurrentUrl = activeUrl;
                     document.getElementById('player-placeholder').style.display = 'none';
-                    document.getElementById('main-player').src = activeUrl;
+                    const mainPlayer = document.getElementById('main-player');
+                    
+                    // Secure sandboxing applied selectively for backup streams
+                    if (streamSource === 'backup' || streamSource === 'backup2') {
+                        mainPlayer.setAttribute('sandbox', 'allow-same-origin allow-scripts allow-forms allow-pointer-lock allow-fullscreen');
+                    } else {
+                        mainPlayer.removeAttribute('sandbox');
+                    }
+                    
+                    mainPlayer.src = activeUrl;
                 }
             }
         };
@@ -1716,7 +1726,16 @@
                     if (liveCurrentUrl !== activeUrl) {
                         liveCurrentUrl = activeUrl;
                         document.getElementById('player-placeholder').style.display = 'none';
-                        document.getElementById('main-player').src = activeUrl;
+                        const mainPlayer = document.getElementById('main-player');
+                        
+                        // Secure sandboxing applied selectively for backup streams
+                        if (streamSource === 'backup' || streamSource === 'backup2') {
+                            mainPlayer.setAttribute('sandbox', 'allow-same-origin allow-scripts allow-forms allow-pointer-lock allow-fullscreen');
+                        } else {
+                            mainPlayer.removeAttribute('sandbox');
+                        }
+                        
+                        mainPlayer.src = activeUrl;
                     }
                 };
 
@@ -1749,7 +1768,9 @@
             document.body.style.overflow = "";
             liveTvModal.classList.remove('flex');
             liveTvModal.classList.add('hidden');
-            document.getElementById('main-player').src = "";
+            const mainPlayer = document.getElementById('main-player');
+            mainPlayer.src = "";
+            mainPlayer.removeAttribute('sandbox');
             liveCurrentUrl = "";
             if (epgUpdateInterval) {
                 clearInterval(epgUpdateInterval);
