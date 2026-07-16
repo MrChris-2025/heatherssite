@@ -76,7 +76,7 @@ const availableSources = [
     { id: 'vidpop', name: 'Vidpop', urls: { movie: 'https://www.vidpop.xyz/embed/?id={id}', tv: 'https://www.vidpop.xyz/embed/?id={id}&season={season}&episode={episode}' } },
     { id: 'rive', name: 'RiveStream', urls: { movie: 'https://rivestream.org/embed?type=movie&id={id}', tv: 'https://rivestream.org/embed?type=tv&id=tmdb&id={id}&season={season}&episode={episode}' } },
     { id: 'hexa', name: 'Hexa', urls: { movie: 'https://hexa.watch/watch/movie/{id}', tv: 'https://hexa.watch/watch/tv/{id}/{season}/{episode}' } },
-    { id: 'vidking', name: 'Vidking', urls: { movie: 'https://www.vidking.net/embed/movie/{id}', tv: 'https://www.vidking.net/embed/tv/{id}/{season}/{episode}' } },
+    { id: 'nextbox', name: 'NextBox', urls: { movie: 'https://nextbox.uno/player/movie/{id}', tv: 'https://nextbox.uno/player/tv/{id}/{season}/{episode}' } },
     { id: 'xprime', name: 'XPrime', urls: { movie: 'https://xprime.su/watch/movie/{id}', tv: 'https://xprime.su/watch/tv/{id}/{season}/{episode}' } },
     { id: 'spenflix', name: 'SpenFlix', urls: { movie: 'https://spencerdevs.xyz/movie/{id}', tv: 'https://spencerdevs.xyz/tv/{id}/{season}/{episode}' } },
     { id: 'vidsrccx', name: 'VidSrcCX', urls: { movie: 'https://vidsrc.cx/embed/movie/{id}', tv: 'https://vidsrc.cx/embed/tv/{id}/{season}/{episode}' } },
@@ -87,7 +87,7 @@ const availableSources = [
     { id: 'vidsrcvip', name: 'vidsrc.vip', urls: { movie: 'https://vidsrc.vip/embed/movie/{id}', tv: 'https://vidsrc.vip/embed/tv/{id}/{season}/{episode}' } }
 ];
 
-const sandboxedSources = ['wplayme', 'vidsrcpk', 'primewire', 'vidpop', 'rive', 'hexa', 'spenflix', 'vidking', 'xprime', 'vidsrccx', 'cinezo', 'vidnest'];
+const sandboxedSources = ['wplayme', 'vidsrcpk', 'primewire', 'vidpop', 'rive', 'hexa', 'spenflix', 'nextbox', 'xprime', 'vidsrccx', 'cinezo', 'vidnest'];
 const noSandboxSources = ['videasy', 'vidfast', 'vidsrcvip'];
 
 function getContinueWatchingKey({ sourceId, type, id, season, episode }) {
