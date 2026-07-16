@@ -87,7 +87,7 @@ const availableSources = [
     { id: 'vidsrcvip', name: 'vidsrc.vip', urls: { movie: 'https://vidsrc.vip/embed/movie/{id}', tv: 'https://vidsrc.vip/embed/tv/{id}/{season}/{episode}' } }
 ];
 
-const sandboxedSources = ['wplayme', 'vidsrcpk', 'primewire', 'vidpop', 'rive', 'hexa', 'spenflix', 'nextbox', 'xprime', 'vidsrccx', 'cinezo', 'filmU'];
+const sandboxedSources = ['wplayme', 'vidsrcpk', 'primewire', 'vidpop', 'rive', 'hexa', 'spenflix', 'nextbox', 'xprime', 'vidsrccx', 'cinezo', 'filmU',];
 const noSandboxSources = ['videasy', 'vidfast', 'vidsrcvip'];
 
 function getContinueWatchingKey({ sourceId, type, id, season, episode }) {
