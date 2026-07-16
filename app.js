@@ -71,7 +71,7 @@ const showNewReleaseTvBtn = document.getElementById('showNewReleaseTvBtn');
 const availableSources = [
     { id: 'wplayme', name: 'Mike Ty-thhon', urls: { movie: 'https://embed.wplay.me/embed/movie/{id}', tv: 'https://embed.wplay.me/embed/tv/{id}/{season}/{episode}' } },
     { id: 'vidsrcpk', name: 'VidSrcPk', urls: { movie: 'https://vidsrc.win/movie/?id={id}', tv: 'https://vidsrc.win/tv.html?id={id}&season={season}&episode={episode}' } },
-    { id: "filmu", name: "FilmU", urls: { movie: 'https://embed.filmu.in/movie/${id}', tv: 'https://embed.filmu.in/tv/{id}/{season}/{episode}', } },
+    { id: "filmu", name: "FilmU", urls: { movie: 'https://embed.filmu.in/movie/{id}', tv: 'https://embed.filmu.in/tv/{id}/{season}/{episode}', } },
     { id: 'primewire', name: 'Primewire', urls: { movie: 'https://www.primewire.tf/embed/movie?tmdb={id}', tv: 'https://www.primewire.tf/embed/tv?tmdb={id}&season={season}&episode={episode}&server=vidmoly' } },
     { id: 'vidpop', name: 'Vidpop', urls: { movie: 'https://www.vidpop.xyz/embed/?id={id}', tv: 'https://www.vidpop.xyz/embed/?id={id}&season={season}&episode={episode}' } },
     { id: 'rive', name: 'RiveStream', urls: { movie: 'https://rivestream.org/embed?type=movie&id={id}', tv: 'https://rivestream.org/embed?type=tv&id=tmdb&id={id}&season={season}&episode={episode}' } },
