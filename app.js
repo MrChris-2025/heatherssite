@@ -82,7 +82,7 @@ const availableSources = [
     { id: 'vidsrccx', name: 'VidSrcCX', urls: { movie: 'https://vidsrc.cx/embed/movie/{id}', tv: 'https://vidsrc.cx/embed/tv/{id}/{season}/{episode}' } },
     { id: 'vidnest', name: 'VidNest', urls: { movie: 'https://vidnest.fun/movie/{id}', tv: 'https://vidnest.fun/tv/{id}/{season}/{episode}' } },
     { id: 'cinezo', name: 'Cinezo', urls: { movie: 'https://api.cinezo.net/movie/{id}', tv: 'https://api.cinezo.net/tv/{id}/{season}/{episode}' } },
-   { id: 'videasy', name: 'VidEasy', urls: { movie: 'https://player.videasy.net/movie/{id}?color=8834ec', tv: 'https://player.videasy.net/tv/{id}/{season}/{episode}?nextEpisode=true&color=8834ec' } },
+    { id: 'videasy', name: 'VidEasy', urls: { movie: 'https://player.videasy.net/movie/{id}?color=8834ec', tv: 'https://player.videasy.net/tv/{id}/{season}/{episode}?nextEpisode=true&color=8834ec' } },
     { id: 'vidfast', name: 'VidFast', urls: { movie: 'https://vidfast.pro/movie/{id}', tv: 'https://vidfast.pro/tv/{id}/{season}/{episode}' } },
     { id: 'vidsrcvip', name: 'vidsrc.vip', urls: { movie: 'https://vidsrc.vip/embed/movie/{id}', tv: 'https://vidsrc.vip/embed/tv/{id}/{season}/{episode}' } }
 ];
@@ -138,17 +138,10 @@ async function deleteContinueWatching(key) {
     }
 }
 
-/**
- * Deletes all previous episode records for a specific TV show 
- * when a newer episode is started.
- */
 async function cleanupOldEpisodes(tmdbId, currentSeason, currentEpisode) {
     try {
         const CW = Parse.Object.extend('ContinueWatching');
         const query = new Parse.Query(CW);
-        
-        // Find keys starting with "{source}:tv:{tmdbId}:"
-        // Since we don't strictly know the source here, we check for ":tv:{tmdbId}:"
         query.contains('key', `:tv:${tmdbId}:`);
         
         const results = await query.find();
@@ -158,7 +151,8 @@ async function cleanupOldEpisodes(tmdbId, currentSeason, currentEpisode) {
             let season = parseInt(parts[3]);
             let episode = parseInt(parts[4]);
 
-            // If the stored record is an older episode or older season, delete it
+            if (isNaN(season) || isNaN(episode)) continue;
+
             if (season < currentSeason || (season === currentSeason && episode < currentEpisode)) {
                 await row.destroy();
                 console.log(`Cleaned up old episode record: ${key}`);
@@ -172,7 +166,6 @@ async function cleanupOldEpisodes(tmdbId, currentSeason, currentEpisode) {
 // ----------------------------------------------------
 // Progress Tracking Logic
 // ----------------------------------------------------
-
 let localWatchTimer = null;
 let lastVideoKey = null;
 let watchSeconds = 0;
@@ -240,11 +233,12 @@ async function loadContinueWatchingParse() {
         renderContinueWatchingParse(continueWatchingData);
     } catch (err) {
         console.error("Failed to load continue watching:", err);
-        continueWatchingSection.style.display = 'none';
+        if (continueWatchingSection) continueWatchingSection.style.display = 'none';
     }
 }
 
 async function renderContinueWatchingParse(continueWatchingData) {
+    if (!continueWatchingSection) return;
     if (!continueWatchingData.length) {
         continueWatchingSection.style.display = 'none';
         return;
@@ -338,6 +332,7 @@ async function fetchSeasonDetails(id, seasonNumber) {
 }
 
 async function populateGenreFilter() {
+    if (!genreFilter) return;
     const url = currentType === 'movie' ? MOVIE_GENRES_URL : TV_GENRES_URL;
     try {
         const res = await fetch(url);
@@ -353,6 +348,7 @@ async function populateGenreFilter() {
 }
 
 function populateYearFilter() {
+    if (!yearFilter) return;
     const cy = new Date().getFullYear();
     yearFilter.innerHTML = '<option value="">All Years</option>';
     for (let y = cy; y >= 1900; y--) {
@@ -364,6 +360,7 @@ function populateYearFilter() {
 }
 
 function renderGallery(items) {
+    if (!galleryContainer) return;
     galleryContainer.innerHTML = '';
     if (!items || items.length === 0) {
         galleryContainer.innerHTML = '<p class="text-center text-gray-500 col-span-full">No results found.</p>';
@@ -391,6 +388,7 @@ function renderGallery(items) {
 }
 
 async function renderNewReleases(items) {
+    if (!newReleasesContainer) return;
     newReleasesContainer.innerHTML = '';
     if (!items || items.length === 0) {
         newReleasesContainer.innerHTML = '<p class="text-center text-gray-500">No new releases on this day.</p>';
@@ -421,32 +419,42 @@ async function updateUI() {
     const data = await fetchContent(currentType, currentPage, currentQuery, currentGenreId, currentYear);
     if (data) {
         renderGallery(data.results);
-        pageInfoSpan.textContent = pageInfoBottomSpan.textContent = `Page ${data.page} of ${data.total_pages}`;
-        prevPageBtn.disabled = prevPageBottomBtn.disabled = data.page <= 1;
-        nextPageBtn.disabled = nextPageBottomBtn.disabled = data.page >= data.total_pages;
-        galleryTitle.textContent = currentQuery ? `Search Results for "${currentQuery}"` : (currentGenreId || currentYear ? `${genreFilter.options[genreFilter.selectedIndex]?.textContent} ${currentType === 'movie' ? 'Movies' : 'TV Shows'}` : (currentType === 'movie' ? 'Popular Movies' : 'Popular TV Shows'));
+        if (pageInfoSpan) pageInfoSpan.textContent = `Page ${data.page} of ${data.total_pages}`;
+        if (pageInfoBottomSpan) pageInfoBottomSpan.textContent = `Page ${data.page} of ${data.total_pages}`;
+        if (prevPageBtn) prevPageBtn.disabled = data.page <= 1;
+        if (prevPageBottomBtn) prevPageBottomBtn.disabled = data.page <= 1;
+        if (nextPageBtn) nextPageBtn.disabled = data.page >= data.total_pages;
+        if (nextPageBottomBtn) nextPageBottomBtn.disabled = data.page >= data.total_pages;
+        
+        if (galleryTitle) {
+            galleryTitle.textContent = currentQuery ? `Search Results for "${currentQuery}"` : (currentGenreId || currentYear ? `${genreFilter.options[genreFilter.selectedIndex]?.textContent} ${currentType === 'movie' ? 'Movies' : 'TV Shows'}` : (currentType === 'movie' ? 'Popular Movies' : 'Popular TV Shows'));
+        }
     }
 }
 
 function updateNewReleasesUI() {
-    releaseDateInfo.textContent = currentReleaseDate.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+    if (releaseDateInfo) {
+        releaseDateInfo.textContent = currentReleaseDate.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+    }
     fetchNewReleases(currentReleaseDate, newReleaseType).then(renderNewReleases);
 }
 
 function closeModal() {
-    videoModal.classList.remove('visible');
-    videoModal.classList.add('hidden');
+    if (videoModal) {
+        videoModal.classList.remove('visible');
+        videoModal.classList.add('hidden');
+    }
     stopLocalProgressTracking();
     if (videoPlayer) videoPlayer.src = '';
 }
 
 function openPlayer(itemData, initialSeason = null, initialEpisode = null) {
     currentItemData = itemData;
-    modalTitle.textContent = itemData.title || itemData.name;
+    if (modalTitle) modalTitle.textContent = itemData.title || itemData.name;
     stopLocalProgressTracking(); 
     const isTV = !!(itemData.media_type === 'tv' || itemData.first_air_date);
-    episodeSelector.classList.toggle('hidden', !isTV);
-    episodeNavButtons.classList.toggle('hidden', !isTV);
+    if (episodeSelector) episodeSelector.classList.toggle('hidden', !isTV);
+    if (episodeNavButtons) episodeNavButtons.classList.toggle('hidden', !isTV);
     if (isTV) {
         currentType = 'tv';
         populateSeasonSelect(initialSeason, initialEpisode); 
@@ -454,17 +462,21 @@ function openPlayer(itemData, initialSeason = null, initialEpisode = null) {
         currentType = 'movie';
         updatePlayer();
     }
-    videoModal.classList.remove('hidden');
-    videoModal.classList.add('visible');
+    if (videoModal) {
+        videoModal.classList.remove('hidden');
+        videoModal.classList.add('visible');
+    }
 }
 
 function populateSourceSelector() {
+    if (!sourceSelector) return;
     const sources = isSandboxMode ? sandboxedSources : noSandboxSources;
     sourceSelector.innerHTML = availableSources.filter(s => sources.includes(s.id)).map(s => `<option value="${s.id}">${s.name}</option>`).join('');
     updatePlayer();
 }
 
 function populateSeasonSelect(initialSeason = null, initialEpisode = null) {
+    if (!seasonSelect) return;
     seasonSelect.innerHTML = '';
     if (!currentItemData || !currentItemData.seasons) return;
     const seasons = currentItemData.seasons.filter(s => s.season_number >= 1).sort((a, b) => a.season_number - b.season_number);
@@ -478,6 +490,7 @@ function populateSeasonSelect(initialSeason = null, initialEpisode = null) {
 }
 
 async function updateEpisodeUI(initialEpisode = null) {
+    if (!seasonSelect) return;
     const sNum = parseInt(seasonSelect.value);
     let sData = (currentItemData.seasons || []).find(s => s.season_number === sNum);
     if (!sData || !sData.episodes) {
@@ -491,11 +504,14 @@ async function updateEpisodeUI(initialEpisode = null) {
 }
 
 function populateEpisodeSelect(sData, initialEpisode = null) {
+    if (!episodeSelect) return;
     episodeSelect.innerHTML = '';
     const eps = sData.episodes || [];
     if (!eps.length) {
         episodeSelect.innerHTML = '<option value="0">No episodes found</option>';
-        episodeSelect.disabled = prevEpisodeBtn.disabled = nextEpisodeBtn.disabled = true;
+        episodeSelect.disabled = true;
+        if (prevEpisodeBtn) prevEpisodeBtn.disabled = true;
+        if (nextEpisodeBtn) nextEpisodeBtn.disabled = true;
         return;
     }
     episodeSelect.disabled = false;
@@ -512,26 +528,25 @@ async function updatePlayer() {
     if (!currentItemData) return;
     const isTV = currentType === 'tv';
     
-    if (isTV) {
+    if (isTV && seasonSelect && episodeSelect) {
         const s = parseInt(seasonSelect.value), e = parseInt(episodeSelect.value);
         const sData = (currentItemData.seasons || []).find(sd => sd.season_number === s);
         const epCount = sData?.episodes.length || 0;
         const maxS = Math.max(...currentItemData.seasons.map(sd => sd.season_number));
         
-        // --- AUTO-CLEANUP LOGIC ---
-        // Delete previous episodes from "Continue Watching" when a new one is started
         cleanupOldEpisodes(currentItemData.id, s, e);
         
-        prevEpisodeBtn.disabled = e <= 1 && s <= 1;
-        nextEpisodeBtn.disabled = e >= epCount && s >= maxS;
+        if (prevEpisodeBtn) prevEpisodeBtn.disabled = e <= 1 && s <= 1;
+        if (nextEpisodeBtn) nextEpisodeBtn.disabled = e >= epCount && s >= maxS;
         const eData = (sData?.episodes || []).find(ed => ed.episode_number === e);
-        nowPlayingDisplay.textContent = `Now Playing: ${currentItemData.name} - S${s} E${e} - ${eData?.name || ''}`;
-        summaryDisplay.textContent = eData?.overview || "No summary available.";
+        if (nowPlayingDisplay) nowPlayingDisplay.textContent = `Now Playing: ${currentItemData.name} - S${s} E${e} - ${eData?.name || ''}`;
+        if (summaryDisplay) summaryDisplay.textContent = eData?.overview || "No summary available.";
     } else {
-        nowPlayingDisplay.textContent = `Now Playing: ${currentItemData.title}`;
-        summaryDisplay.textContent = currentItemData.overview || "No summary available.";
+        if (nowPlayingDisplay) nowPlayingDisplay.textContent = `Now Playing: ${currentItemData.title}`;
+        if (summaryDisplay) summaryDisplay.textContent = currentItemData.overview || "No summary available.";
     }
 
+    if (!sourceSelector) return;
     const src = availableSources.find(s => s.id === sourceSelector.value);
     if (!src) return;
 
@@ -543,7 +558,9 @@ async function updatePlayer() {
     iframe.src = url; iframe.frameBorder = '0'; iframe.allowFullscreen = true;
     if (isSandboxMode) iframe.setAttribute('sandbox', 'allow-same-origin allow-scripts allow-forms allow-pointer-lock allow-fullscreen');
     iframe.setAttribute('allow', 'fullscreen'); 
-    iframeContainer.innerHTML = ''; iframeContainer.appendChild(iframe);
+    if (iframeContainer) {
+        iframeContainer.innerHTML = ''; iframeContainer.appendChild(iframe);
+    }
     videoPlayer = iframe;
     startLocalProgressTracking();
 }
@@ -555,7 +572,9 @@ async function playTrailer() {
         iframe.className = 'w-full h-full absolute top-0 left-0';
         iframe.src = url; iframe.allowFullscreen = true;
         iframe.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen');
-        iframeContainer.innerHTML = ''; iframeContainer.appendChild(iframe);
+        if (iframeContainer) {
+            iframeContainer.innerHTML = ''; iframeContainer.appendChild(iframe);
+        }
         videoPlayer = iframe;
         stopLocalProgressTracking();
     } else alert('No trailer found.');
@@ -563,65 +582,76 @@ async function playTrailer() {
 
 function toggleMediaType(type) {
     currentType = type; currentPage = 1; currentGenreId = ''; currentYear = '';
-    genreFilter.value = yearFilter.value = '';
+    if (genreFilter) genreFilter.value = '';
+    if (yearFilter) yearFilter.value = '';
     populateGenreFilter();
-    document.getElementById('showMoviesBtn').classList.toggle('active', type === 'movie');
-    document.getElementById('showTvBtn').classList.toggle('active', type === 'tv');
+    if (showMoviesBtn) showMoviesBtn.classList.toggle('active', type === 'movie');
+    if (showTvBtn) showTvBtn.classList.toggle('active', type === 'tv');
     updateUI();
 }
 
 function scrollAndLoad(action) {
-    document.getElementById('galleryContainer').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    if (galleryContainer) galleryContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
     if (action === 'prev' && currentPage > 1) { currentPage--; updateUI(); }
     else if (action === 'next') { currentPage++; updateUI(); }
 }
 
 // Global Event Listeners
-searchInput.addEventListener('input', () => { currentQuery = searchInput.value.trim(); currentPage = 1; updateUI(); });
-showMoviesBtn.addEventListener('click', () => toggleMediaType('movie'));
-showTvBtn.addEventListener('click', () => toggleMediaType('tv'));
-genreFilter.addEventListener('change', () => { currentGenreId = genreFilter.value; currentPage = 1; updateUI(); });
-yearFilter.addEventListener('change', () => { currentYear = yearFilter.value; currentPage = 1; updateUI(); });
-[prevPageBtn, prevPageBottomBtn].forEach(b => b.onclick = () => scrollAndLoad('prev'));
-[nextPageBtn, nextPageBottomBtn].forEach(b => b.onclick = () => scrollAndLoad('next'));
-sourceSelector.onchange = updatePlayer;
-trailerBtn.onclick = playTrailer;
-seasonSelect.onchange = () => updateEpisodeUI();
-episodeSelect.onchange = updatePlayer;
+if (searchInput) searchInput.addEventListener('input', () => { currentQuery = searchInput.value.trim(); currentPage = 1; updateUI(); });
+if (showMoviesBtn) showMoviesBtn.addEventListener('click', () => toggleMediaType('movie'));
+if (showTvBtn) showTvBtn.addEventListener('click', () => toggleMediaType('tv'));
+if (genreFilter) genreFilter.addEventListener('change', () => { currentGenreId = genreFilter.value; currentPage = 1; updateUI(); });
+if (yearFilter) yearFilter.addEventListener('change', () => { currentYear = yearFilter.value; currentPage = 1; updateUI(); });
 
-prevEpisodeBtn.onclick = async () => {
-    let s = parseInt(seasonSelect.value), e = parseInt(episodeSelect.value);
-    if (e > 1) { episodeSelect.value = e - 1; updatePlayer(); }
-    else if (s > 1) {
-        seasonSelect.value = s - 1; await updateEpisodeUI();
-        const sData = currentItemData.seasons.find(sd => sd.season_number == (s-1));
-        episodeSelect.value = sData.episodes.length; updatePlayer();
-    }
-};
+[prevPageBtn, prevPageBottomBtn].forEach(b => { if (b) b.onclick = () => scrollAndLoad('prev'); });
+[nextPageBtn, nextPageBottomBtn].forEach(b => { if (b) b.onclick = () => scrollAndLoad('next'); });
 
-nextEpisodeBtn.onclick = async () => {
-    let s = parseInt(seasonSelect.value), e = parseInt(episodeSelect.value);
-    const sData = currentItemData.seasons.find(sd => sd.season_number == s);
-    if (e < sData.episodes.length) { episodeSelect.value = e + 1; updatePlayer(); }
-    else {
-        const nextS = currentItemData.seasons.find(sd => sd.season_number == s + 1);
-        if (nextS) { seasonSelect.value = s + 1; await updateEpisodeUI(); episodeSelect.value = 1; updatePlayer(); }
-    }
-};
+if (sourceSelector) sourceSelector.onchange = updatePlayer;
+if (trailerBtn) trailerBtn.onclick = playTrailer;
+if (seasonSelect) seasonSelect.onchange = () => updateEpisodeUI();
+if (episodeSelect) episodeSelect.onchange = updatePlayer;
 
-showSandboxBtn.onclick = () => { isSandboxMode = true; populateSourceSelector(); };
-showNoSandboxBtn.onclick = () => { isSandboxMode = false; populateSourceSelector(); };
-modalCloseBtn.onclick = closeModal;
-videoModal.onclick = (e) => { if (e.target.id === 'videoModal') closeModal(); };
+if (prevEpisodeBtn) {
+    prevEpisodeBtn.onclick = async () => {
+        let s = parseInt(seasonSelect.value), e = parseInt(episodeSelect.value);
+        if (e > 1) { episodeSelect.value = e - 1; updatePlayer(); }
+        else if (s > 1) {
+            seasonSelect.value = s - 1; await updateEpisodeUI();
+            const sData = currentItemData.seasons.find(sd => sd.season_number == (s-1));
+            episodeSelect.value = sData.episodes.length; updatePlayer();
+        }
+    };
+}
 
-prevReleaseDayBtn.onclick = () => { currentReleaseDate.setDate(currentReleaseDate.getDate() - 1); updateNewReleasesUI(); };
-nextReleaseDayBtn.onclick = () => { currentReleaseDate.setDate(currentReleaseDate.getDate() + 1); updateNewReleasesUI(); };
-showNewReleaseMoviesBtn.onclick = () => { newReleaseType = 'movie'; updateNewReleasesUI(); };
-showNewReleaseTvBtn.onclick = () => { newReleaseType = 'tv'; updateNewReleasesUI(); };
+if (nextEpisodeBtn) {
+    nextEpisodeBtn.onclick = async () => {
+        let s = parseInt(seasonSelect.value), e = parseInt(episodeSelect.value);
+        const sData = currentItemData.seasons.find(sd => sd.season_number == s);
+        if (e < sData.episodes.length) { episodeSelect.value = e + 1; updatePlayer(); }
+        else {
+            const nextS = currentItemData.seasons.find(sd => sd.season_number == s + 1);
+            if (nextS) { seasonSelect.value = s + 1; await updateEpisodeUI(); episodeSelect.value = 1; updatePlayer(); }
+        }
+    };
+}
+
+if (showSandboxBtn) showSandboxBtn.onclick = () => { isSandboxMode = true; populateSourceSelector(); };
+if (showNoSandboxBtn) showNoSandboxBtn.onclick = () => { isSandboxMode = false; populateSourceSelector(); };
+if (modalCloseBtn) modalCloseBtn.onclick = closeModal;
+if (videoModal) videoModal.onclick = (e) => { if (e.target.id === 'videoModal') closeModal(); };
+
+if (prevReleaseDayBtn) prevReleaseDayBtn.onclick = () => { currentReleaseDate.setDate(currentReleaseDate.getDate() - 1); updateNewReleasesUI(); };
+if (nextReleaseDayBtn) nextReleaseDayBtn.onclick = () => { currentReleaseDate.setDate(currentReleaseDate.getDate() + 1); updateNewReleasesUI(); };
+if (showNewReleaseMoviesBtn) showNewReleaseMoviesBtn.onclick = () => { newReleaseType = 'movie'; updateNewReleasesUI(); };
+if (showNewReleaseTvBtn) showNewReleaseTvBtn.onclick = () => { newReleaseType = 'tv'; updateNewReleasesUI(); };
 
 document.addEventListener('DOMContentLoaded', () => {
-    populateSourceSelector(); populateGenreFilter(); populateYearFilter();
-    updateUI(); loadContinueWatchingParse(); updateNewReleasesUI();
+    populateSourceSelector(); 
+    populateGenreFilter(); 
+    populateYearFilter();
+    updateUI(); 
+    loadContinueWatchingParse(); 
+    updateNewReleasesUI();
 });
 
 function formatTime(s) {
