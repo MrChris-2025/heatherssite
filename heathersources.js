@@ -22,7 +22,7 @@ export const availableSources = [
     { id: 'nxsha', name: 'Nxsha', urls: { movie: 'https://web.nxsha.app/embed/movie/{id}', tv: 'https://web.nxsha.app/embed/tv/{id}/{season}/{episode}' } },
     { id: 'videasy', name: 'VidEasy', urls: { movie: 'https://player.videasy.net/movie/{id}?color=8834ec', tv: 'https://player.videasy.net/tv/{id}/{season}/{episode}?nextEpisode=true&color=8834ec' } },
     { id: 'vidfast', name: 'VidFast', urls: { movie: 'https://vidfast.pro/movie/{id}', tv: 'https://vidfast.pro/tv/{id}/{season}/{episode}' } },
-    { id: 'vidsync', name: 'Vidsync', urls: { movie: 'https://vidsync.live/embed/movie/{id}?autoPlay=true', tv: 'https://vidsync.live/embed/tv/{id}/{season}/{episode}?autoPlay=true' } }
+    { id: 'vidsync', name: '1Vidsync', urls: { movie: 'https://vidsync.live/embed/movie/{id}?autoPlay=true', tv: 'https://vidsync.live/embed/tv/{id}/{season}/{episode}?autoPlay=true' } }
 ];
 
 export const noSandboxSources = ['videasy', 'vidfast', 'wplayme', 'vidsync'];
