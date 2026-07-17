@@ -1,3 +1,12 @@
+// Import sources & sandbox logic from your new module
+import { 
+    isSandboxMode, 
+    setSandboxMode, 
+    availableSources, 
+    getActiveSourceList, 
+    getSandboxAttributes 
+} from './heathersources.js';
+
 // ==== TAILWIND CONFIGURATION ====
 tailwind.config = {
     theme: {
@@ -29,7 +38,6 @@ let currentPage = 1;
 let currentType = 'movie';
 let currentQuery = '';
 let currentItemData = null;
-let isSandboxMode = false;
 
 // DOM Elements
 const galleryContainer = document.getElementById('galleryContainer');
@@ -80,24 +88,6 @@ const heartModalCloseBtn = document.getElementById('heartModalCloseBtn');
 
 let favoritedItems = {};
 let recentlyWatchedItems = {};
-
-// Restored Streaming Sources configuration
-const availableSources = [
-    { id: 'cinesrc', name: 'CineSrc', urls: { movie: 'https://cinesrc.st/embed/movie/{id}', tv: 'https://cinesrc.st/embed/tv/{id}/{season}/{episode}' } },
-    { id: 'wplayme', name: 'Wplay.me', urls: { movie: 'https://play.xpass.top/e/movie/{id}', tv: 'https://play.xpass.top/e/tv/{id}/{season}/{episode}' } },
-    { id: 'meow', name: 'Meow', urls: { movie: 'https://meowtv.ru/play/movie/{id}', tv: 'https://meowtv.ru/play/tv/{id}/{season}/{episode}' } },
-    { id: 'nextbox', name: 'NextBox', urls: { movie: 'https://nextbox.uno/player/movie/{id}', tv: 'https://nextbox.uno/player/tv/{id}/{season}/{episode}' } },
-    { id: 'cinezo', name: 'Cinezo', urls: { movie: 'https://api.cinezo.net/movie/{id}', tv: 'https://api.cinezo.net/tv/{id}/{season}/{episode}?autoplayNext=true?startAt=630' } },     
-    { id: 'filmu', name: 'FilmU', urls: { movie: 'https://embed.filmu.in/movie/{id}', tv: 'https://embed.filmu.in/tv/{id}/{season}/{episode}' } },
-    { id: 'cinemaos', name: 'Cinemaos', urls: { movie: 'https://cinemaos.tech/player/{id}', tv: 'https://cinemaos.live/tv/watch/{id}&{season}&{episode}' } },
-    { id: 'nxsha', name: 'Nxsha', urls: { movie: 'https://web.nxsha.app/embed/movie/{id}', tv: 'https://web.nxsha.app/embed/tv/{id}/{season}/{episode}' } },
-    { id: 'videasy', name: 'VidEasy', urls: { movie: 'https://player.videasy.net/movie/{id}?color=8834ec', tv: 'https://player.videasy.net/tv/{id}/{season}/{episode}?nextEpisode=true&color=8834ec' } },
-    { id: 'vidfast', name: 'VidFast', urls: { movie: 'https://vidfast.pro/movie/{id}', tv: 'https://vidfast.pro/tv/{id}/{season}/{episode}' } },
-    { id: 'vidsync', name: 'Vidsync', urls: { movie: 'https://vidsync.live/embed/movie/{id}?autoPlay=true', tv: 'https://vidsync.live/embed/tv/{id}/{season}/{episode}?autoPlay=true' } }
-];
-
-const noSandboxSources = ['videasy', 'vidfast', 'wplayme', 'vidsync'];
-const sandboxedSources = ['filmu', 'nextbox', 'cinezo', 'meow', 'nxsha', 'cinemaos', 'cinesrc'];
 
 // --- FAVORITES LOGIC ---
 async function loadFavorites() {
@@ -372,8 +362,8 @@ function openPlayer(itemData, s = null, e = null) {
 }
 
 function populateSourceSelector() {
-    const list = isSandboxMode ? sandboxedSources : noSandboxSources;
-    sourceSelector.innerHTML = availableSources.filter(s => list.includes(s.id)).map(s => `<option value="${s.id}">${s.name}</option>`).join('');
+    const activeList = getActiveSourceList();
+    sourceSelector.innerHTML = availableSources.filter(s => activeList.includes(s.id)).map(s => `<option value="${s.id}">${s.name}</option>`).join('');
     sourceSelector.onchange = updatePlayer;
     updatePlayer();
 }
@@ -416,7 +406,8 @@ function updatePlayer() {
         summaryDisplay.textContent = ep?.overview || currentItemData.overview;
     }
     
-    iframeContainer.innerHTML = `<iframe id="videoPlayer" class="w-full h-full absolute" src="${url}" allowfullscreen ${isSandboxMode ? 'sandbox="allow-same-origin allow-scripts allow-forms allow-pointer-lock allow-fullscreen"' : ''}></iframe>`;
+    const sandboxAttr = getSandboxAttributes();
+    iframeContainer.innerHTML = `<iframe id="videoPlayer" class="w-full h-full absolute" src="${url}" allowfullscreen ${sandboxAttr}></iframe>`;
     saveRecentlyWatched();
 }
 
@@ -989,14 +980,14 @@ fullscreenBtn.onclick = () => {
 };
 
 showNoSandboxBtn.onclick = () => {
-    isSandboxMode = false;
+    setSandboxMode(false);
     showNoSandboxBtn.classList.add('active', 'ring-2', 'ring-purple-300');
     showSandboxBtn.classList.remove('active', 'ring-2', 'ring-purple-300');
     populateSourceSelector();
 };
 
 showSandboxBtn.onclick = () => {
-    isSandboxMode = true;
+    setSandboxMode(true);
     showSandboxBtn.classList.add('active', 'ring-2', 'ring-purple-300');
     showNoSandboxBtn.classList.remove('active', 'ring-2', 'ring-purple-300');
     populateSourceSelector();
