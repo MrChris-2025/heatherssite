@@ -18,7 +18,7 @@ export const availableSources = [
     { id: 'nextbox', name: 'NextBox', urls: { movie: 'https://nextbox.uno/player/movie/{id}', tv: 'https://nextbox.uno/player/tv/{id}/{season}/{episode}' } },
     { id: 'cinezo', name: 'Cinezo', urls: { movie: 'https://api.cinezo.net/movie/{id}', tv: 'https://api.cinezo.net/tv/{id}/{season}/{episode}?autoplayNext=true?startAt=630' } },     
     { id: 'filmu', name: 'FilmU', urls: { movie: 'https://embed.filmu.in/movie/{id}', tv: 'https://embed.filmu.in/tv/{id}/{season}/{episode}' } },
-    { id: 'cinemaos', name: 'Cinemaos', urls: { movie: 'https://cinemaos.tech/player/{id}', tv: 'https://cinemaos.live/tv/watch/{id}&{season}&{episode}' } },
+    { id: 'cinemaos', name: 'Cinemaos', urls: { movie: 'https://cinemaos.tech/player/{id}', tv: 'https://vuflix.co/tv/{slug}/{id}&{season}&{episode}' } },
     { id: 'nxsha', name: 'Nxsha', urls: { movie: 'https://web.nxsha.app/embed/movie/{id}', tv: 'https://web.nxsha.app/embed/tv/{id}/{season}/{episode}' } },
     { id: 'videasy', name: 'VidEasy', urls: { movie: 'https://player.videasy.net/movie/{id}?color=8834ec', tv: 'https://player.videasy.net/tv/{id}/{season}/{episode}?nextEpisode=true&color=8834ec' } },
     { id: 'vidfast', name: 'VidFast', urls: { movie: 'https://vidfast.pro/movie/{id}', tv: 'https://vidfast.pro/tv/{id}/{season}/{episode}' } },
