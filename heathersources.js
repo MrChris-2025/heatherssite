@@ -25,8 +25,8 @@ export const availableSources = [
     { id: 'vidsync', name: 'Vidsync', urls: { movie: 'https://vidsync.live/embed/movie/{id}?autoPlay=true', tv: 'https://vidsync.live/embed/tv/{id}/{season}/{episode}?autoPlay=true' } }
 ];
 
-export const noSandboxSources = ['videasy', 'vidfast', 'wplayme', 'vidsync'];
-export const sandboxedSources = ['filmu', 'nextbox', 'cinezo', 'meow', 'nxsha', 'cinemaos', 'cinesrc'];
+export const noSandboxSources = ['videasy', 'vidfast', 'wplayme', 'cinemaos'];
+export const sandboxedSources = ['filmu', 'nextbox', 'cinezo', 'meow', 'nxsha', '', 'cinesrc'];
 
 /**
  * Returns the correct list of sources depending on whether Sandbox Mode is active.
