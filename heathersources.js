@@ -20,7 +20,7 @@ export const availableSources = [
     { id: 'filmu', name: 'FilmU', urls: { movie: 'https://embed.filmu.in/movie/{id}', tv: 'https://embed.filmu.in/tv/{id}/{season}/{episode}' } },
     { id: 'cinemaos', name: 'Cinemaos', urls: { movie: 'https://cinemaos.tech/player/{id}', tv: 'https://cinemaos.live/tv/watch/{id}&{season}&{episode}' } },
     { id: 'nxsha', name: 'Nxsha', urls: { movie: 'https://web.nxsha.app/embed/movie/{id}', tv: 'https://web.nxsha.app/embed/tv/{id}/{season}/{episode}' } },
-    { id: 'videasy', name: 'VidEasy', urls: { movie: 'https://videasy.xyz/embed/movie/{tmdb_id}', tv: 'https://videasy.xyz/embed/tv/{tmdb_id}/{season}/{episode}?nextEpisode=true' } },
+    { id: 'videasy', name: 'VidEasy', urls: { movie: 'https://videasy.xyz/embed/movie/{id}', tv: 'https://videasy.xyz/embed/tv/{id}/{season}/{episode}?nextEpisode=true' } },
     { id: 'vidfast', name: 'VidFast', urls: { movie: 'https://vidfast.pro/movie/{id}', tv: 'https://vidfast.pro/tv/{id}/{season}/{episode}' } },
     { id: 'vidsync', name: 'Vidsync', urls: { movie: 'https://vidsync.live/embed/movie/{id}?autoPlay=true', tv: 'https://vidsync.live/embed/tv/{id}/{season}/{episode}?autoPlay=true' } }
 ];
