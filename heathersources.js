@@ -15,7 +15,7 @@ export const availableSources = [
     { id: 'fmov', name: 'FMov', urls: { movie: 'https://fmov.my/embed/movie/{id}', tv: 'https://fmov.my/embed/tv/{id}/{season}/{episode}' } },
     { id: 'wplayme', name: 'Wplay.me', urls: { movie: 'https://play.xpass.top/e/moviehttps://play.xpass.top/e/movie/{id}', tv: 'https://play.xpass.top/e/tv/{id}/{season}/{episode}' } },
     { id: 'meow', name: 'Meow', urls: { movie: 'https://meowtv.ru/play/movie/{id}', tv: 'https://meowtv.ru/play/tv/{id}/{season}/{episode}' } },
-    { id: 'yap', name: 'Yap', urls: { movie: 'https://yapgrid.com/embed/movie/{id}?autoplay=1', tv: 'https://yapgrid.com/embed/tv/{id}/{season}/{episode}?autoplay=1' } },
+    { id: 'yap', name: 'Yap', urls: { movie: 'https://www.pulptv.net/watch/movie/{id}', tv: 'https://www.pulptv.net/watch/tv/{id}?s={currentSeason}&e={currentEpisode}' } },
     { id: 'cinezo', name: 'Cinezo', urls: { movie: 'https://api.cinezo.net/movie/{id}', tv: 'https://api.cinezo.net/tv/{id}/{season}/{episode}?autoplayNext=true?startAt=630' } },     
     { id: 'filmu', name: 'FilmU', urls: { movie: 'https://embed.filmu.in/movie/{id}', tv: 'https://embed.filmu.in/tv/{id}/{season}/{episode}' } },
     { id: 'cinemaos', name: 'Cinemaos', urls: { movie: 'https://cinemaos.tech/player/{id}', tv: 'https://cinemaos.live/tv/watch/{id}&{season}&{episode}' } },
